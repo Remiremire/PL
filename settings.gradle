@@ -1,1 +1,1 @@
-include ':app', ':common', ':applib', ':installpatch'
+include ':app', ':common', ':applib', ':mytest'
