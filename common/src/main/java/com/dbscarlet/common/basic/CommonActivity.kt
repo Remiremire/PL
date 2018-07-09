@@ -113,7 +113,7 @@ abstract class CommonActivity : AppCompatActivity(), BaseView, HasFragmentInject
             } else {
                 shouldShowRationaleOnAsk = shouldShowRationale()
                 if (shouldShowRationaleOnAsk) {
-                    onExplain?.invoke(this)
+                    runOnUiThread{ onExplain?.invoke(this) }
                 } else {
                     askPermission()
                 }
