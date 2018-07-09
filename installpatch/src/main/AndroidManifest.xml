@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dbscarlet.tinkertest" >
+    <application>
+        <activity android:name="com.dbscarlet.tinkertest.core.VersionInfoAct"/>
+        <activity android:name="com.dbscarlet.tinkertest.core.FindPatchAct"/>
+    </application>
+</manifest>

@@ -1,0 +1,13 @@
+
+project.ext{
+    compile_sdk_version = 26
+    target_sdk_version = 26
+    min_sdk_version = 14
+
+    support_v7_version = "26.1.0"
+    dagger2_version = '2.16'
+    rxJava2_version = '2.1.7'
+    rxAndroid_version = '2.0.2'
+    lifecycle_version = '1.1.1'
+    arouter_compiler_version = '1.1.4'
+}
