@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dbscarlet.applib.RoutePath
+import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.FileUtil
@@ -24,7 +24,7 @@ import java.util.*
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = RoutePath.FIND_PATCH_FILE)
+@Route(path = Path.FIND_PATCH_FILE)
 class FindPatchAct: BaseActivity() {
     private val fileList: MutableList<File> = mutableListOf()
     private var fileStack: Stack<File> = Stack()

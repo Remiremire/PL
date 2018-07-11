@@ -3,5 +3,6 @@
     <application>
         <activity android:name="com.dbscarlet.tinkertest.core.VersionInfoAct"/>
         <activity android:name="com.dbscarlet.tinkertest.core.FindPatchAct"/>
+        <activity android:name=".core.apiTest.ApiTestAct" />
     </application>
 </manifest>

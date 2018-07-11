@@ -29,4 +29,14 @@
         android:paddingRight="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_api_test"
+        android:text="api test"
+        android:layout_marginTop="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

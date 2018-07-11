@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.dbscarlet.applib.RoutePath
+import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.AppInfo
@@ -20,7 +20,7 @@ import java.io.File
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = RoutePath.TINKER_TEST)
+@Route(path = Path.TINKER_TEST)
 class VersionInfoAct: BaseActivity(), InstallCallback {
 
     @JvmField
@@ -38,8 +38,13 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
         tv_patch.text = "Patch_$patchCode"
         btn_install_patch.setOnClickListener{
             ARouter.getInstance()
-                    .build(RoutePath.FIND_PATCH_FILE)
+                    .build(Path.FIND_PATCH_FILE)
                     .navigation(this, 101)
+        }
+        btn_api_test.setOnClickListener {
+            ARouter.getInstance()
+                    .build(Path.API_TEST)
+                    .navigation(this)
         }
         TinkerUtil.tinkerInstallCallback = this
     }
