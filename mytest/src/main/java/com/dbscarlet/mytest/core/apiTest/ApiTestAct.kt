@@ -1,4 +1,4 @@
-package com.dbscarlet.tinkertest.core.apiTest
+package com.dbscarlet.mytest.core.apiTest
 
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -6,7 +6,7 @@ import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.logI
-import com.dbscarlet.tinkertest.R
+import com.dbscarlet.mytest.R
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response

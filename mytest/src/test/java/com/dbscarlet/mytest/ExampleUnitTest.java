@@ -1,4 +1,4 @@
-package com.dbscarlet.tinkertest;
+package com.dbscarlet.mytest;
 
 import org.junit.Test;
 

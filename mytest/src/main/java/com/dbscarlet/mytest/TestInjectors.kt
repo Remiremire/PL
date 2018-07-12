@@ -1,8 +1,8 @@
-package com.dbscarlet.tinkertest
+package com.dbscarlet.mytest
 
-import com.dbscarlet.tinkertest.core.FindPatchAct
-import com.dbscarlet.tinkertest.core.VersionInfoAct
-import com.dbscarlet.tinkertest.core.apiTest.ApiTestAct
+import com.dbscarlet.mytest.core.FindPatchAct
+import com.dbscarlet.mytest.core.VersionInfoAct
+import com.dbscarlet.mytest.core.apiTest.ApiTestAct
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -1,7 +1,7 @@
 package com.dbscarlet.pl.main.di
 
 import com.dbscarlet.pl.main.application.App
-import com.dbscarlet.tinkertest.TestInjectors
+import com.dbscarlet.mytest.TestInjectors
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.support.AndroidSupportInjectionModule

@@ -1,4 +1,4 @@
-package com.dbscarlet.tinkertest;
+package com.dbscarlet.mytest;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.dbscarlet.tinkertest.core
+package com.dbscarlet.mytest.core
 
 import android.Manifest
 import android.app.Activity
@@ -15,7 +15,7 @@ import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.FileUtil
-import com.dbscarlet.tinkertest.R
+import com.dbscarlet.mytest.R
 import kotlinx.android.synthetic.main.act_find_patch.*
 import kotlinx.android.synthetic.main.item_find_patch.view.*
 import java.io.File

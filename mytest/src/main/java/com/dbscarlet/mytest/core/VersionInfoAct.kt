@@ -1,7 +1,8 @@
-package com.dbscarlet.tinkertest.core
+package com.dbscarlet.mytest.core
 
 import android.app.Activity
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -13,7 +14,8 @@ import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
 import com.dbscarlet.common.util.InstallResult
 import com.dbscarlet.common.util.TinkerUtil
-import com.dbscarlet.tinkertest.R
+import com.dbscarlet.mytest.R
+import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*
 import java.io.File
 
@@ -33,9 +35,10 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.act_version_info)
-        tv_version.text = AppInfo.VERSION_NAME
-        tv_patch.text = "Patch_$patchCode"
+//        setContentView(R.layout.act_version_info)
+        val binding = DataBindingUtil.setContentView<ActVersionInfoBinding>(this, R.layout.act_version_info)
+        binding.versionInfo = AppInfo.VERSION_NAME
+        binding.patchInfo = "Patch_$patchCode"
         btn_install_patch.setOnClickListener{
             ARouter.getInstance()
                     .build(Path.FIND_PATCH_FILE)
