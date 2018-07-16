@@ -46,7 +46,8 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.0'
     api 'com.lzy.net:okgo:3.0.4'
     api 'com.lzy.net:okrx2:2.0.2'
-    api "android.arch.lifecycle:runtime:$lifecycle_version"
+    api "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
     api "com.google.dagger:dagger:$dagger2_version"
     api "com.google.dagger:dagger-android:$dagger2_version"
     api "com.google.dagger:dagger-android-support:$dagger2_version" // if you use the support libraries

@@ -94,7 +94,6 @@ abstract class CommonActivity : AppCompatActivity(), BaseView, HasFragmentInject
         return progress
     }
 
-
     /////////////////////////动态权限相关////////////////////////////////////////////////
     private var permissionRequestMap: MutableMap<Int, PermissionRequestImpl>? = null
 
