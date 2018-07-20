@@ -4,5 +4,6 @@
         <activity android:name="com.dbscarlet.mytest.core.VersionInfoAct"/>
         <activity android:name="com.dbscarlet.mytest.core.FindPatchAct"/>
         <activity android:name="com.dbscarlet.mytest.core.apiTest.ApiTestAct" />
+        <activity android:name=".core.authentication.AuthenticationAct" />
     </application>
 </manifest>

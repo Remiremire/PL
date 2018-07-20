@@ -12,4 +12,5 @@ object Path {
     const val TINKER_TEST = Group.TEST + "versionInfo"
     const val FIND_PATCH_FILE = Group.TEST + "findPatchFile"
     const val API_TEST = Group.TEST + "apiTest"
+    const val AUTHENTICATION = Group.TEST + "authentication";
 }

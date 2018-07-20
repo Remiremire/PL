@@ -3,6 +3,7 @@ package com.dbscarlet.mytest
 import com.dbscarlet.mytest.core.FindPatchAct
 import com.dbscarlet.mytest.core.VersionInfoAct
 import com.dbscarlet.mytest.core.apiTest.ApiTestAct
+import com.dbscarlet.mytest.core.authentication.AuthenticationAct
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -19,4 +20,7 @@ abstract class TestInjectors {
 
     @ContributesAndroidInjector
     abstract fun apiTestAct(): ApiTestAct
+
+    @ContributesAndroidInjector
+    abstract fun authentication(): AuthenticationAct
 }

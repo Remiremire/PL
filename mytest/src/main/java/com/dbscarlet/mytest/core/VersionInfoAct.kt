@@ -36,7 +36,6 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.act_version_info)
-        val index: Int = 1
         val binding = DataBindingUtil.setContentView<ActVersionInfoBinding>(this, R.layout.act_version_info)
         binding.versionInfo = AppInfo.VERSION_NAME
         binding.patchInfo = "Patch_$patchCode"
@@ -49,6 +48,11 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
             ARouter.getInstance()
                     .build(Path.API_TEST)
                     .navigation(this)
+        }
+        btn_authentication.setOnClickListener {
+            ARouter.getInstance()
+                    .build(Path.AUTHENTICATION)
+                    .navigation()
         }
         TinkerUtil.tinkerInstallCallback = this
     }
@@ -70,5 +74,4 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
             TinkerUtil.showRestartDialog(this)
         }
     }
-
 }

@@ -98,21 +98,21 @@ object LogUtil {
     }
 }
 
-fun logI(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.INFO)
+fun logI(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.INFO)
 }
-fun logW(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.WARN)
+fun logW(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.WARN)
 }
-fun logE(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.ERROR)
+fun logE(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.ERROR)
 }
-fun logD(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.DEBUG)
+fun logD(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.DEBUG)
 }
-fun logV(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.VERBOSE)
+fun logV(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.VERBOSE)
 }
-fun logWtf(msg: String, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg, throwable, Log.ASSERT)
+fun logWtf(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
+    LogUtil.printLog(tag, msg.toString(), throwable, Log.ASSERT)
 }
