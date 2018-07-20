@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -80,7 +81,9 @@ public class CustomCurveView extends View {
         if (colors == null || colors.length == 0){
             return;
         }
-        lineGradient.setColors(colors);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            lineGradient.setColors(colors);
+        }
         postInvalidate();
     }
 
