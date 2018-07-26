@@ -53,5 +53,10 @@
             android:text="Authentication"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <com.dbscarlet.mytest.core.curve.CurveView
+            android:id="@+id/curve_view"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
     </LinearLayout>
 </layout>

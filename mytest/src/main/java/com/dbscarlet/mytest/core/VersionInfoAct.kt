@@ -3,7 +3,9 @@ package com.dbscarlet.mytest.core
 import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -15,9 +17,12 @@ import com.dbscarlet.common.util.InstallCallback
 import com.dbscarlet.common.util.InstallResult
 import com.dbscarlet.common.util.TinkerUtil
 import com.dbscarlet.mytest.R
+import com.dbscarlet.mytest.core.curve.CurveLine
+import com.dbscarlet.mytest.core.curve.XAxes
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*
 import java.io.File
+import java.util.*
 
 /**
  * Created by Daibing Wang on 2018/7/3.
@@ -55,6 +60,62 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
                     .navigation()
         }
         TinkerUtil.tinkerInstallCallback = this
+        setCurveView()
+    }
+
+    private fun setCurveView() {
+        val xAxes = XAxes(this)
+        val labels = mutableListOf<String>()
+        for (i in 1..10) {
+            labels.add("X$i")
+        }
+        xAxes.setLabels(labels)
+        curve_view.setXAxes(xAxes)
+        var showPoint : CurveLine.Point? = null
+        curve_view.setOnPointTouch {
+            _, _, point ->
+            when {
+                showPoint == null -> {
+                    showPoint = point
+                    point.show = true
+                }
+                showPoint === point -> {
+                    showPoint = null
+                    point.show = false
+                }
+                else -> {
+                    showPoint?.show = false
+                    showPoint = point
+                    point.show = true
+                }
+            }
+            curve_view.notifyCurvesChange()
+        }
+        curve_view.setBaseInfo(0f, 10f)
+        val curveLineList = mutableListOf<CurveLine>()
+        curve_view.setCurveLine(curveLineList)
+        val redLine = CurveLine(this, Color.parseColor("#FF7875"))
+        val blueLine = CurveLine(this, Color.parseColor("#40A9FF"))
+        val yellowLine = CurveLine(this, Color.parseColor("#FFC53D"))
+        curveLineList.add(redLine)
+        curveLineList.add(blueLine)
+        curveLineList.add(yellowLine)
+        redLine.pointList = randomPoint()
+        blueLine.pointList = randomPoint()
+        yellowLine.pointList = randomPoint()
+        Handler().postDelayed({
+            curve_view.notifyCurvesChange()
+        }, 500)
+    }
+
+    private fun randomPoint(): MutableList<CurveLine.Point> {
+        val random = Random()
+        val result = mutableListOf<CurveLine.Point>()
+        for (i in 0..9) {
+            val value = (random.nextFloat() * 1000).toInt().toFloat() / 100
+            result.add(CurveLine.Point(value, false, value.toString()))
+        }
+        return result
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
