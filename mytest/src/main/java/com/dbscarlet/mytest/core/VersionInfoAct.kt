@@ -5,7 +5,6 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -18,6 +17,7 @@ import com.dbscarlet.common.util.InstallResult
 import com.dbscarlet.common.util.TinkerUtil
 import com.dbscarlet.mytest.R
 import com.dbscarlet.mytest.core.curve.CurveLine
+import com.dbscarlet.mytest.core.curve.CurveView
 import com.dbscarlet.mytest.core.curve.XAxes
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*
@@ -71,26 +71,7 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
         }
         xAxes.setLabels(labels)
         curve_view.setXAxes(xAxes)
-        var showPoint : CurveLine.Point? = null
-        curve_view.setOnPointTouch {
-            _, _, point ->
-            when {
-                showPoint == null -> {
-                    showPoint = point
-                    point.show = true
-                }
-                showPoint === point -> {
-                    showPoint = null
-                    point.show = false
-                }
-                else -> {
-                    showPoint?.show = false
-                    showPoint = point
-                    point.show = true
-                }
-            }
-            curve_view.notifyCurvesChange()
-        }
+        curve_view.setOnSelectPointListener(CurveView.ShowLastSelectPointListener())
         curve_view.setBaseInfo(0f, 10f)
         val curveLineList = mutableListOf<CurveLine>()
         curve_view.setCurveLine(curveLineList)
@@ -103,9 +84,7 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
         redLine.pointList = randomPoint()
         blueLine.pointList = randomPoint()
         yellowLine.pointList = randomPoint()
-        Handler().postDelayed({
-            curve_view.notifyCurvesChange()
-        }, 500)
+        curve_view.notifyChange()
     }
 
     private fun randomPoint(): MutableList<CurveLine.Point> {

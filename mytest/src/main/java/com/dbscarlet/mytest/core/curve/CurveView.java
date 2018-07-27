@@ -7,7 +7,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Daibing Wang on 2018/7/20.
@@ -21,7 +23,7 @@ public class CurveView extends View {
     private XAxes xAxes;
     private float defCurvePaddingLR = dip2Px(16);
     private float pointTouchRangePow = dip2Px(16) * dip2Px(16);
-    private OnPointTouch onPointTouch;
+    private OnSelectPointListener onSelectPointListener;
 
     public CurveView(Context context) {
         super(context);
@@ -36,6 +38,10 @@ public class CurveView extends View {
     public CurveView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
+    }
+
+    private void initView() {
+
     }
 
     @Override
@@ -64,22 +70,19 @@ public class CurveView extends View {
                 }
             }
         }
-        if (onPointTouch != null && touchPoint != null) {
-            onPointTouch.onPointTouch(touchLine, touchIndex, touchPoint);
+        if (onSelectPointListener != null && touchPoint != null) {
+            onSelectPointListener.onPointTouch(touchLine, touchIndex, touchPoint, this);
         }
         return super.onTouchEvent(event);
     }
 
-    public void setOnPointTouch(OnPointTouch onPointTouch) {
-        this.onPointTouch = onPointTouch;
-    }
-
-    private void initView() {
+    public void setOnSelectPointListener(OnSelectPointListener onSelectPointListener) {
+        this.onSelectPointListener = onSelectPointListener;
     }
 
     public void setXAxes(XAxes xAxes) {
         this.xAxes = xAxes;
-        notifyCurvesChange();
+        notifyChange();
     }
 
     public void setBaseInfo(float minValueLimit, float maxValueLimit) {
@@ -89,10 +92,10 @@ public class CurveView extends View {
 
     public void setCurveLine(List<CurveLine> curveLine) {
         this.mCurveLines = curveLine;
-        notifyCurvesChange();
+        notifyChange();
     }
 
-    public void notifyCurvesChange() {
+    public void notifyChange() {
         float top = getPaddingTop();
         float left = getPaddingLeft();
         float bottom = getHeight() - getPaddingBottom();
@@ -119,7 +122,7 @@ public class CurveView extends View {
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-        notifyCurvesChange();
+        notifyChange();
     }
 
     @Override
@@ -141,7 +144,28 @@ public class CurveView extends View {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
     }
 
-    public interface OnPointTouch {
-        void onPointTouch(CurveLine curveLine, int index, CurveLine.Point point);
+    public interface OnSelectPointListener {
+        void onPointTouch(CurveLine curveLine, int index, CurveLine.Point point, CurveView curveView);
+    }
+
+    public static class ShowLastSelectPointListener implements OnSelectPointListener {
+        private Map<CurveView, CurveLine.Point> selectPoints = new HashMap<>();
+
+        @Override
+        public void onPointTouch(CurveLine curveLine, int index, CurveLine.Point point, CurveView curveView) {
+            CurveLine.Point lastShowPoint = selectPoints.get(curveView);
+            if (lastShowPoint == null) {
+                point.show = true;
+                selectPoints.put(curveView, point);
+            } else if (lastShowPoint == point) {
+                point.show = false;
+                selectPoints.put(curveView, null);
+            } else {
+                lastShowPoint.show = false;
+                point.show = true;
+                selectPoints.put(curveView, point);
+            }
+            curveView.notifyChange();
+        }
     }
 }
