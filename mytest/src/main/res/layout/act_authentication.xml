@@ -18,9 +18,27 @@
             android:text="Ask user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_marginTop="12dp"
+            android:hint="email"
+            android:lines="1"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_psw"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <Button
-            android:id="@+id/btn_match"
-            android:text="match"
+            android:id="@+id/btn_login"
+            android:text="Login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

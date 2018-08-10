@@ -25,14 +25,12 @@ public class CurveLine {
     private Path mCurveLineRangePath = new Path();
     private Path mTextPath = new Path();
     private Paint textPaint, pathPaint;
+    private boolean canSelect = true;
     public CurveLine(Context context, int lineColor) {
-        this.lineColor = lineColor;
-        int defBottomColor = 0x00000000;
-        int defTopColor = Color.argb((int) (Color.alpha(lineColor) * 0.3),
+        int defGradientBottom = 0x00000000;
+        int defGradientTop = Color.argb((int) (Color.alpha(lineColor) * 0.3),
                 Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
-        lineGradient = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{defTopColor, defBottomColor});
-        lineGradient.setShape(GradientDrawable.RECTANGLE);
-        lineGradient.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        setColor(lineColor, defGradientTop, defGradientBottom);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         mComputer = new Computer(displayMetrics);
         textPaint = new Paint();
@@ -44,6 +42,14 @@ public class CurveLine {
         pathPaint.setColor(lineColor);
         pathPaint.setStrokeCap(Paint.Cap.ROUND);
         pathPaint.setAntiAlias(true);
+    }
+
+    public boolean isCanSelect() {
+        return canSelect;
+    }
+
+    public void setCanSelect(boolean canSelect) {
+        this.canSelect = canSelect;
     }
 
     public void setPointList(List<Point> pointList) {

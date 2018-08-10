@@ -37,39 +37,7 @@ class TwitterApiSign: Interceptor {
     private val randomStrFilter = Regex("[^0-9a-zA-Z]")
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        signTest()
         return chain.proceed(signRequest(chain.request()))
-    }
-
-    fun signTest() {
-        val key = "gReNivhwQsHJ8401DYGtAw&0BQFkAcOqYGNgbt0NwoF7w3G9MUlt9AkSJBIwkxoFA"
-        val text = "GET&http%3A%2F%2Fapi.twitter.com%2F1%2Fstatuses%2Fhome_timeline.xml&oauth_consumer_key%3DgReNivhwQsHJ8401DYGtAw%26oauth_nonce%3Ddf563232s%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1280824014%26oauth_token%3D169731880-OzvV2F9vWN2HwztmJi7HAvsOM78pU7Xc2dg4ZZX2%26oauth_version%3D1.0"
-        val hmac =  encodeHMAC(text, key)
-        logI("sign test:\n$hmac")
-        logI("UrlEncode: ${URLEncoder.encode(hmac, "utf-8")}")
-//        val map = mutableMapOf<String, String>()
-//        map["status"] = "Hello Ladies + Gentlemen, a signed OAuth request!"
-//        map["include_entities"] = "true"
-//        map["oauth_consumer_key"] = "xvz1evFS4wEEPTGEFPHBog"
-//        map["oauth_signature_method"] = SIGNATURE_METHOD
-//        map["oauth_version"] = OAUTH_VERSION
-//        map["oauth_token"] = "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb"
-//        map["oauth_nonce"] = "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"
-//        map["oauth_timestamp"] = "1318622958"
-//
-//        val paramList = mutableListOf<String>()
-//        map.forEach{k, v -> paramList.add("$k=$v")}
-//        paramList.sort()
-//        val paramStringBuilder = StringBuilder()
-//        paramList.forEach { paramStringBuilder.append("$it&") }
-//        paramStringBuilder.replace(paramStringBuilder.length - 1, paramStringBuilder.length, "")
-//        logI("sign Params:\n$paramStringBuilder")
-//        //用请求方法、url、参数，构成被签名text
-//        val signText = "POST&HTTPS%3A%2F%2Fapi.twitter.com%2F1.1%2Fstatuses%2Fupdate.json&${URLEncoder.encode(paramStringBuilder.toString(), "UTF-8")}"
-//        val signKey = "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw&LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"
-//        logI("encodeText:\n$signText")
-//        val encodeHMAC = encodeHMAC("", signKey)
-//        logI("encodeResult:\n$encodeHMAC" )
     }
 
     /**
@@ -98,7 +66,6 @@ class TwitterApiSign: Interceptor {
         //用请求方法、url、参数，构成被签名text
         val encodeUrl = URLEncoder.encode(url.toString(), "UTF-8")
         val signText = "${request.method().toUpperCase()}&$encodeUrl&${URLEncoder.encode(paramStringBuilder.toString(), "UTF-8")}"
-        logI("signText:\n$signText")
         //生成签名oauth_signature
         val signature = encodeHMAC(signText, signKey)
 

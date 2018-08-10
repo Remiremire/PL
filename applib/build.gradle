@@ -33,6 +33,7 @@ kapt {
     arguments {
         arg("moduleName", project.getName())
     }
+    generateStubs = true
 }
 
 dependencies {

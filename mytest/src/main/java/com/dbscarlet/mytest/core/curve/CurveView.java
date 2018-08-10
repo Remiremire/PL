@@ -46,32 +46,35 @@ public class CurveView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-        CurveLine.Point touchPoint = null;
-        CurveLine touchLine = null;
-        int touchIndex = 0;
-        float touchDisPow = Float.MAX_VALUE;
-        if (mCurveLines != null && mCurveLines.size() > 0) {
-            for (CurveLine cl : mCurveLines) {
-                List<CurveLine.Point> pointList = cl.getPointList();
-                if (pointList == null || pointList.size() == 0) {
-                    continue;
-                }
-                for (int i = 0; i < pointList.size(); i++) {
-                    CurveLine.Point p = pointList.get(i);
-                    float curDisPow = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
-                    if (curDisPow < pointTouchRangePow && (touchPoint == null || curDisPow < touchDisPow)) {
-                        touchPoint = p;
-                        touchDisPow = curDisPow;
-                        touchLine = cl;
-                        touchIndex = i;
+        if (event.getAction() == MotionEvent.ACTION_UP && onSelectPointListener != null) {
+            float x = event.getX();
+            float y = event.getY();
+            CurveLine.Point touchPoint = null;
+            CurveLine touchLine = null;
+            int touchIndex = 0;
+            float touchDisPow = Float.MAX_VALUE;
+            if (mCurveLines != null && mCurveLines.size() > 0) {
+                for (CurveLine cl : mCurveLines) {
+                    List<CurveLine.Point> pointList = cl.getPointList();
+                    if (!cl.isCanSelect() || pointList == null || pointList.size() == 0) {
+                        continue;
+                    }
+                    for (int i = 0; i < pointList.size(); i++) {
+                        CurveLine.Point p = pointList.get(i);
+                        float curDisPow = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
+                        if (curDisPow < pointTouchRangePow && (touchPoint == null || curDisPow < touchDisPow)) {
+                            touchPoint = p;
+                            touchDisPow = curDisPow;
+                            touchLine = cl;
+                            touchIndex = i;
+                        }
                     }
                 }
             }
-        }
-        if (onSelectPointListener != null && touchPoint != null) {
-            onSelectPointListener.onPointTouch(touchLine, touchIndex, touchPoint, this);
+            if (touchPoint != null) {
+                onSelectPointListener.onPointTouch(touchLine, touchIndex, touchPoint, this);
+                return true;
+            }
         }
         return super.onTouchEvent(event);
     }

@@ -1,6 +1,11 @@
 package com.dbscarlet.mytest.core.authentication
 
+import android.app.Dialog
 import android.os.Bundle
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
@@ -11,15 +16,13 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.act_authentication.*
-import java.util.regex.Pattern
 
 /**
  * Created by Daibing Wang on 2018/7/18.
  */
 @Route(path = Path.AUTHENTICATION)
 class AuthenticationAct: BaseActivity() {
-    var loginHtml: String? = null
-    var loginSuccessHtml: String? = null
+    var authenticityToken: String? = null
 
     override fun getPresenters(): Array<IPresenter<*>>? {
         return null
@@ -57,20 +60,54 @@ class AuthenticationAct: BaseActivity() {
                     .execute(object : StringCallback(){
                         override fun onSuccess(response: Response<String>) {
                             val body = response.body()
-                            loginHtml = body
-
                             logI("Login Html:\n$body")
+//                            parseAuthenticityToken(body)
+                            showWebDialog(body)
                         }
                     })
         }
-        btn_match.setOnClickListener {
-            if (loginHtml.isNullOrEmpty()) return@setOnClickListener
-            val pattern = Pattern.compile("<.*?name\\s*=\\s*\"authenticity_token\"")
-            val matcher = pattern.matcher(loginHtml)
-            logI("mathes result: ${matcher.matches()}")
+        btn_login.setOnClickListener {
+            if (authenticityToken.isNullOrEmpty() ||
+                    et_email.text.isNullOrEmpty() ||
+                    et_psw.text.isNullOrEmpty()) {
+                Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            OkGo.post<String>("https://api.twitter.com/oauth/authorize")
+                    .params("authenticity_token", authenticityToken)
+                    .params("session[username_or_email]", et_email.text.toString())
+                    .params("session[password]", et_psw.text.toString())
+                    .execute(object : StringCallback(){
+                        override fun onSuccess(response: Response<String>?) {
+                            logI("login result\n${response?.body()}")
+                        }
+                    })
         }
     }
 
+    private fun parseAuthenticityToken(html: String) {
+        val nameAttrRegex = "name\\s*?=\\s*?\"authenticity_token\""
+        val valueAttrRegex = "value\\s*?=\\s*?\"[0-9a-zA-Z_\\-]+\""
+        val tokenLabel = Regex("<[^<>]*?$nameAttrRegex[^<>]*?$valueAttrRegex[^<>]*?>")
+                .find(html)?.value
+        if (tokenLabel == null) {
+            logI("match nothing")
+            return
+        }
+        val valueAttr = Regex(valueAttrRegex).find(tokenLabel)?.value
+        val token = valueAttr?.subSequence(valueAttr.indexOf("\"") + 1, valueAttr.lastIndexOf("\""))
+        logI("find token:  $token")
+        if (token != null) authenticityToken = token.toString()
+    }
 
+    private fun showWebDialog(html: String) {
+        val dialog = Dialog(this)
+        val webView = WebView(this)
+        webView.webChromeClient = WebChromeClient()
+        webView.webViewClient  = WebViewClient()
+        webView.loadData(html, "text/html", "utf-8")
+        dialog.setContentView(webView)
+        dialog.show()
+    }
 
 }
