@@ -1,7 +1,7 @@
 package com.dbscarlet.pl.main.application
 
 import com.dbscarlet.common.basic.CommonApp
-import com.dbscarlet.mytest.core.authentication.TwitterApiSign
+import com.dbscarlet.mytest.core.authentication.TwitterSign
 import com.dbscarlet.pl.main.di.DaggerAppComponent
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.cache.CacheEntity
@@ -39,7 +39,7 @@ class App : CommonApp() {
                 .readTimeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .connectTimeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
-                .addInterceptor(TwitterApiSign())
+                .addInterceptor(TwitterSign())
 //                .addInterceptor(loggingInterceptor)
                 .build()
 

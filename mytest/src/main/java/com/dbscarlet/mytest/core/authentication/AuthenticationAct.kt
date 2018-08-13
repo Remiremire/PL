@@ -32,6 +32,8 @@ class AuthenticationAct: BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_authentication)
         btn_default_token.setOnClickListener {
+            OAUTH_TOKEN = DEF_OAUTH_TOKEN
+            OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET
             OkGo.get<String>("https://api.twitter.com/oauth/request_token")
                     .execute(object : StringCallback(){
                         override fun onSuccess(response: Response<String>?) {
@@ -61,7 +63,7 @@ class AuthenticationAct: BaseActivity() {
                         override fun onSuccess(response: Response<String>) {
                             val body = response.body()
                             logI("Login Html:\n$body")
-//                            parseAuthenticityToken(body)
+                            parseAuthenticityToken(body)
                             showWebDialog(body)
                         }
                     })
@@ -105,7 +107,7 @@ class AuthenticationAct: BaseActivity() {
         val webView = WebView(this)
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient  = WebViewClient()
-        webView.loadData(html, "text/html", "utf-8")
+        webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null)
         dialog.setContentView(webView)
         dialog.show()
     }

@@ -3,7 +3,7 @@ package com.dbscarlet.common.repository
 /**
  * Created by Daibing Wang on 2018/7/16.
  */
-enum class ResourceState {
+enum class State {
     /**
      * 加载中
      */

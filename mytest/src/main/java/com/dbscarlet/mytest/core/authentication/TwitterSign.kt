@@ -30,11 +30,11 @@ val DEF_OAUTH_TOKEN_SECRET = "mPDOh1dtvFcmQYLHRqrWKBG53GbcPkwyWZuvN9wCtzEog"
 var OAUTH_TOKEN = DEF_OAUTH_TOKEN
 var OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET
 
-class TwitterApiSign: Interceptor {
+class TwitterSign: Interceptor {
     private val HMAC_SHA1_ALGORITHM = "HmacSHA1"
     private val UTF8 = Charset.forName("UTF-8")
     private val random = Random()
-    private val randomStrFilter = Regex("[^0-9a-zA-Z]")
+    private val randomStrFilterRegex = Regex("[^0-9a-zA-Z]")
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(signRequest(chain.request()))
@@ -45,13 +45,13 @@ class TwitterApiSign: Interceptor {
      */
     private fun signRequest(request: Request): Request {
         //签名key
-        val signKey = "$CONSUMER_SECRET&${OAUTH_TOKEN_SECRET ?: ""}"
+        val signKey = "$CONSUMER_SECRET&$OAUTH_TOKEN_SECRET"
 
         val paramList = mutableListOf<String>()
         //原始参数
         val url = request.url()
         url.query()?.split('&')?.forEach{ paramList.add(it) }
-        getbodyString(request)?.split('&')?.forEach{ paramList.add(it) }
+        getBodyString(request)?.split('&')?.forEach{ paramList.add(it) }
 
         //添加基础参数
         val baseParams = createBaseParams()
@@ -97,7 +97,7 @@ class TwitterApiSign: Interceptor {
         map["oauth_consumer_key"] = CONSUMER_KEY
         map["oauth_signature_method"] = SIGNATURE_METHOD
         map["oauth_version"] = OAUTH_VERSION
-        if (!OAUTH_TOKEN.isNullOrEmpty()) map["oauth_token"] = OAUTH_TOKEN
+        map["oauth_token"] = OAUTH_TOKEN
         val randomString = randomString()
         val timeStamp = System.currentTimeMillis() / 1000
         map["oauth_nonce"] = randomString
@@ -136,15 +136,15 @@ class TwitterApiSign: Interceptor {
 
     private fun randomString(): String {
         val md5 = MessageDigest.getInstance("md5")
-        val digest = md5.digest("${System.currentTimeMillis()}${random.nextInt()}}".toByteArray())
+        val digest = md5.digest("${System.currentTimeMillis()}${random.nextLong()}}".toByteArray())
         return String(Base64.encode(digest, Base64.DEFAULT), Charset.forName("UTF-8"))
-                .replace(randomStrFilter, "")
+                .replace(randomStrFilterRegex, "")
     }
 
     /**
      * 获取请求body，(比如post参数)
      */
-    private fun getbodyString(request: Request): String? {
+    private fun getBodyString(request: Request): String? {
         try {
             val copy = request.newBuilder().build()
             val body = copy.body() ?: return null
