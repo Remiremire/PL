@@ -26,11 +26,16 @@ public class CurveLine {
     private Path mTextPath = new Path();
     private Paint textPaint, pathPaint;
     private boolean canSelect = true;
+    private boolean visible = true;
+
     public CurveLine(Context context, int lineColor) {
-        int defGradientBottom = 0x00000000;
-        int defGradientTop = Color.argb((int) (Color.alpha(lineColor) * 0.3),
+        this.lineColor = lineColor;
+        int defBottomColor = 0x00000000;
+        int defTopColor = Color.argb((int) (Color.alpha(lineColor) * 0.3),
                 Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
-        setColor(lineColor, defGradientTop, defGradientBottom);
+        lineGradient = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{defTopColor, defBottomColor});
+        lineGradient.setShape(GradientDrawable.RECTANGLE);
+        lineGradient.setGradientType(GradientDrawable.LINEAR_GRADIENT);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         mComputer = new Computer(displayMetrics);
         textPaint = new Paint();
@@ -60,6 +65,14 @@ public class CurveLine {
         return mPointList;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     public void setColor(int lineColor, int gradientTop, int gradientBottom) {
         this.lineColor = lineColor;
         lineGradient = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{gradientTop, gradientBottom});
@@ -67,16 +80,16 @@ public class CurveLine {
         lineGradient.setGradientType(GradientDrawable.LINEAR_GRADIENT);
     }
 
-    public void compute(float left, float top, float right, float bottom,
-                        float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
+    void compute(float left, float top, float right, float bottom,
+                 float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
         computeLine(left, top, right, bottom, minValueLimit, maxValueLimit, xAxesStep, LINE_SMOOTHNESS);
     }
 
     private void computeLine(float left, float top, float right, float bottom,
                              float minValue, float maxValue,float xAxesStep, float LINE_SMOOTHNESS) {
-        mCurveLineRangePath.reset();
         final Path path = mCurveLinePath;
         path.reset();
+        mCurveLineRangePath.reset();
         final List<Point> pointList = mPointList;
         if (pointList == null || pointList.size() == 0) {
             return;
@@ -157,10 +170,10 @@ public class CurveLine {
         mCurveLineRangePath.lineTo(lineEndX, bottom);
         mCurveLineRangePath.lineTo(lineStartX, bottom);
         mCurveLineRangePath.close();
-        lineGradient.setBounds((int) lineStartX, 0, (int)lineEndX, (int)bottom);
+        lineGradient.setBounds((int) lineStartX, (int) top, (int)lineEndX, (int)bottom);
     }
 
-    public void drawLine(Canvas canvas) {
+    void drawLine(Canvas canvas) {
         if (mPointList == null || mPointList.size() == 0) {
             return;
         }
@@ -173,7 +186,7 @@ public class CurveLine {
         canvas.restore();
     }
 
-    public void drawPoints(Canvas canvas) {
+    void drawPoints(Canvas canvas) {
         final List<Point> pointList = mPointList;
         for (Point point : pointList) {
             if (point.show) {
@@ -238,7 +251,7 @@ public class CurveLine {
 
         private void computePoint(Point point, int index) {
             point.x = left + xAxesStep * (index + startIndex);
-            point.y = bottom + (top - bottom) * (point.value / (maxValue - minValue));
+            point.y = top + (bottom - top) * ((maxValue - point.value) / (maxValue - minValue));
             if (TextUtils.isEmpty(point.text)) return;
             point.textWidth = textPaint.measureText(point.text);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
@@ -258,7 +271,7 @@ public class CurveLine {
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
         }
     }
-    
+
     public static class Point{
         public float value;
         public boolean show;
@@ -286,6 +299,5 @@ public class CurveLine {
             this.text = text;
         }
     }
-
 
 }

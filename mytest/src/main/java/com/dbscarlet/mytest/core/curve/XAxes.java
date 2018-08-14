@@ -77,13 +77,20 @@ public class XAxes {
         float textStrokeWidth = paint.getStrokeWidth();
         paint.setStrokeWidth(dip2Px(1));
         paint.setColor(lineColor);
+        paint.setStyle(Paint.Style.STROKE);
         canvas.drawPath(path, paint);
         paint.setStrokeWidth(textStrokeWidth);
         paint.setColor(textColor);
+        paint.setStyle(Paint.Style.FILL);
         int size = labels.size();
-        for (int i = 0; i < size; i++) {
-            canvas.drawText(labels.get(i), textDrawLocation[i][0], textDrawLocation[i][1], paint);
+        try {
+            for (int i = 0; i < size; i++) {
+                canvas.drawText(labels.get(i), textDrawLocation[i][0], textDrawLocation[i][1], paint);
+            }
+        } catch (Exception e) {
+
         }
+
     }
 
     private float dip2Px(float dip) {
