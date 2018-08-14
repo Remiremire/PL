@@ -9,9 +9,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.common.permission.AskPermission
 import com.dbscarlet.common.permission.PermissionRequest
@@ -26,12 +23,11 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/4/24.
  */
-abstract class CommonActivity : AppCompatActivity(), BaseView, HasFragmentInjector, HasSupportFragmentInjector {
+abstract class CommonActivity : AppCompatActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentInjector : DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<android.support.v4.app.Fragment>
-    private var progressList: MutableList<ProgressHandler>? = null
 
     override fun fragmentInjector(): AndroidInjector<Fragment> {
         return fragmentInjector
@@ -45,53 +41,6 @@ abstract class CommonActivity : AppCompatActivity(), BaseView, HasFragmentInject
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         ARouter.getInstance().inject(this)
-        getPresenters()?.forEach { lifecycle.addObserver(it) }
-    }
-
-    abstract fun getPresenters() : Array<IPresenter<*>>?
-
-    override fun onDestroy() {
-        super.onDestroy()
-        progressList?.forEach { it.hide() }
-        getPresenters()?.forEach { lifecycle.removeObserver(it) }
-    }
-
-    override fun toast(msgRes: Int) {
-        toast(resources.getString(msgRes))
-    }
-
-    override fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun handleProgress(): ProgressHandler {
-        val progress = object: ProgressHandler {
-            override fun dismiss() {
-                progressList?.remove(this)
-            }
-
-            val progressBar : ProgressBar = ProgressBar(this@CommonActivity)
-
-            override fun show(msg: String?, title: String?) {
-                progressBar.visibility = View.VISIBLE
-                progressBar.isIndeterminate = false
-            }
-
-            override fun update(progress: Int, total: Int) {
-                if (!progressBar.isIndeterminate) {
-                    progressBar.isIndeterminate = true
-                }
-                progressBar.max = total
-                progressBar.progress = progress
-            }
-
-            override fun hide() {
-                progressBar.visibility = View.GONE
-            }
-        }
-        progressList = progressList ?: mutableListOf()
-        progressList?.add(progress)
-        return progress
     }
 
     /////////////////////////动态权限相关////////////////////////////////////////////////
