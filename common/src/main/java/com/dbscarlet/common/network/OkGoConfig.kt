@@ -44,6 +44,7 @@ fun <T, R : Request<String, *>> Request<String, R>.subscribe(subscriber: Flowabl
     converter(StringConvert())
             .adapt(FlowableResponse<String>())
             .map { Gson().fromJson<T>(it.body(), object : TypeToken<T>() {}.type)}
+            .subscribe(subscriber)
 }
 
 

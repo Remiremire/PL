@@ -21,8 +21,8 @@ public class CurveView extends View {
     private Float mMinValueLimit;
     private Float mMaxValueLimit;
     private XAxes xAxes;
-    private float defCurvePaddingLR = dip2Px(16);
-    private float pointTouchRangePow = dip2Px(16) * dip2Px(16);
+    private float defCurvePaddingLR = dip2Px(12);
+    private float pointTouchRangePow = dip2Px(20) * dip2Px(20);
     private OnSelectPointListener onSelectPointListener;
 
     public CurveView(Context context) {
@@ -41,22 +41,24 @@ public class CurveView extends View {
     }
 
     private void initView() {
-
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP && onSelectPointListener != null) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && onSelectPointListener != null) {
             float x = event.getX();
             float y = event.getY();
             CurveLine.Point touchPoint = null;
             CurveLine touchLine = null;
-            int touchIndex = 0;
+            int lineIndex = 0;
+            int pointIndex = 0;
             float touchDisPow = Float.MAX_VALUE;
             if (mCurveLines != null && mCurveLines.size() > 0) {
-                for (CurveLine cl : mCurveLines) {
+                for (int j = 0; j < mCurveLines.size(); j++) {
+                    CurveLine cl = mCurveLines.get(j);
                     List<CurveLine.Point> pointList = cl.getPointList();
-                    if (!cl.isCanSelect() || pointList == null || pointList.size() == 0) {
+                    if (!cl.isVisible() || !cl.isCanSelect() || pointList == null || pointList.size() == 0) {
                         continue;
                     }
                     for (int i = 0; i < pointList.size(); i++) {
@@ -66,13 +68,14 @@ public class CurveView extends View {
                             touchPoint = p;
                             touchDisPow = curDisPow;
                             touchLine = cl;
-                            touchIndex = i;
+                            pointIndex = i;
+                            lineIndex = j;
                         }
                     }
                 }
             }
             if (touchPoint != null) {
-                onSelectPointListener.onPointTouch(touchLine, touchIndex, touchPoint, this);
+                onSelectPointListener.onPointSelect(lineIndex, touchLine, pointIndex, touchPoint, this);
                 return true;
             }
         }
@@ -88,7 +91,12 @@ public class CurveView extends View {
         notifyChange();
     }
 
-    public void setBaseInfo(float minValueLimit, float maxValueLimit) {
+    /**
+     * 设置曲线图取值范围限制
+     * @param minValueLimit 最小值，即y轴原点的值
+     * @param maxValueLimit 最大值，即y轴在图顶部的值
+     */
+    public void setValueLimit(float minValueLimit, float maxValueLimit) {
         mMinValueLimit = minValueLimit;
         mMaxValueLimit = maxValueLimit;
     }
@@ -99,32 +107,37 @@ public class CurveView extends View {
     }
 
     public void notifyChange() {
-        float top = getPaddingTop();
-        float left = getPaddingLeft();
-        float bottom = getHeight() - getPaddingBottom();
-        float right = getWidth() - getPaddingRight();
-        float curveT = top + dip2Px(24);
-        float curveB = bottom;
-        float curveL = left + defCurvePaddingLR;
-        float curveR = right - defCurvePaddingLR;
-        float xAxesStep = 0;
-        if (xAxes != null) {
-            curveB -= xAxes.getHeight();
-            xAxes.compute(left, right, curveL, curveT, curveB, curveR);
-            xAxesStep = xAxes.getXAexStep();
-        }
-        if (mCurveLines != null) {
-            for (CurveLine cl : mCurveLines) {
-                cl.compute(curveL, curveT, curveR, curveB,
-                        mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                float top = getPaddingTop();
+                float left = getPaddingLeft();
+                float bottom = getHeight() - getPaddingBottom();
+                float right = getWidth() - getPaddingRight();
+                float curveT = top + dip2Px(24);
+                float curveB = bottom;
+                float curveL = left + defCurvePaddingLR;
+                float curveR = right - defCurvePaddingLR;
+                float xAxesStep = 0;
+                if (xAxes != null) {
+                    curveB -= xAxes.getHeight();
+                    xAxes.compute(left, right, curveL, curveT, curveB, curveR);
+                    xAxesStep = xAxes.getXAexStep();
+                }
+                if (mCurveLines != null) {
+                    for (CurveLine cl : mCurveLines) {
+                        cl.compute(curveL, curveT, curveR, curveB,
+                                mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+                    }
+                }
+                invalidate();
             }
-        }
-        invalidate();
+        });
     }
 
     @Override
-    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
-        super.onSizeChanged(width, height, oldWidth, oldHeight);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         notifyChange();
     }
 
@@ -135,10 +148,14 @@ public class CurveView extends View {
         }
         if (mCurveLines != null) {
             for (CurveLine cl : mCurveLines) {
-                cl.drawLine(canvas);
+                if (cl.isVisible()) {
+                    cl.drawLine(canvas);
+                }
             }
             for (CurveLine cl : mCurveLines) {
-                cl.drawPoints(canvas);
+                if (cl.isVisible()) {
+                    cl.drawPoints(canvas);
+                }
             }
         }
     }
@@ -148,14 +165,14 @@ public class CurveView extends View {
     }
 
     public interface OnSelectPointListener {
-        void onPointTouch(CurveLine curveLine, int index, CurveLine.Point point, CurveView curveView);
+        void onPointSelect(int lineIndex, CurveLine curveLine, int pointIndex, CurveLine.Point point, CurveView curveView);
     }
 
     public static class ShowLastSelectPointListener implements OnSelectPointListener {
         private Map<CurveView, CurveLine.Point> selectPoints = new HashMap<>();
 
         @Override
-        public void onPointTouch(CurveLine curveLine, int index, CurveLine.Point point, CurveView curveView) {
+        public void onPointSelect(int lineIndex, CurveLine curveLine, int pointIndex, CurveLine.Point point, CurveView curveView) {
             CurveLine.Point lastShowPoint = selectPoints.get(curveView);
             if (lastShowPoint == null) {
                 point.show = true;
