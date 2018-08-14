@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
-import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.FileUtil
 import com.dbscarlet.mytest.R
 import kotlinx.android.synthetic.main.act_find_patch.*
@@ -30,10 +29,6 @@ class FindPatchAct: BaseActivity() {
     private var fileStack: Stack<File> = Stack()
     private val adapter = Adapter()
     private var patchFile: File? = null
-
-    override fun getPresenters(): Array<IPresenter<*>>? {
-        return null
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

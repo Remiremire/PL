@@ -10,7 +10,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
-import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
 import com.dbscarlet.common.util.InstallResult
@@ -33,10 +32,6 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
     @JvmField
     @Autowired(name = "patchCode")
     var patchCode: Int = 0
-
-    override fun getPresenters(): Array<IPresenter<*>>? {
-        return null
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +67,7 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
         xAxes.setLabels(labels)
         curve_view.setXAxes(xAxes)
         curve_view.setOnSelectPointListener(CurveView.ShowLastSelectPointListener())
-        curve_view.setBaseInfo(0f, 10f)
+        curve_view.setValueLimit(0f, 10f)
         val curveLineList = mutableListOf<CurveLine>()
         curve_view.setCurveLine(curveLineList)
         val redLine = CurveLine(this, Color.parseColor("#FF7875"))

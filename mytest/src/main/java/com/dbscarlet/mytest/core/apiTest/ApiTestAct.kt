@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
-import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.common.util.logI
 import com.dbscarlet.mytest.R
 import com.lzy.okgo.OkGo
@@ -17,9 +16,6 @@ import kotlinx.android.synthetic.main.act_api_test.*
  */
 @Route(path = Path.API_TEST)
 class ApiTestAct: BaseActivity() {
-    override fun getPresenters(): Array<IPresenter<*>>? {
-        return null
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

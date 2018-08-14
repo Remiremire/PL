@@ -6,16 +6,12 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
-import com.dbscarlet.common.basic.IPresenter
 import com.dbscarlet.pl.BuildConfig
 import com.dbscarlet.pl.R
 import kotlinx.android.synthetic.main.activity_home.*
 
 @Route(path = Path.HOME)
-class HomeActivity : BaseActivity(), View {
-    override fun getPresenters(): Array<IPresenter<*>>? {
-        return null
-    }
+class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
