@@ -10,8 +10,8 @@ import android.widget.Toast
  */
 private val uiThreadHandler = Handler(Looper.getMainLooper())
 
-fun runOnUiThread(delay: Long? = null, runnable: ()-> Unit) {
-    if (delay == null || delay == 0L) {
+fun runOnUiThread(delay: Long = 0, runnable: ()-> Unit) {
+    if (delay <= 0) {
         uiThreadHandler.post(runnable)
     } else {
         uiThreadHandler.postDelayed(runnable, delay)

@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
-import com.dbscarlet.applib.base.BaseActivity
+import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.FileUtil
 import com.dbscarlet.mytest.R
 import kotlinx.android.synthetic.main.act_find_patch.*
@@ -23,8 +23,8 @@ import java.util.*
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = Path.FIND_PATCH_FILE)
-class FindPatchAct: BaseActivity() {
+@Route(path = Path.TEST.FIND_PATCH_FILE)
+class FindPatchAct: CommonActivity() {
     private val fileList: MutableList<File> = mutableListOf()
     private var fileStack: Stack<File> = Stack()
     private val adapter = Adapter()

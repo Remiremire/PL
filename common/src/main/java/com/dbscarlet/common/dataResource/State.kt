@@ -1,4 +1,4 @@
-package com.dbscarlet.common.repository
+package com.dbscarlet.common.dataResource
 
 /**
  * Created by Daibing Wang on 2018/7/16.

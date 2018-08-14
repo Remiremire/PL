@@ -1,6 +1,5 @@
-package com.dbscarlet.common.repository
+package com.dbscarlet.common.dataResource
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.support.annotation.CallSuper
 
@@ -11,18 +10,12 @@ open class ResourceObserver<T>: Observer<Resource<T>> {
     @CallSuper
     override fun onChanged(t: Resource<T>?) {
         when(t?.state) {
-            State.LOADING -> onLoading(t, t.message, t.progress, t.total)
+            State.LOADING -> onLoading(t, t.msg, t.progress, t.total)
             State.SUCCESS -> onSuccess(t, t.data!!)
-            State.FAILED -> onFailed(t, t.code, t.message)
+            State.FAILED -> onFailed(t, t.code, t.msg)
             State.EXCEPTION -> onException(t, t.cause)
             else -> Unit
         }
-        val testLiveData = object : LiveData<String>(){
-            override fun onActive() {
-                value = ""
-            }
-        }
-
     }
 
     open fun onSuccess(res: Resource<T>, data: T){}

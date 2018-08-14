@@ -4,13 +4,16 @@ package com.dbscarlet.applib
  * Created by Daibing Wang on 2018/6/28.
  */
 object Path {
-    private object Group {
-        const val APP = "/app/"
-        const val TEST = "/test/"
+    object APP {
+        private const val BASE = "/app"
+        const val HOME = "$BASE/home"
+        const val AUTHORIZE = "$BASE/authorize"
     }
-    const val HOME = Group.APP + "home"
-    const val TINKER_TEST = Group.TEST + "versionInfo"
-    const val FIND_PATCH_FILE = Group.TEST + "findPatchFile"
-    const val API_TEST = Group.TEST + "apiTest"
-    const val AUTHENTICATION = Group.TEST + "authentication"
+    object TEST {
+        private const val BASE = "/test"
+        const val TINKER_TEST = "$BASE/versionInfo"
+        const val FIND_PATCH_FILE = "$BASE/findPatchFile"
+        const val API_TEST = "$BASE/apiTest"
+        const val AUTHENTICATION = "$BASE/authentication"
+    }
 }

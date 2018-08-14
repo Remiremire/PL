@@ -9,7 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
-import com.dbscarlet.applib.base.BaseActivity
+import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
 import com.dbscarlet.common.util.InstallResult
@@ -26,8 +26,8 @@ import java.util.*
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = Path.TINKER_TEST)
-class VersionInfoAct: BaseActivity(), InstallCallback {
+@Route(path = Path.TEST.TINKER_TEST)
+class VersionInfoAct: CommonActivity(), InstallCallback {
 
     @JvmField
     @Autowired(name = "patchCode")
@@ -41,17 +41,17 @@ class VersionInfoAct: BaseActivity(), InstallCallback {
         binding.patchInfo = "Patch_$patchCode"
         btn_install_patch.setOnClickListener{
             ARouter.getInstance()
-                    .build(Path.FIND_PATCH_FILE)
+                    .build(Path.TEST.FIND_PATCH_FILE)
                     .navigation(this, 101)
         }
         btn_api_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(Path.API_TEST)
+                    .build(Path.TEST.API_TEST)
                     .navigation(this)
         }
         btn_authentication.setOnClickListener {
             ARouter.getInstance()
-                    .build(Path.AUTHENTICATION)
+                    .build(Path.TEST.AUTHENTICATION)
                     .navigation()
         }
         TinkerUtil.tinkerInstallCallback = this

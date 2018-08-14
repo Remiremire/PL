@@ -41,6 +41,7 @@ abstract class CommonActivity : AppCompatActivity(), HasFragmentInjector, HasSup
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         ARouter.getInstance().inject(this)
+
     }
 
     /////////////////////////动态权限相关////////////////////////////////////////////////
