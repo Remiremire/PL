@@ -9,6 +9,10 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.twitterApiConfig.DEF_OAUTH_TOKEN
+import com.dbscarlet.applib.twitterApiConfig.DEF_OAUTH_TOKEN_SECRET
+import com.dbscarlet.applib.twitterApiConfig.OAUTH_TOKEN
+import com.dbscarlet.applib.twitterApiConfig.OAUTH_TOKEN_SECRET
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.logI
 import com.dbscarlet.mytest.R
@@ -16,9 +20,6 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.act_authentication.*
-
-
-
 
 
 /**
@@ -54,7 +55,12 @@ class AuthenticationAct: CommonActivity() {
                                 }
                             }
                         }
+
+                        override fun onError(response: Response<String>?) {
+                            super.onError(response)
+                        }
                     })
+
         }
         btn_ask_user.setOnClickListener {
             OkGo.get<String>("https://api.twitter.com/oauth/authorize")

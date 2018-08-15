@@ -1,7 +1,9 @@
 package com.dbscarlet.pl.main.application
 
+import android.content.Context
+import com.dbscarlet.applib.contact.SPSaveKey
+import com.dbscarlet.applib.twitterApiConfig.*
 import com.dbscarlet.common.basic.CommonApp
-import com.dbscarlet.mytest.core.authentication.TwitterSign
 import com.dbscarlet.pl.main.di.DaggerAppComponent
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.cache.CacheEntity
@@ -29,6 +31,12 @@ class App : CommonApp() {
     }
 
     private fun initNetwork() {
+        val sp = getSharedPreferences(SPSaveKey.SHAREPREFRENCE_NAME, Context.MODE_PRIVATE)
+        val oauthToken = sp.getString(SPSaveKey.OAUTH_TOKEN, null)
+        val secret = sp.getString(SPSaveKey.OAUTH_TOKEN_SECRET, null)
+        OAUTH_TOKEN = if (oauthToken.isNullOrEmpty()) DEF_OAUTH_TOKEN else oauthToken
+        OAUTH_TOKEN_SECRET = if (secret.isNullOrEmpty()) DEF_OAUTH_TOKEN_SECRET else secret
+
         val loggingInterceptor = HttpLoggingInterceptor("Network_PL")
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
         loggingInterceptor.setColorLevel(Level.INFO)
@@ -39,7 +47,7 @@ class App : CommonApp() {
                 .readTimeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .connectTimeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
-                .addInterceptor(TwitterSign())
+                .addInterceptor(TwitterSignInterceptor())
 //                .addInterceptor(loggingInterceptor)
                 .build()
 

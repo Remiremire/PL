@@ -1,4 +1,4 @@
-package com.dbscarlet.mytest.core.authentication
+package com.dbscarlet.applib.twitterApiConfig
 
 import android.util.Base64
 import com.dbscarlet.common.util.logI
@@ -30,7 +30,7 @@ val DEF_OAUTH_TOKEN_SECRET = "mPDOh1dtvFcmQYLHRqrWKBG53GbcPkwyWZuvN9wCtzEog"
 var OAUTH_TOKEN = DEF_OAUTH_TOKEN
 var OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET
 
-class TwitterSign: Interceptor {
+class TwitterSignInterceptor: Interceptor {
     private val HMAC_SHA1_ALGORITHM = "HmacSHA1"
     private val UTF8 = Charset.forName("UTF-8")
     private val random = Random()

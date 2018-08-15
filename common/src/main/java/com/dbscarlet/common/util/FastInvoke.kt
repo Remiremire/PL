@@ -10,6 +10,10 @@ import android.widget.Toast
  */
 private val uiThreadHandler = Handler(Looper.getMainLooper())
 
+fun isUiThread(thread: Thread = Thread.currentThread()): Boolean {
+    return thread.name == Looper.getMainLooper().thread.name
+}
+
 fun runOnUiThread(delay: Long = 0, runnable: ()-> Unit) {
     if (delay <= 0) {
         uiThreadHandler.post(runnable)
@@ -19,7 +23,7 @@ fun runOnUiThread(delay: Long = 0, runnable: ()-> Unit) {
 }
 
 fun toastShort(text: String, context: Context = AppInfo.app) {
-    if (Thread.currentThread().name == Looper.getMainLooper().thread.name) {
+    if (isUiThread()) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     } else {
         runOnUiThread { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
@@ -27,7 +31,7 @@ fun toastShort(text: String, context: Context = AppInfo.app) {
 }
 
 fun toastLong(text: String, context: Context = AppInfo.app) {
-    if (Thread.currentThread().name == Looper.getMainLooper().thread.name) {
+    if (isUiThread()) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     } else {
         runOnUiThread { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }

@@ -9,15 +9,21 @@ import com.dbscarlet.common.dataResource.State
  */
 class AuthorizeRepository {
 
-
     fun requestLoginHtml(): LiveData<Resource<String>> {
         val liveData = object : LiveData<Resource<String>>(){
             override fun onActive() {
-                value = Resource(State.LOADING, msg = "正在加载")
+                val resource = Resource<String>(State.LOADING, msg = "正在加载")
+                value = resource
+            }
 
+            override fun onInactive() {
+
+            }
+
+            fun setResource(resource: Resource<String>) {
+                value = resource
             }
         }
         return liveData
     }
-
 }
