@@ -1,9 +1,9 @@
-package com.dbscarlet.applib.twitterApiConfig
+package com.dbscarlet.applib.twitterNetwork
 
 /**
  * Created by Daibing Wang on 2018/8/15.
  */
-class TwitterError {
+class TwitterErrorEntity {
     var errors: List<Error>? = null
 
     class Error {

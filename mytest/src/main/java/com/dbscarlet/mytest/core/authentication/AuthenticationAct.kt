@@ -9,10 +9,10 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
-import com.dbscarlet.applib.twitterApiConfig.DEF_OAUTH_TOKEN
-import com.dbscarlet.applib.twitterApiConfig.DEF_OAUTH_TOKEN_SECRET
-import com.dbscarlet.applib.twitterApiConfig.OAUTH_TOKEN
-import com.dbscarlet.applib.twitterApiConfig.OAUTH_TOKEN_SECRET
+import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN
+import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN_SECRET
+import com.dbscarlet.applib.twitterNetwork.OAUTH_TOKEN
+import com.dbscarlet.applib.twitterNetwork.OAUTH_TOKEN_SECRET
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.logI
 import com.dbscarlet.mytest.R

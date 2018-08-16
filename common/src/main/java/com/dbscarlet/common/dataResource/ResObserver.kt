@@ -6,7 +6,7 @@ import android.support.annotation.CallSuper
 /**
  * Created by Daibing Wang on 2018/7/16.
  */
-open class ResourceObserver<T>: Observer<Resource<T>> {
+open class ResObserver<T>: Observer<Resource<T>> {
     @CallSuper
     override fun onChanged(t: Resource<T>?) {
         when(t?.state) {

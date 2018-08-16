@@ -3,7 +3,7 @@ package com.dbscarlet.applib.contact
 /**
  * Created by Daibing Wang on 2018/8/14.
  */
-class TwitterApiUrl {
+class TwitterUrl {
     companion object {
         const val HOST = "https://api.twitter.com/"
 

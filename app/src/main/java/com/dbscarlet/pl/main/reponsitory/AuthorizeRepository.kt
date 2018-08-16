@@ -3,11 +3,17 @@ package com.dbscarlet.pl.main.reponsitory
 import android.arch.lifecycle.LiveData
 import com.dbscarlet.common.dataResource.Resource
 import com.dbscarlet.common.dataResource.State
+import com.dbscarlet.pl.main.webService.AuthorizeWebService
+import javax.inject.Inject
 
 /**
  * Created by Daibing Wang on 2018/8/14.
  */
-class AuthorizeRepository {
+class AuthorizeRepository
+    @Inject
+    constructor(
+            val webService: AuthorizeWebService
+    ){
 
     fun requestLoginHtml(): LiveData<Resource<String>> {
         val liveData = object : LiveData<Resource<String>>(){

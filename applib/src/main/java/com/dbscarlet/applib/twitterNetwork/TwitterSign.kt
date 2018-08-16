@@ -1,4 +1,4 @@
-package com.dbscarlet.applib.twitterApiConfig
+package com.dbscarlet.applib.twitterNetwork
 
 import android.util.Base64
 import com.dbscarlet.common.util.logI

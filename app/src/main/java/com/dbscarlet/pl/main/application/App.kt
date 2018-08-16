@@ -2,7 +2,7 @@ package com.dbscarlet.pl.main.application
 
 import android.content.Context
 import com.dbscarlet.applib.contact.SPSaveKey
-import com.dbscarlet.applib.twitterApiConfig.*
+import com.dbscarlet.applib.twitterNetwork.*
 import com.dbscarlet.common.basic.CommonApp
 import com.dbscarlet.pl.main.di.DaggerAppComponent
 import com.lzy.okgo.OkGo
