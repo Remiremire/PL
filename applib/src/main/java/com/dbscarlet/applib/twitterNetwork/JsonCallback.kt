@@ -25,7 +25,7 @@ abstract class JsonCallback<T>: BaseCallback<T>() {
         try {
             return gson.fromJson<T>(string, object :TypeToken<T>(){}.type)
         } catch (e: Exception) {
-            throw TwitterApiException(NetworkError.PARSE_ERROR, "网络响应异常")
+            throw TwitterApiException(NetworkError.PARSE_ERROR)
         }
     }
 }
