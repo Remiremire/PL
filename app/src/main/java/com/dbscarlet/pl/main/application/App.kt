@@ -31,7 +31,7 @@ class App : CommonApp() {
     }
 
     private fun initNetwork() {
-        val sp = getSharedPreferences(SPSaveKey.SHAREPREFRENCE_NAME, Context.MODE_PRIVATE)
+        val sp = getSharedPreferences(SPSaveKey.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val oauthToken = sp.getString(SPSaveKey.OAUTH_TOKEN, null)
         val secret = sp.getString(SPSaveKey.OAUTH_TOKEN_SECRET, null)
         OAUTH_TOKEN = if (oauthToken.isNullOrEmpty()) DEF_OAUTH_TOKEN else oauthToken

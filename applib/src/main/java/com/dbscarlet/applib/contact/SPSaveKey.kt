@@ -5,7 +5,7 @@ package com.dbscarlet.applib.contact
  */
 class SPSaveKey private constructor() {
     companion object {
-        const val SHAREPREFRENCE_NAME = "dbscarlet_pl"
+        const val SHARED_PREFERENCES_NAME = "dbscarlet_pl"
         const val OAUTH_TOKEN = "oauth_token"
         const val OAUTH_TOKEN_SECRET = "oauth_secret"
     }
