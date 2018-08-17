@@ -1,0 +1,13 @@
+package com.dbscarlet.applib.twitterNetwork
+
+/**
+ * Created by Daibing Wang on 2018/8/17.
+ */
+val CONSUMER_SECRET = "KoTFoWKEuDALjbxx0qmArc4qdhRATaY2bCuKfQuLqOhnSK6Jqr"
+val CONSUMER_KEY = "PUL25DBIvY54psfJ5Mqhwvwc2"
+val SIGNATURE_METHOD = "HMAC-SHA1"
+val OAUTH_VERSION = "1.0"
+val DEF_OAUTH_TOKEN = "744155165423509505-SypL6sBZhGM0AZi3v2udHeY4f6Dd95r"
+val DEF_OAUTH_TOKEN_SECRET = "mPDOh1dtvFcmQYLHRqrWKBG53GbcPkwyWZuvN9wCtzEog"
+var OAUTH_TOKEN = DEF_OAUTH_TOKEN
+var OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET

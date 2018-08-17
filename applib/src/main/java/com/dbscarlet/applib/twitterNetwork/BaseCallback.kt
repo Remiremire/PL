@@ -11,15 +11,19 @@ import com.lzy.okgo.model.Response
  */
 abstract class BaseCallback<T>: AbsCallback<T>() {
 
-    override fun onError(response: Response<T>?) {
+    final override fun onError(response: Response<T>?) {
         when {
             response == null -> onFailed(NetworkError.NO_RESPONSE, null)
             response.exception is TwitterApiException -> {
                 val twException = response.exception as TwitterApiException
                 onFailed(twException.errorCode, twException.errorMsg, twException)
             }
-            else -> when(response.code()) {
-                in 500..599 -> onFailed(response.code(), "服务器繁忙", response.exception)
+            else -> {
+                when(response.code()) {
+                    in 500..599 -> onFailed(response.code(), "服务器繁忙", response.exception)
+                    in 400..499 -> onFailed(response.code(), "连接超时", response.exception)
+                    else -> onException(NetworkError.UNKNOWN, response.exception)
+                }
             }
         }
     }
@@ -55,6 +59,14 @@ abstract class BaseCallback<T>: AbsCallback<T>() {
     }
 
     open fun onFailed(code: Int, msg: String, throwable: Throwable?) {
+        logE(msg, "TwitterApi", throwable)
+    }
+
+    private fun onException(error: NetworkError, throwable: Throwable?) {
+        onException(error.code, error.msg, throwable)
+    }
+
+    open fun onException(code: Int, msg: String, throwable: Throwable?) {
         logE(msg, "TwitterApi", throwable)
     }
 }
