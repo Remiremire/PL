@@ -6,7 +6,7 @@ import android.support.annotation.CallSuper
 /**
  * Created by Daibing Wang on 2018/7/16.
  */
-open class ResObserver<T>: Observer<Resource<T>> {
+abstract class ResObserver<T>: Observer<Resource<T>> {
     @CallSuper
     override fun onChanged(t: Resource<T>?) {
         when(t?.state) {
@@ -18,11 +18,11 @@ open class ResObserver<T>: Observer<Resource<T>> {
         }
     }
 
-    open fun onSuccess(res: Resource<T>, data: T){}
+    abstract fun onSuccess(res: Resource<T>, data: T)
 
     open fun onLoading(res: Resource<T>, message: String?, progress: Double?, total: Double?) {}
 
     open fun onFailed(res: Resource<T>, code: Int?, message: String?){}
 
-    open fun onException(res: Resource<T>, cause: Exception?) {}
+    open fun onException(res: Resource<T>, cause: Throwable?) {}
 }
