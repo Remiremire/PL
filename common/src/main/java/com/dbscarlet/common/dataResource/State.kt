@@ -19,5 +19,9 @@ enum class State {
     /**
      * 获取数据异常，（比如网络超时、解析报错）
      */
-    EXCEPTION
+    EXCEPTION,
+    /**
+     * 已取消
+     */
+    Cancel
 }

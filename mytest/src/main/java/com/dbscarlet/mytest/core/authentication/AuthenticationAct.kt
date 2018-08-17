@@ -6,13 +6,9 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.Path
-import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN
-import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN_SECRET
-import com.dbscarlet.applib.twitterNetwork.OAUTH_TOKEN
-import com.dbscarlet.applib.twitterNetwork.OAUTH_TOKEN_SECRET
+import com.dbscarlet.applib.twitterNetwork.*
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.logI
 import com.dbscarlet.mytest.R
@@ -27,15 +23,18 @@ import kotlinx.android.synthetic.main.act_authentication.*
  */
 @Route(path = Path.TEST.AUTHENTICATION)
 class AuthenticationAct: CommonActivity() {
-    var authenticityToken: String? = null
+
+    private var token: String? = null
+
+    private var secret: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_authentication)
         btn_default_token.setOnClickListener {
-            OAUTH_TOKEN = DEF_OAUTH_TOKEN
-            OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET
             OkGo.get<String>("https://api.twitter.com/oauth/request_token")
+                    .headers(HEADER_OAUTH_TOKEN, DEF_OAUTH_TOKEN)
+                    .headers(HEADER_OAUTH_SECRET, DEF_OAUTH_TOKEN_SECRET)
                     .execute(object : StringCallback(){
                         override fun onSuccess(response: Response<String>?) {
                             val body = response?.body()
@@ -50,8 +49,8 @@ class AuthenticationAct: CommonActivity() {
                                     }
                                 }
                                 if (resultMap["oauth_callback_confirmed"] == "true") {
-                                    OAUTH_TOKEN = resultMap["oauth_token"] ?: DEF_OAUTH_TOKEN
-                                    OAUTH_TOKEN_SECRET = resultMap["oauth_token_secret"] ?: DEF_OAUTH_TOKEN_SECRET
+                                    token = resultMap["oauth_token"]
+                                    secret = resultMap["oauth_token_secret"]
                                 }
                             }
                         }
@@ -63,48 +62,20 @@ class AuthenticationAct: CommonActivity() {
 
         }
         btn_ask_user.setOnClickListener {
+            if (token.isNullOrEmpty() || secret.isNullOrEmpty()) {
+                return@setOnClickListener
+            }
             OkGo.get<String>("https://api.twitter.com/oauth/authorize")
+                    .headers(HEADER_OAUTH_TOKEN, token)
+                    .headers(HEADER_OAUTH_SECRET, secret)
                     .params("oauth_token", OAUTH_TOKEN)
                     .execute(object : StringCallback(){
                         override fun onSuccess(response: Response<String>) {
                             val body = response.body()
-                            parseAuthenticityToken(body)
                             showWebDialog(body)
                         }
                     })
         }
-        btn_login.setOnClickListener {
-            if (authenticityToken.isNullOrEmpty() ||
-                    et_email.text.isNullOrEmpty() ||
-                    et_psw.text.isNullOrEmpty()) {
-                Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            OkGo.post<String>("https://api.twitter.com/oauth/authorize")
-                    .params("authenticity_token", authenticityToken)
-                    .params("session[username_or_email]", et_email.text.toString())
-                    .params("session[password]", et_psw.text.toString())
-                    .execute(object : StringCallback(){
-                        override fun onSuccess(response: Response<String>?) {
-                            logI("login result\n${response?.body()}")
-                        }
-                    })
-        }
-    }
-
-    private fun parseAuthenticityToken(html: String) {
-        val nameAttrRegex = "name\\s*?=\\s*?\"authenticity_token\""
-        val valueAttrRegex = "value\\s*?=\\s*?\"[0-9a-zA-Z_\\-]+\""
-        val tokenLabel = Regex("<[^<>]*?$nameAttrRegex[^<>]*?$valueAttrRegex[^<>]*?>")
-                .find(html)?.value
-        if (tokenLabel == null) {
-            logI("match nothing")
-            return
-        }
-        val valueAttr = Regex(valueAttrRegex).find(tokenLabel)?.value
-        val token = valueAttr?.subSequence(valueAttr.indexOf("\"") + 1, valueAttr.lastIndexOf("\""))
-        logI("find token:  $token")
-        if (token != null) authenticityToken = token.toString()
     }
 
     private fun showWebDialog(html: String) {

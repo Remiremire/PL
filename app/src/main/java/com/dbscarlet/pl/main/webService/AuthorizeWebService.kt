@@ -10,13 +10,15 @@ import com.lzy.okgo.request.base.Request
  */
 class AuthorizeWebService {
     fun requestToken(): Request<Map<String, String>, *> {
-        OAUTH_TOKEN = DEF_OAUTH_TOKEN
-        OAUTH_TOKEN_SECRET = DEF_OAUTH_TOKEN_SECRET
         return OkGo.post<Map<String, String>>(TwitterUrl.REQUEST_TOKEN)
+                .headers(HEADER_OAUTH_TOKEN, DEF_OAUTH_TOKEN)
+                .headers(HEADER_OAUTH_SECRET, DEF_OAUTH_TOKEN_SECRET)
     }
 
-    fun authorize(): Request<String, *> {
+    fun authorize(token: String, secret: String): Request<String, *> {
         return OkGo.get<String>(TwitterUrl.AUTHORIZE)
+                .headers(HEADER_OAUTH_TOKEN, token)
+                .headers(HEADER_OAUTH_SECRET, secret)
                 .params("oauth_token", OAUTH_TOKEN)
     }
 

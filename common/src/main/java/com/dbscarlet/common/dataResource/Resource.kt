@@ -28,5 +28,9 @@ class Resource<T>(
         fun <T> success(data: T): Resource<T> {
             return Resource(State.SUCCESS, data = data)
         }
+
+        fun <T> cancel(): Resource<T> {
+            return Resource(State.Cancel)
+        }
     }
 }

@@ -44,6 +44,7 @@ fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
 
         override fun onInactive() {
             OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
+            value = Resource.cancel()
         }
     }
 }
@@ -78,6 +79,7 @@ fun Request<String?, *>.toStringLiveData(): LiveData<Resource<String?>> {
 
         override fun onInactive() {
             OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
+            value = Resource.cancel()
         }
     }
 }
@@ -116,6 +118,7 @@ fun Request<Map<String, String>, *>.toFormDataLiveData(): LiveData<Resource<Map<
 
         override fun onInactive() {
             OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
+            value = Resource.cancel()
         }
     }
 }

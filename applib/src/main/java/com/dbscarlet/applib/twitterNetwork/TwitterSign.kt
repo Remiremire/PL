@@ -36,8 +36,11 @@ class TwitterSignInterceptor: Interceptor {
      * 对请求添加基础参数并签名
      */
     private fun signRequest(request: Request): Request {
-        //签名key
-        val signKey = "$CONSUMER_SECRET&$OAUTH_TOKEN_SECRET"
+        val token: String? = request.header(HEADER_OAUTH_TOKEN)
+        val secret: String? = request.header(HEADER_OAUTH_SECRET)
+
+        val finalToken = if (token != null && secret != null) token else OAUTH_TOKEN ?: DEF_OAUTH_TOKEN
+        val finalSecret = if (token != null && secret != null) secret else OAUTH_TOKEN_SECRET ?: DEF_OAUTH_TOKEN_SECRET
 
         val paramList = mutableListOf<String>()
         //原始参数
@@ -46,7 +49,7 @@ class TwitterSignInterceptor: Interceptor {
         getBodyString(request)?.split('&')?.forEach{ paramList.add(it) }
 
         //添加基础参数
-        val baseParams = createBaseParams()
+        val baseParams = createBaseParams(finalToken)
         baseParams.forEach{k,v -> paramList.add("$k=$v")}
 
         //参数排序，然后组成一个字符串
@@ -59,10 +62,14 @@ class TwitterSignInterceptor: Interceptor {
         val encodeUrl = URLEncoder.encode(url.toString(), "UTF-8")
         val signText = "${request.method().toUpperCase()}&$encodeUrl&${URLEncoder.encode(paramStringBuilder.toString(), "UTF-8")}"
         //生成签名oauth_signature
+        //签名key
+        val signKey = "$CONSUMER_SECRET&$finalSecret"
         val signature = encodeHMAC(signText, signKey)
 
         //用原始url和基础参数、签名生成新url
         return request.newBuilder()
+                .removeHeader(HEADER_OAUTH_TOKEN)
+                .removeHeader(HEADER_OAUTH_SECRET)
                 .addHeader("Authorization", createAuthorizationBody(baseParams, signature))
                 .build()
 
@@ -84,12 +91,12 @@ class TwitterSignInterceptor: Interceptor {
     /**
      * 生成基础参数
      */
-    private fun createBaseParams(): Map<String, String> {
+    private fun createBaseParams(authToken: String): Map<String, String> {
         val map = mutableMapOf<String, String>()
         map["oauth_consumer_key"] = CONSUMER_KEY
         map["oauth_signature_method"] = SIGNATURE_METHOD
         map["oauth_version"] = OAUTH_VERSION
-        map["oauth_token"] = OAUTH_TOKEN
+        map["oauth_token"] = authToken
         val randomString = randomString()
         val timeStamp = System.currentTimeMillis() / 1000
         map["oauth_nonce"] = randomString
