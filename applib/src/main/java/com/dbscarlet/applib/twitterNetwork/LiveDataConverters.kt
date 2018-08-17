@@ -11,9 +11,9 @@ import com.lzy.okgo.request.base.Request
  */
 fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
     val request: Request<T, *> = this
+    val tag = request.tag ?: request.tag(request)
     return object: LiveData<Resource<T>>() {
         override fun onActive() {
-            request.tag(request)
             request.execute(object: JsonCallback<T>(){
                 override fun onStart(request: Request<T, out Request<Any, Request<*, *>>>?) {
                     super.onStart(request)
@@ -23,7 +23,7 @@ fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
                 override fun onSuccess(response: Response<T>?) {
                     val data = response?.body()
                     value = if (data == null) {
-                        Resource.failed(msg = "服务无响应")
+                        Resource.failed(response?.code(), "服务无响应", response?.exception)
                     } else {
                         Resource.success(data)
                     }
@@ -43,20 +43,79 @@ fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
         }
 
         override fun onInactive() {
-            OkGo.cancelTag(OkGo.getInstance().okHttpClient, request)
+            OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
         }
     }
 }
 
-fun Request<String, *>.toStringLiveData(): LiveData<Resource<String>> {
+fun Request<String?, *>.toStringLiveData(): LiveData<Resource<String?>> {
     val request = this
-    return object : LiveData<Resource<String>>() {
+    val tag = request.tag ?: request.tag(request)
+    return object : LiveData<Resource<String?>>() {
         override fun onActive() {
+            request.execute(object : StringCallback(){
+                override fun onStart(request: Request<String?, out Request<Any, Request<*, *>>>?) {
+                    super.onStart(request)
+                    value = Resource.loading("加载中...")
+                }
 
+                override fun onSuccess(response: Response<String?>?) {
+                    val body = response?.body()
+                    value = Resource.success(body)
+                }
+
+                override fun onException(code: Int, msg: String, throwable: Throwable?) {
+                    super.onException(code, msg, throwable)
+                    value = Resource.exception(code = code, msg = msg, cause = throwable)
+                }
+
+                override fun onFailed(code: Int, msg: String, throwable: Throwable?) {
+                    super.onFailed(code, msg, throwable)
+                    value = Resource.failed(code = code, msg = msg, cause = throwable)
+                }
+            })
         }
 
         override fun onInactive() {
-            OkGo.cancelTag(OkGo.getInstance().okHttpClient, request)
+            OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
+        }
+    }
+}
+
+fun Request<Map<String, String>, *>.toFormDataLiveData(): LiveData<Resource<Map<String, String>>> {
+    val request = this
+    val tag = request.tag ?: request.tag(request)
+    return object : LiveData<Resource<Map<String, String>>>() {
+        override fun onActive() {
+            request.execute(object : FormDataCallback(){
+                override fun onStart(request: Request<Map<String, String>, out Request<Any, Request<*, *>>>?) {
+                    super.onStart(request)
+                    value = Resource.loading("加载中...")
+                }
+
+                override fun onSuccess(response: Response<Map<String, String>>?) {
+                    val body = response?.body()
+                    value = if (body == null) {
+                        Resource.failed(response?.code(), "服务无响应", response?.exception)
+                    } else {
+                        Resource.success(body)
+                    }
+                }
+
+                override fun onException(code: Int, msg: String, throwable: Throwable?) {
+                    super.onException(code, msg, throwable)
+                    value = Resource.exception(code = code, msg = msg, cause = throwable)
+                }
+
+                override fun onFailed(code: Int, msg: String, throwable: Throwable?) {
+                    super.onFailed(code, msg, throwable)
+                    value = Resource.failed(code = code, msg = msg, cause = throwable)
+                }
+            })
+        }
+
+        override fun onInactive() {
+            OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
         }
     }
 }
