@@ -22,8 +22,10 @@ class AuthorizeWebService {
                 .params("oauth_token", OAUTH_TOKEN)
     }
 
-    fun accessToken(pinCode: String): Request<String, *> {
-        return OkGo.post<String>(TwitterUrl.ACCESS_TOKEN)
+    fun accessToken(pinCode: String, token: String, secret: String): Request<Map<String, String>, *> {
+        return OkGo.post<Map<String, String>>(TwitterUrl.ACCESS_TOKEN)
+                .headers(HEADER_OAUTH_TOKEN, token)
+                .headers(HEADER_OAUTH_SECRET, secret)
                 .params("oauth_verifier", pinCode)
     }
 }

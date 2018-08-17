@@ -1,6 +1,7 @@
 package com.dbscarlet.applib.twitterNetwork
 
 import android.arch.lifecycle.LiveData
+import com.dbscarlet.applib.NetworkError
 import com.dbscarlet.common.dataResource.Resource
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -49,10 +50,10 @@ fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
     }
 }
 
-fun Request<String?, *>.toStringLiveData(): LiveData<Resource<String?>> {
+fun Request<String, *>.toStringLiveData(): LiveData<Resource<String>> {
     val request = this
     val tag = request.tag ?: request.tag(request)
-    return object : LiveData<Resource<String?>>() {
+    return object : LiveData<Resource<String>>() {
         override fun onActive() {
             request.execute(object : StringCallback(){
                 override fun onStart(request: Request<String?, out Request<Any, Request<*, *>>>?) {
@@ -62,7 +63,12 @@ fun Request<String?, *>.toStringLiveData(): LiveData<Resource<String?>> {
 
                 override fun onSuccess(response: Response<String?>?) {
                     val body = response?.body()
-                    value = Resource.success(body)
+                    value = if (body == null) {
+                        Resource.failed(NetworkError.NO_RESPONSE_BODY.code,
+                                NetworkError.NO_RESPONSE_BODY.msg)
+                    } else {
+                        Resource.success(body)
+                    }
                 }
 
                 override fun onException(code: Int, msg: String, throwable: Throwable?) {
@@ -74,6 +80,48 @@ fun Request<String?, *>.toStringLiveData(): LiveData<Resource<String?>> {
                     super.onFailed(code, msg, throwable)
                     value = Resource.failed(code = code, msg = msg, cause = throwable)
                 }
+
+            })
+        }
+
+        override fun onInactive() {
+            OkGo.cancelTag(OkGo.getInstance().okHttpClient, tag)
+            value = Resource.cancel()
+        }
+    }
+}
+
+fun Request<String?, *>.toNullableStringLiveData(): LiveData<Resource<String?>> {
+    val request = this
+    val tag = request.tag ?: request.tag(request)
+    return object : LiveData<Resource<String?>>() {
+        override fun onActive() {
+            request.execute(object : StringCallback(){
+                override fun onStart(request: Request<String?, out Request<Any, Request<*, *>>>?) {
+                    super.onStart(request)
+                    value = Resource.loading("加载中...")
+                }
+
+                override fun onSuccess(response: Response<String?>?) {
+                    value = if (response == null) {
+                        Resource.failed(NetworkError.NO_RESPONSE.code,
+                                NetworkError.NO_RESPONSE.msg)
+                    } else {
+                        Resource.success(response.body())
+                    }
+
+                }
+
+                override fun onException(code: Int, msg: String, throwable: Throwable?) {
+                    super.onException(code, msg, throwable)
+                    value = Resource.exception(code = code, msg = msg, cause = throwable)
+                }
+
+                override fun onFailed(code: Int, msg: String, throwable: Throwable?) {
+                    super.onFailed(code, msg, throwable)
+                    value = Resource.failed(code = code, msg = msg, cause = throwable)
+                }
+
             })
         }
 

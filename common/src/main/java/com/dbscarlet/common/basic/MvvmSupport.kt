@@ -29,3 +29,11 @@ fun <T, L: LiveData<T>> L.publisher(lifecycleOwner: LifecycleOwner): Publisher<T
 fun <T, R: Publisher<T>> R.liveData(): LiveData<T> {
     return LiveDataReactiveStreams.fromPublisher(this)
 }
+
+fun <T, R> LiveData<T>.map(converter: (T?)-> R): LiveData<R> {
+    val result = MutableLiveData<R>()
+    observeForever {
+        result.postValue(converter.invoke(it))
+    }
+    return result
+}
