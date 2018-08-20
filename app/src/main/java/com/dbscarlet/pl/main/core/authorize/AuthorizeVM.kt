@@ -12,33 +12,100 @@ import javax.inject.Inject
  * Created by Daibing Wang on 2018/8/17.
  */
 class AuthorizeVM
-    @Inject constructor() : BaseVM(){
-    @Inject
-    lateinit var repository: AuthorizeRepository
-    var token: String? = null
-    var secret: String? = null
+    @Inject constructor(
+            private val repository: AuthorizeRepository
+    ) : BaseVM(){
+    private var token: String? = null
+    private var secret: String? = null
 
     fun getLoginHtml(): LiveData<Resource<String>> {
-        val resultLiveData = MutableLiveData<Resource<String>>()
-        resultLiveData.value = Resource.loading("加载中...")
+        val liveData = MutableLiveData<Resource<String>>()
+        liveData.value = Resource.loading("加载中...")
+        val token = this.token
+        val secret = this.secret
+        if (token == null || secret == null) {
+            requestToken(liveData)
+        } else {
+            authorize(token, secret, liveData)
+        }
+        return liveData
+    }
+
+    private fun authorize(token: String, secret: String, liveData: MutableLiveData<Resource<String>>) {
+        repository.getLoginHtml(token, secret)
+                .observeForever(object : ResObserver<String>(){
+                    override fun onSuccess(res: Resource<String>, data: String) {
+                        liveData.value = Resource.success(data)
+                    }
+
+                    override fun onFailed(res: Resource<String>, code: Int?, msg: String?, cause: Throwable?) {
+                        liveData.value = Resource.failed(code, msg, cause)
+                    }
+
+                    override fun onException(res: Resource<String>, code: Int?, msg: String?, cause: Throwable?) {
+                        liveData.value = Resource.exception(code, msg, cause)
+                    }
+                })
+    }
+
+    private fun requestToken(liveData: MutableLiveData<Resource<String>>) {
         repository.requestToken()
-                .observeForever(object : ResObserver<Map<String, String>>(){
+                .observeForever(object : ResObserver<Map<String, String>>() {
                     override fun onSuccess(res: Resource<Map<String, String>>, data: Map<String, String>) {
-                        token = data["oauth_token"]
-                        secret = data["oauth_token_secret"]
+                        val token = data["oauth_token"]
+                        val secret = data["oauth_token_secret"]
+
                         if (token == null || secret == null) {
-                            resultLiveData.value = Resource.failed(msg = "服务无响应")
+                            liveData.value = Resource.failed(msg = "服务无响应")
+                        } else {
+                            this@AuthorizeVM.token = token
+                            this@AuthorizeVM.secret = secret
+                            authorize(token, secret, liveData)
                         }
                     }
 
                     override fun onFailed(res: Resource<Map<String, String>>, code: Int?, msg: String?, cause: Throwable?) {
-                        resultLiveData.value = Resource.failed(code, msg, cause)
+                        liveData.value = Resource.failed(code, msg, cause)
                     }
 
                     override fun onException(res: Resource<Map<String, String>>, code: Int?, msg: String?, cause: Throwable?) {
-                        resultLiveData.value = Resource.exception(code, msg, cause)
+                        liveData.value = Resource.exception(code, msg, cause)
                     }
                 })
-        return resultLiveData
     }
+
+    fun login(pinCode: String) : LiveData<Resource<Unit>> {
+        val liveData = MutableLiveData<Resource<Unit>>()
+        val token = this.token
+        val secret = this.secret
+        if (token == null || secret == null) {
+            liveData.value = Resource.failed(msg = "请求已过期")
+            return liveData
+        }
+        liveData.value = Resource.loading("加载中...")
+        repository.accessToken(pinCode, token, secret)
+                .observeForever(object : ResObserver<Map<String, String>>(){
+                    override fun onSuccess(res: Resource<Map<String, String>>, data: Map<String, String>) {
+                        val oauthToken = data["oauth_token"]
+                        val oauthTokenSecret = data["oauth_token_secret"]
+                        if (oauthToken == null || oauthTokenSecret == null ||
+                                oauthToken.isNullOrEmpty() || oauthTokenSecret.isNullOrEmpty()) {
+                            liveData.value = Resource.failed(msg = "授权失败")
+                        } else {
+                            liveData.value = Resource.success(Unit)
+                        }
+                    }
+
+                    override fun onFailed(res: Resource<Map<String, String>>, code: Int?, msg: String?, cause: Throwable?) {
+                        liveData.value = Resource.failed(code, msg, cause)
+                    }
+
+                    override fun onException(res: Resource<Map<String, String>>, code: Int?, msg: String?, cause: Throwable?) {
+                        liveData.value = Resource.exception(code, msg, cause)
+                    }
+                })
+        return liveData
+
+    }
+
 }

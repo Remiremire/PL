@@ -1,6 +1,6 @@
 package com.dbscarlet.pl.main.di
 
-import com.dbscarlet.mytest.core.authentication.AuthenticationAct
+import com.dbscarlet.pl.main.core.authorize.AuthorizeAct
 import com.dbscarlet.pl.main.core.home.HomeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -14,5 +14,5 @@ abstract class AppInjectors {
     abstract fun homeActivity(): HomeActivity
 
     @ContributesAndroidInjector
-    abstract fun ahthorizeAct(): AuthenticationAct
+    abstract fun ahthorizeAct(): AuthorizeAct
 }

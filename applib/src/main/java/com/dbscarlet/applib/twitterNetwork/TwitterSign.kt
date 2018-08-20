@@ -1,7 +1,6 @@
 package com.dbscarlet.applib.twitterNetwork
 
 import android.util.Base64
-import com.dbscarlet.common.util.logI
 import com.lzy.okgo.utils.OkLogger
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -57,7 +56,6 @@ class TwitterSignInterceptor: Interceptor {
         val paramStringBuilder = StringBuilder()
         paramList.forEach { paramStringBuilder.append("$it&") }
         paramStringBuilder.replace(paramStringBuilder.length - 1, paramStringBuilder.length, "")
-        logI("sign Params:\n$paramStringBuilder")
         //用请求方法、url、参数，构成被签名text
         val encodeUrl = URLEncoder.encode(url.toString(), "UTF-8")
         val signText = "${request.method().toUpperCase()}&$encodeUrl&${URLEncoder.encode(paramStringBuilder.toString(), "UTF-8")}"

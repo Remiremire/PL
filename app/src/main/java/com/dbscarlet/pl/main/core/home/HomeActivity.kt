@@ -22,5 +22,10 @@ class HomeActivity : CommonActivity() {
                     .withInt("patchCode", BuildConfig.TINKER_PATCH_VERSION)
                     .navigation(this)
         }
+        tv_hello.setOnClickListener {
+            ARouter.getInstance()
+                    .build(Path.APP.AUTHORIZE)
+                    .navigation(this)
+        }
     }
 }

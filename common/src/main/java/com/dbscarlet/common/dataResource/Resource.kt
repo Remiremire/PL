@@ -3,7 +3,7 @@ package com.dbscarlet.common.dataResource
 /**
  * Created by Daibing Wang on 2018/7/16.
  */
-class Resource<T>(
+class Resource<T> private constructor(
         var state: State,
         var code: Int? = null,
         var msg: String? = null,
