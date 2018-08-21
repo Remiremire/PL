@@ -1,4 +1,4 @@
-package com.dbscarlet.mytest.core.curve;
+package com.dbscarlet.applib.curve;
 
 import android.content.Context;
 import android.graphics.Canvas;

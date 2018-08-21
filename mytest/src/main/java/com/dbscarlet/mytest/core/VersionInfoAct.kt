@@ -9,15 +9,15 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.curve.CurveLine
+import com.dbscarlet.applib.curve.CurveView
+import com.dbscarlet.applib.curve.XAxes
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
 import com.dbscarlet.common.util.InstallResult
 import com.dbscarlet.common.util.TinkerUtil
 import com.dbscarlet.mytest.R
-import com.dbscarlet.mytest.core.curve.CurveLine
-import com.dbscarlet.mytest.core.curve.CurveView
-import com.dbscarlet.mytest.core.curve.XAxes
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*
 import java.io.File
@@ -92,12 +92,12 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         return result
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
             101->{
                 if (resultCode == Activity.RESULT_OK) {
-                    val patchFile = data?.getSerializableExtra("patchFile") as File
+                    val patchFile = data.getSerializableExtra("patchFile") as File
                     TinkerUtil.installTinkerPatch(this, patchFile.absolutePath)
                 }
             }

@@ -1,4 +1,4 @@
-package com.dbscarlet.mytest.core.curve;
+package com.dbscarlet.applib.curve;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -81,7 +81,7 @@ public class CurveLine {
     }
 
     void compute(float left, float top, float right, float bottom,
-                 float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
+                        float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
         computeLine(left, top, right, bottom, minValueLimit, maxValueLimit, xAxesStep, LINE_SMOOTHNESS);
     }
 
@@ -271,7 +271,7 @@ public class CurveLine {
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
         }
     }
-
+    
     public static class Point{
         public float value;
         public boolean show;
@@ -299,5 +299,6 @@ public class CurveLine {
             this.text = text;
         }
     }
+
 
 }
