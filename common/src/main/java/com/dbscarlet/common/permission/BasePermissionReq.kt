@@ -16,7 +16,7 @@ abstract class BasePermissionReq(requestCode: Int) : PermissionRequest(requestCo
     private var showRationale: BooleanArray? = null
     protected abstract val activity: Activity
 
-    override fun askPermission() {
+    final override fun askPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val len = permissions.size
             val permissionArray = arrayOfNulls<String>(len)
@@ -29,14 +29,14 @@ abstract class BasePermissionReq(requestCode: Int) : PermissionRequest(requestCo
         }
     }
 
-    override fun refused() {
+    final override fun refused() {
         runOnUiThread {
             onRequestEnd()
             onRefused?.invoke(permissions.filter {!checkPermission(it)})
         }
     }
 
-    override fun execute() {
+    final override fun execute() {
         if (checkPermissionList(permissions)) {
             allowed()
         } else {
@@ -58,14 +58,14 @@ abstract class BasePermissionReq(requestCode: Int) : PermissionRequest(requestCo
         }
     }
 
-    override fun goSetting() {
+    final override fun goSetting() {
         val activity = activity
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.fromParts("package", activity.packageName, null)
         activity.startActivityForResult(intent, requestCode)
     }
 
-    override fun cancel() {
+    final override fun cancel() {
         refused()
     }
 
