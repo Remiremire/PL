@@ -44,7 +44,7 @@ class FindPatchAct: CommonActivity() {
             updateFileList()
         }
         requestPermissions(102)
-                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .onExplain {
                     Toast.makeText(this, "需要存储权限", Toast.LENGTH_SHORT).show()
                     it.askPermission()
@@ -54,19 +54,19 @@ class FindPatchAct: CommonActivity() {
                             .setNegativeButton("取消") { dialog, which -> it.cancel() }
                             .setPositiveButton("确定"){dialog, which -> it.goSetting()}
                             .show()
-                }.onAllowed {
-                    fileStack.push(FileUtil.getSdRootDir())
-                    updateFileList()
                 }.onRefused {
                     finish()
-                }.request()
+                }.execute {
+                    fileStack.push(FileUtil.getSdRootDir())
+                    updateFileList()
+                }
 
-    }
+        }
 
     private fun updateFileList() {
         requestPermissions(103)
-                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .onAllowed {
+                .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .execute {
                     fileList.clear()
                     fileList.addAll(fileStack.peek().listFiles())
                     fileList.sortWith(Comparator<File> {
@@ -80,7 +80,7 @@ class FindPatchAct: CommonActivity() {
                         }
                     })
                     adapter.notifyDataSetChanged()
-                }.request()
+                }
     }
 
     override fun onBackPressed() {
