@@ -27,6 +27,7 @@ public class CurveLine {
     private Paint textPaint, pathPaint;
     private boolean canSelect = true;
     private boolean visible = true;
+    private float lineLeftOffset = 0;
 
     public CurveLine(Context context, int lineColor) {
         this.lineColor = lineColor;
@@ -83,6 +84,10 @@ public class CurveLine {
     void compute(float left, float top, float right, float bottom,
                         float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
         computeLine(left, top, right, bottom, minValueLimit, maxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+    }
+
+    public void setLineLeftOffset(float offset) {
+        lineLeftOffset = offset;
     }
 
     private void computeLine(float left, float top, float right, float bottom,
@@ -231,7 +236,6 @@ public class CurveLine {
         float maxValue;
         float minValue;
         float xAxesStep;
-        int startIndex = 0;
 
         public Computer(DisplayMetrics displayMetrics) {
             this.displayMetrics = displayMetrics;
@@ -250,7 +254,7 @@ public class CurveLine {
         }
 
         private void computePoint(Point point, int index) {
-            point.x = left + xAxesStep * (index + startIndex);
+            point.x = left + xAxesStep * (index + lineLeftOffset);
             point.y = top + (bottom - top) * ((maxValue - point.value) / (maxValue - minValue));
             if (TextUtils.isEmpty(point.text)) return;
             point.textWidth = textPaint.measureText(point.text);

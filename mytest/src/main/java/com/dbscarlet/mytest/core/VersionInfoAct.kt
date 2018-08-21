@@ -1,10 +1,14 @@
 package com.dbscarlet.mytest.core
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -67,7 +71,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         xAxes.setLabels(labels)
         curve_view.setXAxes(xAxes)
         curve_view.setOnSelectPointListener(CurveView.ShowLastSelectPointListener())
-        curve_view.setValueLimit(0f, 10f)
+        curve_view.setValueLimit(0f, 12f)
         val curveLineList = mutableListOf<CurveLine>()
         curve_view.setCurveLine(curveLineList)
         val redLine = CurveLine(this, Color.parseColor("#FF7875"))
@@ -79,13 +83,47 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         redLine.pointList = randomPoint()
         blueLine.pointList = randomPoint()
         yellowLine.pointList = randomPoint()
+        redLine.setLineLeftOffset(-1f)
+        blueLine.setLineLeftOffset(-1f)
+        yellowLine.setLineLeftOffset(-1f)
         curve_view.notifyChange()
+
+        val random = Random()
+        val handler = object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message?) {
+                super.handleMessage(msg)
+                redLine.pointList.removeAt(0)
+                blueLine.pointList.removeAt(0)
+                yellowLine.pointList.removeAt(0)
+                redLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
+                blueLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
+                yellowLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
+                redLine.setLineLeftOffset(-1f)
+                blueLine.setLineLeftOffset(-1f)
+                yellowLine.setLineLeftOffset(-1f)
+                curve_view.notifyChange()
+
+                val animator = ValueAnimator.ofFloat(-1f, -2f)
+                animator.addUpdateListener {
+                    val offset = it.animatedValue as Float
+                    redLine.setLineLeftOffset(offset)
+                    blueLine.setLineLeftOffset(offset)
+                    yellowLine.setLineLeftOffset(offset)
+                    curve_view.notifyChange()
+                }
+                animator.duration = 1100
+                animator.start()
+                sendEmptyMessageDelayed(1, 1000)
+            }
+        }
+        handler.sendEmptyMessageDelayed(1, 1000)
+
     }
 
     private fun randomPoint(): MutableList<CurveLine.Point> {
         val random = Random()
         val result = mutableListOf<CurveLine.Point>()
-        for (i in 0..9) {
+        for (i in 0..12) {
             val value = (random.nextFloat() * 1000).toInt().toFloat() / 100
             result.add(CurveLine.Point(value, false, value.toString()))
         }
