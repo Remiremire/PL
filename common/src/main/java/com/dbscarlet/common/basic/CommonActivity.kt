@@ -98,7 +98,7 @@ abstract class CommonActivity : AppCompatActivity(), HasFragmentInjector, HasSup
             it.askPermission()
         }.onGoAppSetting { it ->
             val permissionsStr = getPermissionString(request.permissions)
-            val msg = if (TextUtils.isEmpty(permissionsStr))
+            val msg = if (permissionsStr.isEmpty())
                 "权限被禁用, 是否进行设置?"
             else
                 "$permissionsStr 权限被禁用, 是否进行设置?"
