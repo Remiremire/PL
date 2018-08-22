@@ -1,6 +1,5 @@
 package com.dbscarlet.mytest.core
 
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -14,6 +13,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.curve.CurveLine
+import com.dbscarlet.applib.curve.CurveLineUpdater
 import com.dbscarlet.applib.curve.CurveView
 import com.dbscarlet.applib.curve.XAxes
 import com.dbscarlet.common.basic.CommonActivity
@@ -65,59 +65,62 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
     private fun setCurveView() {
         val xAxes = XAxes(this)
         val labels = mutableListOf<String>()
-        for (i in 1..10) {
+        val width = 10
+        for (i in 1..width) {
             labels.add("X$i")
         }
         xAxes.setLabels(labels)
         curve_view.setXAxes(xAxes)
         curve_view.setOnSelectPointListener(CurveView.ShowLastSelectPointListener())
-        curve_view.setValueLimit(0f, 12f)
-        val curveLineList = mutableListOf<CurveLine>()
-        curve_view.setCurveLine(curveLineList)
-        val redLine = CurveLine(this, Color.parseColor("#FF7875"))
-        val blueLine = CurveLine(this, Color.parseColor("#40A9FF"))
-        val yellowLine = CurveLine(this, Color.parseColor("#FFC53D"))
-        curveLineList.add(redLine)
-        curveLineList.add(blueLine)
-        curveLineList.add(yellowLine)
-        redLine.pointList = randomPoint()
-        blueLine.pointList = randomPoint()
-        yellowLine.pointList = randomPoint()
-        redLine.setLineLeftOffset(-1f)
-        blueLine.setLineLeftOffset(-1f)
-        yellowLine.setLineLeftOffset(-1f)
+        curve_view.setValueLimit(-0.3f, 10.3f)
+        val lineList = mutableListOf<CurveLine>()
+        curve_view.setCurveLine(lineList)
+        val redLine = createLine(lineList, curve_view, Color.parseColor("#FF7875"), width)
+        val blueLine = createLine(lineList, curve_view, Color.parseColor("#40A9FF"), width)
+        val yellowLine = createLine(lineList, curve_view, Color.parseColor("#FFC53D"), width)
         curve_view.notifyChange()
-
-        val random = Random()
-        val handler = object : Handler(Looper.getMainLooper()) {
-            override fun handleMessage(msg: Message?) {
-                super.handleMessage(msg)
-                redLine.pointList.removeAt(0)
-                blueLine.pointList.removeAt(0)
-                yellowLine.pointList.removeAt(0)
-                redLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
-                blueLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
-                yellowLine.pointList.add(CurveLine.Point((random.nextFloat() * 1000).toInt().toFloat() / 100))
-                redLine.setLineLeftOffset(-1f)
-                blueLine.setLineLeftOffset(-1f)
-                yellowLine.setLineLeftOffset(-1f)
-                curve_view.notifyChange()
-
-                val animator = ValueAnimator.ofFloat(-1f, -2f)
-                animator.addUpdateListener {
-                    val offset = it.animatedValue as Float
-                    redLine.setLineLeftOffset(offset)
-                    blueLine.setLineLeftOffset(offset)
-                    yellowLine.setLineLeftOffset(offset)
-                    curve_view.notifyChange()
-                }
-                animator.duration = 1100
-                animator.start()
-                sendEmptyMessageDelayed(1, 1000)
+        class Updater: CurveLineUpdater<Float>() {
+            override fun convert(data: Float): CurveLine.Point {
+                return CurveLine.Point(data)
             }
         }
-        handler.sendEmptyMessageDelayed(1, 1000)
+        val redUpdater = Updater()
+        val blueUpdater = Updater()
+        val yellowUpdater = Updater()
 
+        redUpdater.setCurveInfo(curve_view, redLine, width)
+        blueUpdater.setCurveInfo(curve_view, blueLine, width)
+        yellowUpdater.setCurveInfo(curve_view, yellowLine, width)
+
+        val random = Random()
+        var count  = 1
+        val handler = object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message?) {
+                if (redUpdater.cashSize < 5) {
+                    redUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
+                }
+                if (blueUpdater.cashSize < 5) {
+                    blueUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
+                }
+                if (yellowUpdater.cashSize < 5) {
+                    yellowUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
+                }
+                count++
+                if (count % 10 == 0) {
+                    sendEmptyMessageDelayed(1, 10000)
+                } else {
+                    sendEmptyMessageDelayed(1, 500)
+                }
+            }
+        }
+        handler.sendEmptyMessage(1)
+    }
+
+    private fun createLine(list: MutableList<CurveLine>, curveView: CurveView, color: Int, width: Int): CurveLine {
+        val line = CurveLine(this, color)
+        list.add(line)
+        line.pointList = randomPoint()
+        return line
     }
 
     private fun randomPoint(): MutableList<CurveLine.Point> {
