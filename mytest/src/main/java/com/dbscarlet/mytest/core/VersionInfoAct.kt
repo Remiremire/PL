@@ -12,10 +12,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.Path
-import com.dbscarlet.applib.curve.CurveLine
-import com.dbscarlet.applib.curve.CurveLineUpdater
-import com.dbscarlet.applib.curve.CurveView
-import com.dbscarlet.applib.curve.XAxes
+import com.dbscarlet.applib.curve.*
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
@@ -36,6 +33,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
     @JvmField
     @Autowired(name = "patchCode")
     var patchCode: Int = 0
+    var updateThread: UpdateThread? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +58,16 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         }
         TinkerUtil.tinkerInstallCallback = this
         setCurveView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateThread?.startUpdate()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        updateThread?.stopUpdate()
     }
 
     private fun setCurveView() {
@@ -92,17 +100,23 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         blueUpdater.setCurveInfo(curve_view, blueLine, width)
         yellowUpdater.setCurveInfo(curve_view, yellowLine, width)
 
+        updateThread = UpdateThread()
+        updateThread?.setCurveView(curve_view)
+        updateThread?.addUpdater(redUpdater)
+        updateThread?.addUpdater(blueUpdater)
+        updateThread?.addUpdater(yellowUpdater)
+
         val random = Random()
         var count  = 1
         val handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message?) {
-                if (redUpdater.cashSize < 5) {
+                if (redUpdater.cashSize < 3) {
                     redUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
-                if (blueUpdater.cashSize < 5) {
+                if (blueUpdater.cashSize < 3) {
                     blueUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
-                if (yellowUpdater.cashSize < 5) {
+                if (yellowUpdater.cashSize < 3) {
                     yellowUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
                 count++
