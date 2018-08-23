@@ -83,9 +83,9 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         curve_view.setValueLimit(-0.3f, 10.3f)
         val lineList = mutableListOf<CurveLine>()
         curve_view.setCurveLine(lineList)
-        val redLine = createLine(lineList, curve_view, Color.parseColor("#FF7875"), width)
-        val blueLine = createLine(lineList, curve_view, Color.parseColor("#40A9FF"), width)
-        val yellowLine = createLine(lineList, curve_view, Color.parseColor("#FFC53D"), width)
+        val redLine = createLine(lineList, Color.parseColor("#FF7875"))
+        val blueLine = createLine(lineList, Color.parseColor("#40A9FF"))
+        val yellowLine = createLine(lineList, Color.parseColor("#FFC53D"))
         curve_view.notifyChange()
         class Updater: CurveLineUpdater<Float>() {
             override fun convert(data: Float): CurveLine.Point {
@@ -130,7 +130,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         handler.sendEmptyMessage(1)
     }
 
-    private fun createLine(list: MutableList<CurveLine>, curveView: CurveView, color: Int, width: Int): CurveLine {
+    private fun createLine(list: MutableList<CurveLine>, color: Int): CurveLine {
         val line = CurveLine(this, color)
         list.add(line)
         line.pointList = randomPoint()
