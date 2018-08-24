@@ -132,7 +132,7 @@ public class CurveLine {
                 float secondControlPointX = currentPoint.x - (LINE_SMOOTHNESS * secondDiffX);
                 float secondControlPointY = currentPoint.y - (LINE_SMOOTHNESS * secondDiffY);
 
-                /////////////////连续三个值相同认为是直线，重新修正控制点//////////////
+                //////////////////连续三个值相同认为是直线，重新修正控制点/////////////
                 if (currentPoint.y == previousPoint.y && currentPoint.y == prePreviousPoint.y && pointIndex > 2) {
                     secondControlPointY = currentPoint.y;
                 }
