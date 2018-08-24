@@ -74,6 +74,7 @@ public abstract class CurveLineUpdater<T> {
         }
     }
 
+
     public int getCashSize() {
         return dataResource.size();
     }
