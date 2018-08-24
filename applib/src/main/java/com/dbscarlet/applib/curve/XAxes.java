@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
@@ -43,18 +44,18 @@ public class XAxes {
         return paddingToCanve + fm.bottom - fm.top;
     }
 
-    void compute(float xAxesLLimit, float xAxesRLimit, float curveL, float curveT, float curveB, float curveR) {
+    void compute(float xAxesLLimit, float xAxesRLimit, RectF curveRectF) {
         if (labels == null || labels.size() == 0) return;
         int size = labels.size();
-        xAxesStep = size == 1 ? (curveR - curveL) : (curveR - curveL) / (size - 1);
+        xAxesStep = size == 1 ? (curveRectF.width()) : (curveRectF.width()) / (size - 1);
         path.reset();
         textDrawLocation = new float[size][2];
         Paint.FontMetrics fm = paint.getFontMetrics();
         for (int i = 0; i < size; i++) {
-            float x = curveL + xAxesStep * i;
+            float x = curveRectF.left + xAxesStep * i;
             if (drawLine) {
-                path.moveTo(x, curveT);
-                path.lineTo(x, curveB);
+                path.moveTo(x, curveRectF.top);
+                path.lineTo(x, curveRectF.bottom);
             }
             float textWidth = paint.measureText(labels.get(i));
             if (x - textWidth / 2 < xAxesLLimit) {
@@ -64,7 +65,7 @@ public class XAxes {
             } else {
                 textDrawLocation[i][0] = x - textWidth / 2;
             }
-            textDrawLocation[i][1] = curveB + paddingToCanve - fm.top;
+            textDrawLocation[i][1] = curveRectF.bottom + paddingToCanve - fm.top;
         }
     }
 

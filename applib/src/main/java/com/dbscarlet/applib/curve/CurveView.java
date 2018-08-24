@@ -2,6 +2,7 @@ package com.dbscarlet.applib.curve;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -24,6 +25,7 @@ public class CurveView extends View {
     private float defCurvePaddingLR = dip2Px(12);
     private float pointTouchRangePow = dip2Px(20) * dip2Px(20);
     private OnSelectPointListener onSelectPointListener;
+    private RectF curveRectF = new RectF();
 
     public CurveView(Context context) {
         super(context);
@@ -114,20 +116,19 @@ public class CurveView extends View {
                 float left = getPaddingLeft();
                 float bottom = getHeight() - getPaddingBottom();
                 float right = getWidth() - getPaddingRight();
-                float curveT = top + dip2Px(24);
-                float curveB = bottom;
-                float curveL = left + defCurvePaddingLR;
-                float curveR = right - defCurvePaddingLR;
+                curveRectF.top = top + dip2Px(24);
+                curveRectF.bottom = bottom;
+                curveRectF.left = left + defCurvePaddingLR;
+                curveRectF.right = right - defCurvePaddingLR;
                 float xAxesStep = 0;
                 if (xAxes != null) {
-                    curveB -= xAxes.getHeight();
-                    xAxes.compute(left, right, curveL, curveT, curveB, curveR);
+                    curveRectF.bottom -= xAxes.getHeight();
+                    xAxes.compute(left, right, curveRectF);
                     xAxesStep = xAxes.getXAexStep();
                 }
                 if (mCurveLines != null) {
                     for (CurveLine cl : mCurveLines) {
-                        cl.compute(curveL, curveT, curveR, curveB,
-                                mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+                        cl.compute(curveRectF, mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
                     }
                 }
                 invalidate();
@@ -146,7 +147,9 @@ public class CurveView extends View {
         if (xAxes != null) {
             xAxes.draw(canvas);
         }
-        if (mCurveLines != null) {
+        if (mCurveLines != null && mCurveLines.size() > 0) {
+            canvas.save();
+            canvas.clipRect(curveRectF);
             for (CurveLine cl : mCurveLines) {
                 if (cl.isVisible()) {
                     cl.drawLine(canvas);
@@ -157,6 +160,7 @@ public class CurveView extends View {
                     cl.drawPoints(canvas);
                 }
             }
+            canvas.restore();
         }
     }
 

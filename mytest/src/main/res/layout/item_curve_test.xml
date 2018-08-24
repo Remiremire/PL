@@ -10,11 +10,8 @@
     android:layout_height="200dp">
     <com.dbscarlet.applib.curve.CurveView
         android:id="@+id/curve_view"
+        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp" />
-    <View
-        android:background="#ededed"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
 </LinearLayout>

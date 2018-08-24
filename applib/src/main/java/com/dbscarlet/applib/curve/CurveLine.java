@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -81,17 +82,15 @@ public class CurveLine {
         lineGradient.setGradientType(GradientDrawable.LINEAR_GRADIENT);
     }
 
-    void compute(float left, float top, float right, float bottom,
-                        float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
-        computeLine(left, top, right, bottom, minValueLimit, maxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+    void compute(RectF rectF, float minValueLimit, float maxValueLimit, float xAxesStep, float LINE_SMOOTHNESS) {
+        computeLine(rectF, minValueLimit, maxValueLimit, xAxesStep, LINE_SMOOTHNESS);
     }
 
     public void setLineLeftOffset(float offset) {
         lineLeftOffset = offset;
     }
 
-    private void computeLine(float left, float top, float right, float bottom,
-                             float minValue, float maxValue,float xAxesStep, float LINE_SMOOTHNESS) {
+    private void computeLine(RectF rectF, float minValue, float maxValue,float xAxesStep, float LINE_SMOOTHNESS) {
         final Path path = mCurveLinePath;
         path.reset();
         mCurveLineRangePath.reset();
@@ -99,7 +98,7 @@ public class CurveLine {
         if (pointList == null || pointList.size() == 0) {
             return;
         }
-        mComputer.set(top, left, bottom, right, maxValue, minValue, xAxesStep);
+        mComputer.set(rectF, maxValue, minValue, xAxesStep);
         final int pointSize = pointList.size();
         for (int i = 0; i < pointSize; i++) {
             mComputer.computePoint(pointList.get(i), i);
@@ -172,10 +171,10 @@ public class CurveLine {
         }
 
         mCurveLineRangePath.set(path);
-        mCurveLineRangePath.lineTo(lineEndX, bottom);
-        mCurveLineRangePath.lineTo(lineStartX, bottom);
+        mCurveLineRangePath.lineTo(lineEndX, rectF.bottom);
+        mCurveLineRangePath.lineTo(lineStartX, rectF.bottom);
         mCurveLineRangePath.close();
-        lineGradient.setBounds((int) lineStartX, (int) top, (int)lineEndX, (int)bottom);
+        lineGradient.setBounds((int) lineStartX, (int) rectF.top, (int)lineEndX, (int)rectF.bottom);
     }
 
     void drawLine(Canvas canvas) {
@@ -229,10 +228,7 @@ public class CurveLine {
         private float textPaddingLr;
         private float textPaddingTb;
         private final DisplayMetrics displayMetrics;
-        float top;
-        float left;
-        float bottom;
-        float right;
+        RectF rectF;
         float maxValue;
         float minValue;
         float xAxesStep;
@@ -241,11 +237,8 @@ public class CurveLine {
             this.displayMetrics = displayMetrics;
         }
 
-        private void set(float top, float left, float bottom, float right, float maxValue, float minValue, float xAxesStep) {
-            this.top = top;
-            this.left = left;
-            this.bottom = bottom;
-            this.right = right;
+        private void set(RectF rectF, float maxValue, float minValue, float xAxesStep) {
+            this.rectF = rectF;
             this.maxValue = maxValue;
             this.minValue = minValue;
             this.xAxesStep = xAxesStep;
@@ -254,18 +247,18 @@ public class CurveLine {
         }
 
         private void computePoint(Point point, int index) {
-            point.x = left + xAxesStep * (index + lineLeftOffset);
-            point.y = top + (bottom - top) * ((maxValue - point.value) / (maxValue - minValue));
+            point.x = rectF.left + xAxesStep * (index + lineLeftOffset);
+            point.y = rectF.top + rectF.height() * ((maxValue - point.value) / (maxValue - minValue));
             if (TextUtils.isEmpty(point.text)) return;
             point.textWidth = textPaint.measureText(point.text);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             point.textBaseLine = point.y - dip2Px(6) - fm.bottom - textPaddingTb;
             point.textTop = point.textBaseLine + fm.top;
             point.textHeight = fm.bottom - fm.top;
-            if (point.x - point.textWidth / 2 - textPaddingLr * 3 < left) {
-                point.textLeft = left + textPaddingLr * 3;
-            } else if (point.x + point.textWidth / 2 + textPaddingLr * 3 > right) {
-                point.textLeft = right - point.textWidth - textPaddingLr * 3;
+            if (point.x - point.textWidth / 2 - textPaddingLr * 3 < rectF.left) {
+                point.textLeft = rectF.left + textPaddingLr * 3;
+            } else if (point.x + point.textWidth / 2 + textPaddingLr * 3 > rectF.right) {
+                point.textLeft = rectF.right - point.textWidth - textPaddingLr * 3;
             } else {
                 point.textLeft = point.x - point.textWidth / 2;
             }
