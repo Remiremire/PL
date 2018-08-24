@@ -51,7 +51,6 @@ public abstract class Updater<T, R> {
 
     protected abstract void onUpdate(List<R> dataList, float offset);
 
-
     public void addData(T newData) {
         if (newData == null) return;
 
