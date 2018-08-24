@@ -96,9 +96,13 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         val blueUpdater = Updater()
         val yellowUpdater = Updater()
 
-        redUpdater.setCurveInfo(curve_view, redLine, width)
-        blueUpdater.setCurveInfo(curve_view, blueLine, width)
-        yellowUpdater.setCurveInfo(curve_view, yellowLine, width)
+        redUpdater.setCurveInfo(redLine, width)
+        blueUpdater.setCurveInfo(blueLine, width)
+        yellowUpdater.setCurveInfo(yellowLine, width)
+
+        redUpdater.addDataList(randomFloatList())
+        blueUpdater.addDataList(randomFloatList())
+        yellowUpdater.addDataList(randomFloatList())
 
         updateThread = UpdateThread()
         updateThread?.setCurveView(curve_view)
@@ -110,13 +114,13 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         var count  = 1
         val handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message?) {
-                if (redUpdater.cashSize < 3) {
+                if (redUpdater.cacheSize < 3) {
                     redUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
-                if (blueUpdater.cashSize < 3) {
+                if (blueUpdater.cacheSize < 3) {
                     blueUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
-                if (yellowUpdater.cashSize < 3) {
+                if (yellowUpdater.cacheSize < 3) {
                     yellowUpdater.addData((random.nextFloat() * 1000).toInt().toFloat() / 100)
                 }
                 count++
@@ -133,16 +137,14 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
     private fun createLine(list: MutableList<CurveLine>, color: Int): CurveLine {
         val line = CurveLine(this, color)
         list.add(line)
-        line.pointList = randomPoint()
         return line
     }
 
-    private fun randomPoint(): MutableList<CurveLine.Point> {
+    private fun randomFloatList(): MutableList<Float> {
         val random = Random()
-        val result = mutableListOf<CurveLine.Point>()
+        val result = mutableListOf<Float>()
         for (i in 0..12) {
-            val value = (random.nextFloat() * 1000).toInt().toFloat() / 100
-            result.add(CurveLine.Point(value, false, value.toString()))
+            result.add((random.nextFloat() * 1000).toInt().toFloat() / 100)
         }
         return result
     }

@@ -2,6 +2,9 @@ package com.dbscarlet.applib.curve;
 
 import android.os.Message;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -10,21 +13,21 @@ import java.util.concurrent.PriorityBlockingQueue;
  * Created by Daibing Wang on 2018/8/22.
  */
 public abstract class CurveLineUpdater<T> {
-    private CurveView curveView;
     private CurveLine curveLine;
     private int curveLineWidth;
     private long duration = 1000;
     private long lastUpdateTime;
-    private final Queue<T> dataResource = new PriorityBlockingQueue<>();
+    private float lineOffset = -1;
+    private final List<CurveLine.Point> pointList = new LinkedList<>();
+    private final Queue<T> dataCache = new PriorityBlockingQueue<>();
 
     public void onUpdate(Message msg) {
-        List<CurveLine.Point> pointList = curveLine.getPointList();
         long time = System.currentTimeMillis();
         switch (msg.what) {
             case UpdateThread.INIT:
                 pointList.add(new CurveLine.Point(pointList.get(0).value));
-                curveLine.setLineLeftOffset(-1);
                 lastUpdateTime = time;
+                lineOffset = -1;
                 break;
             case UpdateThread.UPDATE:
                 long timeDiff = time - lastUpdateTime;
@@ -32,50 +35,58 @@ public abstract class CurveLineUpdater<T> {
                     if (pointList.size() > curveLineWidth + 2) {
                         pointList.remove(0);
                         lastUpdateTime = time;
-                        curveLine.setLineLeftOffset(-1);
+                        lineOffset = -1;
                     }
-                    if (pointList.size() < curveLineWidth + 3 && !dataResource.isEmpty()) {
-                        T next = dataResource.poll();
-                        pointList.add(convert(next));
-                        if (pointList.size() < curveLineWidth + 4 && !dataResource.isEmpty()) {
-                            T nextNext = dataResource.poll();
-                            if (nextNext != null) {
-                                pointList.add(convert(nextNext));
-                            }
-                        }
-                    }
+                    tryPollData();
                 } else {
-                    curveLine.setLineLeftOffset(-1 - timeDiff * 1.0f / duration);
+                    lineOffset = -1 - timeDiff * 1.0f / duration;
                 }
                 break;
         }
+        if (curveLine != null) {
+            curveLine.setPointList(pointList);
+            curveLine.setLineLeftOffset(lineOffset);
+        }
     }
 
-    public void setCurveInfo(CurveView curveView, CurveLine curveLine, int curveLineWidth) {
-        this.curveView = curveView;
-        this.curveLine = curveLine;
-        this.curveLineWidth = curveLineWidth;
-    }
-
-    protected abstract CurveLine.Point convert(T data);
-
-
-    public void addData(T newData) {
-        List<CurveLine.Point> pointList = curveLine.getPointList();
-        if (pointList.size() < curveLineWidth) {
-            pointList.add(convert(newData));
-            curveView.notifyChange();
-        } else {
-            if (pointList.size() < curveLineWidth + 3) {
-                pointList.add(convert(newData));
-            } else {
-                dataResource.add(newData);
+    private void tryPollData() {
+        while (pointList.size() < curveLineWidth + 3 && !dataCache.isEmpty()) {
+            T next = dataCache.poll();
+            if (next != null) {
+                pointList.add(convert(next));
             }
         }
     }
 
+    public void setCurveInfo(CurveLine curveLine, int curveLineWidth) {
+        this.curveLine = curveLine;
+        this.curveLineWidth = curveLineWidth;
+    }
 
-    public int getCashSize() {
-        return dataResource.size();
+    protected abstract CurveLine.Point convert(@NotNull T data);
+
+
+    public void addData(T newData) {
+        if (newData == null) return;
+
+        if (pointList.size() < curveLineWidth + 3) {
+            CurveLine.Point point = convert(newData);
+            if (pointList.size() == 0) {
+                pointList.add(new CurveLine.Point(point.value));
+            }
+            pointList.add(point);
+        } else {
+            dataCache.add(newData);
+        }
+    }
+
+    public void addDataList(List<T> dataList) {
+        for (T d : dataList) {
+            addData(d);
+        }
+    }
+
+    public int getCacheSize() {
+        return dataCache.size();
     }
 }
