@@ -14,12 +14,16 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public abstract class CurveLineUpdater<T> {
     private CurveLine curveLine;
-    private int curveLineWidth;
+    private int lineWidth;
     private long duration = 1000;
     private long lastUpdateTime;
     private float lineOffset = -1;
     private final List<CurveLine.Point> pointList = new LinkedList<>();
     private final Queue<T> dataCache = new PriorityBlockingQueue<>();
+
+    public CurveLineUpdater(int lineWidth) {
+        this.lineWidth = lineWidth;
+    }
 
     public void onUpdate(Message msg) {
         long time = System.currentTimeMillis();
@@ -32,7 +36,7 @@ public abstract class CurveLineUpdater<T> {
             case UpdateThread.UPDATE:
                 long timeDiff = time - lastUpdateTime;
                 if (timeDiff >= duration) {
-                    if (pointList.size() > curveLineWidth + 2) {
+                    if (pointList.size() > lineWidth + 2) {
                         pointList.remove(0);
                         lastUpdateTime = time;
                         lineOffset = -1;
@@ -50,7 +54,7 @@ public abstract class CurveLineUpdater<T> {
     }
 
     private void tryPollData() {
-        while (pointList.size() < curveLineWidth + 3 && !dataCache.isEmpty()) {
+        while (pointList.size() < lineWidth + 3 && !dataCache.isEmpty()) {
             T next = dataCache.poll();
             if (next != null) {
                 pointList.add(convert(next));
@@ -58,9 +62,10 @@ public abstract class CurveLineUpdater<T> {
         }
     }
 
-    public void setCurveInfo(CurveLine curveLine, int curveLineWidth) {
-        this.curveLine = curveLine;
-        this.curveLineWidth = curveLineWidth;
+    public void bindCurveLine(CurveLine line) {
+        this.curveLine = line;
+        line.setPointList(pointList);
+        line.setLineLeftOffset(lineOffset);
     }
 
     protected abstract CurveLine.Point convert(@NotNull T data);
@@ -69,7 +74,7 @@ public abstract class CurveLineUpdater<T> {
     public void addData(T newData) {
         if (newData == null) return;
 
-        if (pointList.size() < curveLineWidth + 3) {
+        if (pointList.size() < lineWidth + 3) {
             CurveLine.Point point = convert(newData);
             if (pointList.size() == 0) {
                 pointList.add(new CurveLine.Point(point.value));

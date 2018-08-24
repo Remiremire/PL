@@ -87,7 +87,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         val blueLine = createLine(lineList, Color.parseColor("#40A9FF"))
         val yellowLine = createLine(lineList, Color.parseColor("#FFC53D"))
         curve_view.notifyChange()
-        class Updater: CurveLineUpdater<Float>() {
+        class Updater: CurveLineUpdater<Float>(10) {
             override fun convert(data: Float): CurveLine.Point {
                 return CurveLine.Point(data)
             }
@@ -96,9 +96,9 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         val blueUpdater = Updater()
         val yellowUpdater = Updater()
 
-        redUpdater.setCurveInfo(redLine, width)
-        blueUpdater.setCurveInfo(blueLine, width)
-        yellowUpdater.setCurveInfo(yellowLine, width)
+        redUpdater.bindCurveLine(redLine)
+        blueUpdater.bindCurveLine(blueLine)
+        yellowUpdater.bindCurveLine(yellowLine)
 
         redUpdater.addDataList(randomFloatList())
         blueUpdater.addDataList(randomFloatList())
