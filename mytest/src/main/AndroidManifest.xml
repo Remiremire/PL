@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dbscarlet.mytest" >
     <application>
-        <activity android:name="com.dbscarlet.mytest.core.VersionInfoAct"/>
-        <activity android:name="com.dbscarlet.mytest.core.FindPatchAct"/>
-        <activity android:name="com.dbscarlet.mytest.core.apiTest.ApiTestAct" />
+        <activity android:name=".core.VersionInfoAct"/>
+        <activity android:name=".core.FindPatchAct"/>
+        <activity android:name=".core.apiTest.ApiTestAct" />
         <activity android:name=".core.authentication.AuthenticationAct" />
+        <activity android:name=".core.curvetest.CurveTestActivity" />
     </application>
 </manifest>

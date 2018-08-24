@@ -15,5 +15,6 @@ object Path {
         const val FIND_PATCH_FILE = "$BASE/findPatchFile"
         const val API_TEST = "$BASE/apiTest"
         const val AUTHENTICATION = "$BASE/authentication"
+        const val CURVE_TEST = "$BASE/curveTest"
     }
 }

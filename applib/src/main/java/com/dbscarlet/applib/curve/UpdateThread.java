@@ -11,40 +11,31 @@ import java.util.List;
  * Created by Daibing Wang on 2018/8/23.
  */
 public class UpdateThread extends Thread{
-    public static final int INIT = 0;
-    public static final int UPDATE = 1;
     private final int TIME_IN_FRAME = 30;
     private boolean isUpdate = false;
     private Handler handler;
-    private List<CurveLineUpdater> updaterList = new LinkedList<>();
-    private CurveView curveView;
+    private List<Updater> updaterList = new LinkedList<>();
 
     public UpdateThread() {
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                for (CurveLineUpdater updater : updaterList) {
-                    updater.onUpdate(msg);
+                for (Updater updater : updaterList) {
+                    updater.tryUpdate();
                 }
-                curveView.notifyChange();
             }
         };
     }
 
-    public void setCurveView(CurveView curveView) {
-        this.curveView = curveView;
-    }
-
-    public void addUpdater(CurveLineUpdater updater) {
+    public void addUpdater(Updater updater) {
         updaterList.add(updater);
     }
 
     @Override
     public void run() {
-        handler.sendEmptyMessage(INIT);
         while (isUpdate) {
             waitNextUpdateTime();
-            handler.sendEmptyMessage(UPDATE);
+            handler.sendEmptyMessage(1);
         }
     }
 
