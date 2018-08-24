@@ -106,7 +106,7 @@ public class CurveLine {
         if (pointSize < 1) {
             return;
         }
-        Point prePreviousPoint = pointList.get(0);
+        Point prePreviousPoint;
         Point previousPoint = pointList.get(0);
         Point currentPoint = pointList.get(0);
         Point nextPoint = pointList.get(0);
