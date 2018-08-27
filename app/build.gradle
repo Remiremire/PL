@@ -59,8 +59,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':applib')
     implementation project(':mytest')
-
     kapt "com.google.dagger:dagger-compiler:$dagger2_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
     kapt "com.alibaba:arouter-compiler:$arouter_compiler_version"
+    implementation project(':tweets')
 }

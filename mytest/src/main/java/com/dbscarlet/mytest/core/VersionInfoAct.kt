@@ -54,6 +54,11 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
                     .build(Path.TEST.CURVE_TEST)
                     .navigation(this)
         }
+        btn_widget_test.setOnClickListener {
+            ARouter.getInstance()
+                    .build(Path.TEST.WIDGET_TEST)
+                    .navigation()
+        }
         TinkerUtil.tinkerInstallCallback = this
     }
 

@@ -1,0 +1,60 @@
+package com.dbscarlet.mytest.widget.test
+
+import android.graphics.Color
+import android.support.v4.view.PagerAdapter
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.base.BaseActivity
+import com.dbscarlet.mytest.R
+import com.dbscarlet.mytest.databinding.ActWidgetTestBinding
+
+/**
+ * Created by Daibing Wang on 2018/8/27.
+ */
+@Route(path = Path.TEST.WIDGET_TEST)
+class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
+    override fun getContentLayout(): Int {
+        return R.layout.act_widget_test
+    }
+
+    override fun initView() {
+        binding.pager.adapter = PageAdapter()
+        binding.tabLayout.bindWithViewPager(binding.pager)
+    }
+
+    inner class PageAdapter: PagerAdapter() {
+        override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+            return view === `object`
+        }
+
+        override fun getCount(): Int {
+            return 10
+        }
+
+        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+            val tv = TextView(this@WidgetTestAct)
+            tv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT)
+            tv.gravity = Gravity.CENTER
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
+            tv.text = "content$position"
+            tv.setTextColor(Color.BLACK)
+            container?.addView(tv)
+            return tv
+        }
+
+        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+            container?.removeView(`object` as View)
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return "PAGE${position + 1}"
+
+        }
+    }
+}
