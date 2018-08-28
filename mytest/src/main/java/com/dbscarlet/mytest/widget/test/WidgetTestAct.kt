@@ -12,6 +12,7 @@ import com.dbscarlet.applib.Path
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.mytest.R
 import com.dbscarlet.mytest.databinding.ActWidgetTestBinding
+import com.dbscarlet.mytest.widget.CustomTabLayout
 
 /**
  * Created by Daibing Wang on 2018/8/27.
@@ -25,6 +26,26 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
     override fun initView() {
         binding.pager.adapter = PageAdapter()
         binding.tabLayout.bindWithViewPager(binding.pager)
+        binding.btnMode.setOnClickListener {
+            if (binding.tabLayout.mode == CustomTabLayout.Mode.SCROLLABLE) {
+                binding.tabLayout.mode = CustomTabLayout.Mode.FIXED
+            } else {
+                binding.tabLayout.mode = CustomTabLayout.Mode.SCROLLABLE
+            }
+        }
+        binding.btnIndicator.setOnClickListener {
+            when {
+                binding.tabLayout.indicatorWidth == CustomTabLayout.INDICATOR_WRAP_TEXT -> {
+                    binding.tabLayout.indicatorWidth = CustomTabLayout.INDECATOR_MATCH_TAB
+                }
+                binding.tabLayout.indicatorWidth == CustomTabLayout.INDECATOR_MATCH_TAB -> {
+                    binding.tabLayout.indicatorWidth = binding.tabLayout.dip2Px(30f)
+                }
+                else -> {
+                    binding.tabLayout.indicatorWidth = CustomTabLayout.INDICATOR_WRAP_TEXT
+                }
+            }
+        }
     }
 
     inner class PageAdapter: PagerAdapter() {

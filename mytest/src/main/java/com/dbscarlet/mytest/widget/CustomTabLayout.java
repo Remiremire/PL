@@ -89,11 +89,24 @@ public class CustomTabLayout extends HorizontalScrollView {
      */
     public void setIndicatorWidth(int indicatorWidth) {
         this.indicatorWidth = indicatorWidth;
+        mTabContainer.invalidate();
     }
 
     public void setIndicatorHeight(int indicatorHeight) {
         this.indicatorHeight = indicatorHeight;
         mTabContainer.setPadding(0, 0, 0, indicatorHeight);
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public int getIndicatorHeight() {
+        return indicatorHeight;
+    }
+
+    public int getIndicatorWidth() {
+        return indicatorWidth;
     }
 
     public void bindWithViewPager(ViewPager viewPager) {
@@ -144,11 +157,9 @@ public class CustomTabLayout extends HorizontalScrollView {
             tab.setTextColor(defaultTextColor);
             tab.setTypeface(defaultTypeFace);
         }
-        if (mode == Mode.SCROLLABLE) {
-            tab.setPadding(dip2Px(20), dip2Px(12), dip2Px(20), dip2Px(12));
-        } else {
-            tab.setPadding(0, dip2Px(12), 0, dip2Px(12));
-        }
+        int dp12 = dip2Px(12);
+        int dp20 = dip2Px(20);
+        tab.setPadding(dp20, dp12, dp20, dp12);
     }
 
     public int dip2Px(float px) {
@@ -163,7 +174,7 @@ public class CustomTabLayout extends HorizontalScrollView {
         private Paint paint;
         private TextView mSelectedTab;
         private int indicatorLocation;
-        private float selectOffset;
+        private float offset;
 
         public TabContainerLayout(Context context) {
             super(context);
@@ -205,7 +216,7 @@ public class CustomTabLayout extends HorizontalScrollView {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     if (positionOffset >= 1 || positionOffset <= 0) return;
-                    selectOffset = positionOffset;
+                    offset = positionOffset;
                     indicatorLocation = position;
                     invalidate();
                 }
@@ -253,11 +264,9 @@ public class CustomTabLayout extends HorizontalScrollView {
             if (childCount == 0 ) {
                 return;
             }
-            float width = getWidth();
             float currentIndicatorW = currentIndicatorWidth();
-            float distance = width / childCount;
-            float indicatorCenter = distance * indicatorLocation + distance / 2;
-            float start = indicatorCenter - currentIndicatorW / 2 + selectOffset * distance ;
+            float indicatorCenter = currentIndicatorCenter();
+            float start = indicatorCenter - currentIndicatorW / 2;
             paint.setColor(indicatorColor);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(indicatorHeight);
@@ -266,7 +275,49 @@ public class CustomTabLayout extends HorizontalScrollView {
         }
 
         private float currentIndicatorWidth() {
-            return indicatorWidth * (2 - 4 * (selectOffset - 0.5f) * (selectOffset - 0.5f));
+            float result;
+            if (indicatorWidth == INDICATOR_WRAP_TEXT) {
+                TextView tvL = (TextView) getChildAt(indicatorLocation);
+                float lw = tvL.getPaint().measureText(tvL.getText().toString());
+                if (indicatorLocation < getChildCount() - 1) {
+                    TextView tvR = (TextView) getChildAt(indicatorLocation + 1);
+                    float rw = tvR.getPaint().measureText(tvR.getText().toString());
+                    if (offset <= 0.5) {
+                        result = lw + rw * offset / 0.5f;
+                    } else {
+                        result = rw + lw * (1 - offset) / 0.5f;
+                    }
+                } else {
+                    result = lw;
+                }
+            } else if (indicatorWidth == INDECATOR_MATCH_TAB) {
+                int lw = getChildAt(indicatorLocation).getWidth();
+                if (indicatorLocation < getChildCount() - 1) {
+                    int rw = getChildAt(indicatorLocation + 1).getWidth();
+                    result = lw + (rw - lw) * offset;
+                } else {
+                    result = lw;
+                }
+            } else {
+                result = indicatorWidth * (2 - 4 * (offset - 0.5f) * (offset - 0.5f));
+            }
+            return result;
+        }
+
+        private float currentIndicatorCenter() {
+            int len = getChildCount();
+            float result = 0;
+            for (int i = 0; i < len; i++) {
+                if (i < indicatorLocation) {
+                    result += getChildAt(i).getWidth();
+                } else if (i == indicatorLocation) {
+                    result += getChildAt(i).getWidth() / 2;
+                } else {
+                    result += (getChildAt(i - 1).getWidth() + getChildAt(i).getWidth()) / 2 * offset;
+                    break;
+                }
+            }
+            return result;
         }
     }
 }
