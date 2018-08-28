@@ -74,7 +74,7 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
         }
 
         override fun getPageTitle(position: Int): CharSequence {
-            return "PAGE${position + 1}"
+            return "PAGE\n${position + 1}"
 
         }
     }
