@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -131,11 +130,6 @@ public class CustomTabLayout extends HorizontalScrollView {
                 }
                 int layoutWidth = getWidth() - getPaddingLeft() - getPaddingRight();
                 int scrollX = getScrollX();
-                Log.i("customTabs", "onScrolled: left=" + left
-                        + "\tcurWidth=" + curWidth
-                        + "\tnextWidth=" + nextWidth
-                        + "\tlayoutWidth=" + layoutWidth
-                        + "\tscrollX=" + scrollX);
                 if (scrollX + layoutWidth < left + curWidth + nextWidth * positionOffset) {
                     scrollBy((int) (left + curWidth + nextWidth * positionOffset - scrollX - layoutWidth), 0);
                 } else if (scrollX > left + curWidth * positionOffset) {
@@ -146,7 +140,7 @@ public class CustomTabLayout extends HorizontalScrollView {
         mTabContainer.bindViewPager(viewPager);
     }
 
-    private void setTabTextStyle(TextView tab, boolean isSelected) {
+    protected void setTabTextStyle(TextView tab, boolean isSelected) {
         tab.setGravity(Gravity.CENTER);
         if (isSelected) {
             tab.setTextSize(TypedValue.COMPLEX_UNIT_SP, selectTextSize);
