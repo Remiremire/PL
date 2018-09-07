@@ -34,6 +34,7 @@ class CurveTestActivity: BaseActivity<ActCurveTestBinding>() {
             sendEmptyMessageDelayed(1, 500)
         }
     }
+
     override fun getContentLayout(): Int {
         return R.layout.act_curve_test
     }
