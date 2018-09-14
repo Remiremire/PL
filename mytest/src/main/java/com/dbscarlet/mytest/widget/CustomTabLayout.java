@@ -34,7 +34,7 @@ public class CustomTabLayout extends HorizontalScrollView {
     private int selectTextColor = 0xff101d34;
     private Typeface defaultTypeFace = Typeface.defaultFromStyle(Typeface.NORMAL);
     private Typeface selectTypeFace = Typeface.defaultFromStyle(Typeface.BOLD);
-    private boolean smoothScroll = true;
+    private boolean smoothScroll = false;
 
     private TabContainerLayout mTabContainer;
     private ViewPager mViewPager;
@@ -173,9 +173,13 @@ public class CustomTabLayout extends HorizontalScrollView {
         float centerX = mTabContainer.currentIndicatorCenter();
         float scrollX = getScrollX();
         float needScroll = centerX - (scrollX + 0.5f * layoutWidth);
-        if (scrollX + needScroll + layoutWidth <= tabsWidth && scrollX + needScroll >= 0) {
-            scrollBy((int) needScroll, 0);
+        if (scrollX + needScroll + layoutWidth > tabsWidth) {
+            needScroll = tabsWidth - layoutWidth - scrollX;
         }
+        if (scrollX + needScroll < 0) {
+            needScroll = - scrollX;
+        }
+        scrollBy((int) needScroll, 0);
     }
 
     public enum Mode {
@@ -183,11 +187,7 @@ public class CustomTabLayout extends HorizontalScrollView {
     }
 
     private class TabPagerChangeListener implements ViewPager.OnPageChangeListener {
-        private final int DRAGGING = ViewPager.SCROLL_STATE_DRAGGING;
-        private final int SETTLING = ViewPager.SCROLL_STATE_SETTLING;
-        private final int IDLE = ViewPager.SCROLL_STATE_IDLE;
         private int mScrollState;
-        private int mLastScrollState;
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -203,14 +203,13 @@ public class CustomTabLayout extends HorizontalScrollView {
                 return;
             }
             mTabContainer.changeSelectTab(position);
-            if (mScrollState == IDLE || (mScrollState == SETTLING && mLastScrollState == IDLE)) {
+            if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 updateIndicator(position, 0);
             }
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            mLastScrollState = mScrollState;
             mScrollState = state;
         }
     }
