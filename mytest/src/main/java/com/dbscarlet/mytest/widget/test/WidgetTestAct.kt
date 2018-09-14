@@ -1,6 +1,7 @@
 package com.dbscarlet.mytest.widget.test
 
 import android.graphics.Color
+import android.support.design.widget.TabLayout
 import android.support.v4.view.PagerAdapter
 import android.util.TypedValue
 import android.view.Gravity
@@ -33,12 +34,14 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
                 binding.tabLayout.mode = CustomTabLayout.Mode.SCROLLABLE
             }
         }
+        binding.tabSys.tabMode = TabLayout.MODE_SCROLLABLE
+        binding.tabSys.setupWithViewPager(binding.pager)
         binding.btnIndicator.setOnClickListener {
             when {
                 binding.tabLayout.indicatorWidth == CustomTabLayout.INDICATOR_WRAP_TEXT -> {
-                    binding.tabLayout.indicatorWidth = CustomTabLayout.INDECATOR_MATCH_TAB
+                    binding.tabLayout.indicatorWidth = CustomTabLayout.INDICATOR_MATCH_TAB
                 }
-                binding.tabLayout.indicatorWidth == CustomTabLayout.INDECATOR_MATCH_TAB -> {
+                binding.tabLayout.indicatorWidth == CustomTabLayout.INDICATOR_MATCH_TAB -> {
                     binding.tabLayout.indicatorWidth = binding.tabLayout.dip2Px(30f)
                 }
                 else -> {
@@ -63,7 +66,7 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
                     ViewGroup.LayoutParams.MATCH_PARENT)
             tv.gravity = Gravity.CENTER
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
-            tv.text = "content$position"
+            tv.text = "content${position + 1}"
             tv.setTextColor(Color.BLACK)
             container?.addView(tv)
             return tv

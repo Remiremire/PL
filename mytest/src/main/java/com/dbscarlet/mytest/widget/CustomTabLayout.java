@@ -1,6 +1,7 @@
 package com.dbscarlet.mytest.widget;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -21,7 +22,7 @@ import android.widget.TextView;
  */
 public class CustomTabLayout extends HorizontalScrollView {
     public static int INDICATOR_WRAP_TEXT = -1;
-    public static int INDECATOR_MATCH_TAB = -2;
+    public static int INDICATOR_MATCH_TAB = -2;
 
     private Mode mode;
     private int indicatorHeight;
@@ -33,9 +34,12 @@ public class CustomTabLayout extends HorizontalScrollView {
     private int selectTextColor = 0xff101d34;
     private Typeface defaultTypeFace = Typeface.defaultFromStyle(Typeface.NORMAL);
     private Typeface selectTypeFace = Typeface.defaultFromStyle(Typeface.BOLD);
+    private boolean smoothScroll = true;
 
     private TabContainerLayout mTabContainer;
-
+    private ViewPager mViewPager;
+    private TabPagerChangeListener mPagerChangeListener;
+    private DataSetObserver mDataSetObserver;
 
     public CustomTabLayout(Context context) {
         super(context);
@@ -83,7 +87,7 @@ public class CustomTabLayout extends HorizontalScrollView {
     /**
      * 设置下划线宽度
      * @param indicatorWidth 适应文字宽度{@link #INDICATOR_WRAP_TEXT},
-     *                       或者填满tab的宽度{@link #INDECATOR_MATCH_TAB},
+     *                       或者填满tab的宽度{@link #INDICATOR_MATCH_TAB},
      *                       或者是一个单位为pixel的固定宽度
      */
     public void setIndicatorWidth(int indicatorWidth) {
@@ -108,38 +112,6 @@ public class CustomTabLayout extends HorizontalScrollView {
         return indicatorWidth;
     }
 
-    public void bindWithViewPager(ViewPager viewPager) {
-        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                int len = mTabContainer.getChildCount();
-                float left = 0;
-                float curWidth = 0;
-                float nextWidth = 0;
-                for (int i = 0; i < len; i++) {
-                    int width = mTabContainer.getChildAt(i).getWidth();
-                    if (i < position) {
-                        left += width;
-                    } else if (i == position){
-                        curWidth = width;
-                    } else {
-                        nextWidth = width;
-                        break;
-                    }
-                }
-                int layoutWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-                int scrollX = getScrollX();
-                if (scrollX + layoutWidth < left + curWidth + nextWidth * positionOffset) {
-                    scrollBy((int) (left + curWidth + nextWidth * positionOffset - scrollX - layoutWidth), 0);
-                } else if (scrollX > left + curWidth * positionOffset) {
-                    scrollBy((int) (left + curWidth * positionOffset - scrollX), 0);
-                }
-            }
-        });
-        mTabContainer.bindViewPager(viewPager);
-    }
-
     protected void setTabTextStyle(TextView tab, boolean isSelected) {
         tab.setGravity(Gravity.CENTER);
         if (isSelected) {
@@ -160,14 +132,93 @@ public class CustomTabLayout extends HorizontalScrollView {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, getResources().getDisplayMetrics());
     }
 
+    public void bindWithViewPager(final ViewPager viewPager) {
+        if (mPagerChangeListener == null) {
+            mPagerChangeListener = new TabPagerChangeListener();
+        }
+        if (mDataSetObserver == null) {
+            mDataSetObserver = new DataSetObserver() {
+                @Override
+                public void onChanged() {
+                    if (mViewPager != null) {
+                        mTabContainer.bindViewPager(mViewPager);
+                    }
+                }
+            };
+        }
+        if (mViewPager != null) {
+            mViewPager.removeOnPageChangeListener(mPagerChangeListener);
+            if (mViewPager.getAdapter() != null) {
+                mViewPager.getAdapter().unregisterDataSetObserver(mDataSetObserver);
+            }
+        }
+        mViewPager = viewPager;
+        mViewPager.addOnPageChangeListener(mPagerChangeListener);
+        if (mViewPager.getAdapter() != null) {
+            mViewPager.getAdapter().registerDataSetObserver(mDataSetObserver);
+        }
+        mTabContainer.bindViewPager(viewPager);
+    }
+
+    private void updateIndicator(int position, float offset) {
+        mTabContainer.position = position;
+        mTabContainer.offset = offset;
+        mTabContainer.invalidate();
+        fitCurrentIndicator();
+    }
+
+    private void fitCurrentIndicator() {
+        float layoutWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        float tabsWidth = mTabContainer.getWidth();
+        float centerX = mTabContainer.currentIndicatorCenter();
+        float scrollX = getScrollX();
+        float needScroll = centerX - (scrollX + 0.5f * layoutWidth);
+        if (scrollX + needScroll + layoutWidth <= tabsWidth && scrollX + needScroll >= 0) {
+            scrollBy((int) needScroll, 0);
+        }
+    }
+
     public enum Mode {
         FIXED, SCROLLABLE
+    }
+
+    private class TabPagerChangeListener implements ViewPager.OnPageChangeListener {
+        private final int DRAGGING = ViewPager.SCROLL_STATE_DRAGGING;
+        private final int SETTLING = ViewPager.SCROLL_STATE_SETTLING;
+        private final int IDLE = ViewPager.SCROLL_STATE_IDLE;
+        private int mScrollState;
+        private int mLastScrollState;
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            if (mTabContainer == null) {
+                return;
+            }
+            updateIndicator(position, positionOffset);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (mTabContainer == null) {
+                return;
+            }
+            mTabContainer.changeSelectTab(position);
+            if (mScrollState == IDLE || (mScrollState == SETTLING && mLastScrollState == IDLE)) {
+                updateIndicator(position, 0);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            mLastScrollState = mScrollState;
+            mScrollState = state;
+        }
     }
 
     private class TabContainerLayout extends LinearLayout {
         private Paint paint;
         private TextView mSelectedTab;
-        private int indicatorLocation;
+        private int position;
         private float offset;
 
         public TabContainerLayout(Context context) {
@@ -185,7 +236,7 @@ public class CustomTabLayout extends HorizontalScrollView {
             PagerAdapter pagerAdapter = viewPager.getAdapter();
             int len = pagerAdapter.getCount();
             int currentItem = viewPager.getCurrentItem();
-            indicatorLocation = currentItem;
+            position = currentItem;
             for (int i = 0; i < len; i++) {
                 final int index = i;
                 TextView tab = new TextView(getContext());
@@ -193,7 +244,7 @@ public class CustomTabLayout extends HorizontalScrollView {
                 tab.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewPager.setCurrentItem(index, true);
+                        viewPager.setCurrentItem(index, smoothScroll);
                     }
                 });
                 if (index == currentItem) {
@@ -202,30 +253,8 @@ public class CustomTabLayout extends HorizontalScrollView {
                 } else {
                     setTabTextStyle(tab, false);
                 }
-
                 addView(tab);
             }
-
-            viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    if (positionOffset >= 1 || positionOffset <= 0) return;
-                    offset = positionOffset;
-                    indicatorLocation = position;
-                    invalidate();
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    if (mSelectedTab != null) {
-                        setTabTextStyle(mSelectedTab, false);
-                    }
-                    TextView tab = (TextView) mTabContainer.getChildAt(position);
-                    setTabTextStyle(tab, true);
-                    mSelectedTab = tab;
-                }
-            });
-
             layoutTabs();
         }
 
@@ -271,10 +300,10 @@ public class CustomTabLayout extends HorizontalScrollView {
         private float currentIndicatorWidth() {
             float result;
             if (indicatorWidth == INDICATOR_WRAP_TEXT) {
-                TextView tvL = (TextView) getChildAt(indicatorLocation);
+                TextView tvL = (TextView) getChildAt(position);
                 float lw = tvL.getPaint().measureText(tvL.getText().toString());
-                if (indicatorLocation < getChildCount() - 1) {
-                    TextView tvR = (TextView) getChildAt(indicatorLocation + 1);
+                if (position < getChildCount() - 1) {
+                    TextView tvR = (TextView) getChildAt(position + 1);
                     float rw = tvR.getPaint().measureText(tvR.getText().toString());
                     if (offset <= 0.5) {
                         result = lw + rw * offset / 0.5f;
@@ -284,10 +313,10 @@ public class CustomTabLayout extends HorizontalScrollView {
                 } else {
                     result = lw;
                 }
-            } else if (indicatorWidth == INDECATOR_MATCH_TAB) {
-                int lw = getChildAt(indicatorLocation).getWidth();
-                if (indicatorLocation < getChildCount() - 1) {
-                    int rw = getChildAt(indicatorLocation + 1).getWidth();
+            } else if (indicatorWidth == INDICATOR_MATCH_TAB) {
+                int lw = getChildAt(position).getWidth();
+                if (position < getChildCount() - 1) {
+                    int rw = getChildAt(position + 1).getWidth();
                     result = lw + (rw - lw) * offset;
                 } else {
                     result = lw;
@@ -302,9 +331,9 @@ public class CustomTabLayout extends HorizontalScrollView {
             int len = getChildCount();
             float result = 0;
             for (int i = 0; i < len; i++) {
-                if (i < indicatorLocation) {
+                if (i < position) {
                     result += getChildAt(i).getWidth();
-                } else if (i == indicatorLocation) {
+                } else if (i == position) {
                     result += getChildAt(i).getWidth() / 2;
                 } else {
                     result += (getChildAt(i - 1).getWidth() + getChildAt(i).getWidth()) / 2 * offset;
@@ -312,6 +341,15 @@ public class CustomTabLayout extends HorizontalScrollView {
                 }
             }
             return result;
+        }
+
+        private void changeSelectTab(int index) {
+            if (mSelectedTab != null) {
+                setTabTextStyle(mSelectedTab, false);
+            }
+            TextView tab = (TextView) mTabContainer.getChildAt(index);
+            setTabTextStyle(tab, true);
+            mSelectedTab = tab;
         }
     }
 }

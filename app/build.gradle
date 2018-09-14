@@ -49,6 +49,7 @@ kapt {
         arg("moduleName", project.getName())
     }
     generateStubs = true
+    mapDiagnosticLocations = true
 }
 
 dependencies {
