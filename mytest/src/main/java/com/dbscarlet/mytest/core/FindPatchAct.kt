@@ -51,8 +51,8 @@ class FindPatchAct: CommonActivity() {
                 }.onGoAppSetting {
                     AlertDialog.Builder(this)
                             .setMessage("需要跳转设置界面申请权限")
-                            .setNegativeButton("取消") { dialog, which -> it.cancel() }
-                            .setPositiveButton("确定"){dialog, which -> it.goSetting()}
+                            .setNegativeButton("取消") { _, _ -> it.cancel() }
+                            .setPositiveButton("确定"){ _, _ -> it.goSetting()}
                             .show()
                 }.onRefused {
                     finish()
@@ -69,7 +69,7 @@ class FindPatchAct: CommonActivity() {
                 .execute {
                     fileList.clear()
                     fileList.addAll(fileStack.peek().listFiles())
-                    fileList.sortWith(Comparator<File> {
+                    fileList.sortWith(Comparator {
                         f1, f2 ->
                         if (f1.isDirectory == f2.isDirectory) {
                             f1.name.compareTo(f2.name)
