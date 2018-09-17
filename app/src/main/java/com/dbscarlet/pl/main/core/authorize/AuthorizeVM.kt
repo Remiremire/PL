@@ -2,9 +2,12 @@ package com.dbscarlet.pl.main.core.authorize
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
+import com.dbscarlet.applib.contact.SPSaveKey
 import com.dbscarlet.common.basic.BaseVM
 import com.dbscarlet.common.dataResource.ResObserver
 import com.dbscarlet.common.dataResource.Resource
+import com.dbscarlet.pl.main.application.App
 import com.dbscarlet.pl.main.reponsitory.AuthorizeRepository
 import javax.inject.Inject
 
@@ -17,6 +20,8 @@ class AuthorizeVM
     ) : BaseVM(){
     private var token: String? = null
     private var secret: String? = null
+    @Inject
+    lateinit var app: App
 
     fun getLoginHtml(): LiveData<Resource<String>> {
         val liveData = MutableLiveData<Resource<String>>()
@@ -92,6 +97,10 @@ class AuthorizeVM
                                 oauthToken.isNullOrEmpty() || oauthTokenSecret.isNullOrEmpty()) {
                             liveData.value = Resource.failed(msg = "授权失败")
                         } else {
+                            val sp = app.getSharedPreferences(SPSaveKey.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                            sp.edit().putString(SPSaveKey.OAUTH_TOKEN, oauthToken)
+                                    .putString(SPSaveKey.OAUTH_TOKEN_SECRET, oauthTokenSecret)
+                                    .apply()
                             liveData.value = Resource.success(Unit)
                         }
                     }

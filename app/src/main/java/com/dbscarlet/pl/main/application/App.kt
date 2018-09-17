@@ -5,6 +5,8 @@ import com.dbscarlet.applib.contact.SPSaveKey
 import com.dbscarlet.applib.twitterNetwork.TwitterSignInterceptor
 import com.dbscarlet.applib.twitterNetwork.setToken
 import com.dbscarlet.common.basic.CommonApp
+import com.dbscarlet.common.util.logI
+import com.dbscarlet.pl.main.di.AppModule
 import com.dbscarlet.pl.main.di.DaggerAppComponent
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.cache.CacheEntity
@@ -26,6 +28,7 @@ class App : CommonApp() {
     override fun onCreate() {
         super.onCreate()
         DaggerAppComponent.builder()
+                .appModule(AppModule(this))
                 .build()
                 .inject(this)
         initNetwork()
@@ -37,6 +40,7 @@ class App : CommonApp() {
         val secret = sp.getString(SPSaveKey.OAUTH_TOKEN_SECRET, null)
         if (oauthToken != null && secret != null) {
             setToken(oauthToken, secret)
+            logI("load token: $oauthToken\nsecret: $secret" )
         }
         val loggingInterceptor = HttpLoggingInterceptor("Network_PL")
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)

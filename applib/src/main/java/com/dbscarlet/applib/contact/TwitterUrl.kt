@@ -12,5 +12,7 @@ class TwitterUrl {
         const val AUTHORIZE = HOST + "oauth/authorize"
 
         const val ACCESS_TOKEN = HOST + "oauth/access_token"
+
+        const val HOME_TIMELINE = HOST + "1.1/statuses/home_timeline.json"
     }
 }

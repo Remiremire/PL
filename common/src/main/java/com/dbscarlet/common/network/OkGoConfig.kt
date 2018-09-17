@@ -10,19 +10,36 @@ import io.reactivex.FlowableSubscriber
 /**
  * Created by Daibing Wang on 2018/5/10.
  */
+
 /**
  * 通过转换器，可以将任意类型对象作为请求参数
- * @param param 请求参数对象拓展
- * @param converter 将param转换为Map<String, String>的函数
+ * @params params 请求参数对象拓展
+ * @params converter 将param转换为Map<String, String>的函数
  */
-fun <R, P, T: Request<R, T>> T.params(param: P, isReplace: Boolean = true, converter:(P) -> Map<String,String>?): T {
-    val paramMap = converter.invoke(param)
+fun <R, P, T: Request<R, T>> T.params(params: P, isReplace: Boolean = true, converter:(P) -> Map<String,String>?): T {
+    val paramMap = converter.invoke(params)
     params(paramMap, isReplace)
     return this
 }
 
 /**
- * RESTFul Api params, replace "{$key}" by value
+ * 将任意对象转换为Map<String, String>作为请求参数
+ * 转换规则：该对象每个非空属性作为一条参数，属性名作为参数名，属性值toString()作为参数值
+ */
+fun <R, T: Request<R, T>> T.params(params: Any, isReplace: Boolean = true) : T {
+    return params(params, isReplace) {
+        val fieldMap = mutableMapOf<String, String>()
+        params::class.java.declaredFields.forEach {
+            if (it.get(params) != null) {
+                fieldMap[it.name] = it.get(params).toString()
+            }
+        }
+        fieldMap
+    }
+}
+
+/**
+ * RESTFul Api 参数, 将url中的 "{$key}" 替换为 value
  */
 fun <R, T: Request<R, T>> T.restParams(key: String, value: Any): T {
     this.url.replace("{$key}", "$value")
