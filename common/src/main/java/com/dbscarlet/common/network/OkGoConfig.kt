@@ -1,11 +1,10 @@
 package com.dbscarlet.common.network
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.lzy.okgo.convert.StringConvert
+import com.lzy.okgo.convert.Converter
+import com.lzy.okgo.model.Response
 import com.lzy.okgo.request.base.Request
 import com.lzy.okrx2.adapter.FlowableResponse
-import io.reactivex.FlowableSubscriber
+import io.reactivex.Flowable
 
 /**
  * Created by Daibing Wang on 2018/5/10.
@@ -57,14 +56,10 @@ fun <R, T: Request<R, T>> T.restParams(paramsObj: Any) : T {
     return this
 }
 
-fun <T, R : Request<String, *>> Request<String, R>.subscribe(subscriber: FlowableSubscriber<T>) {
-    converter(StringConvert())
-            .adapt(FlowableResponse<String>())
-            .map { Gson().fromJson<T>(it.body(), object : TypeToken<T>() {}.type)}
-            .subscribe(subscriber)
+fun <R, T: Request<R, T>> T.toFlowable(converter: Converter<R>): Flowable<Response<R>> {
+    return converter(converter)
+            .adapt(FlowableResponse<R>())
 }
-
-
 
 
 
