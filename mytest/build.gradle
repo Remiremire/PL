@@ -29,13 +29,11 @@ kapt {
         arg("moduleName", project.getName())
     }
     generateStubs = true
-    mapDiagnosticLocations = true
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.android.support:appcompat-v7:$support_v7_version"
     api "com.android.support:design:26.1.0"
     implementation project(':applib')
 
