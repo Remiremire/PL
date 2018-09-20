@@ -11,7 +11,6 @@ abstract class FormDataCallback: BaseCallback<Map<String, String>>() {
         if (string == null || string.isEmpty()) {
             return dataMap
         }
-        val parseException = TwitterApiException(NetworkError.PARSE_ERROR)
         string.split("&")
                 .forEach{
                     try {
@@ -20,10 +19,10 @@ abstract class FormDataCallback: BaseCallback<Map<String, String>>() {
                         when(formData.size) {
                             1-> dataMap[key] = ""
                             2-> dataMap[key] = formData[1]
-                            else-> throw parseException
+                            else-> throw TwitterApiException(NetworkError.PARSE_ERROR)
                         }
                     } catch (e: Exception) {
-                        throw parseException
+                        throw TwitterApiException(NetworkError.PARSE_ERROR)
                     }
                 }
         return dataMap
