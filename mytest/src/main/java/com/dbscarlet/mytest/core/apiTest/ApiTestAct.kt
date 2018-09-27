@@ -6,9 +6,7 @@ import com.dbscarlet.applib.Path
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.logI
 import com.dbscarlet.mytest.R
-import com.lzy.okgo.OkGo
-import com.lzy.okgo.callback.StringCallback
-import com.lzy.okgo.model.Response
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.act_api_test.*
 
 /**
@@ -21,16 +19,19 @@ class ApiTestAct: CommonActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_api_test)
         tv_video_list.setOnClickListener {
-            OkGo.get<String>("http://api.bilibili.cn/list")
-                    .params("ts", (System.currentTimeMillis() / 1000).toInt())
-                    .params("page", 1)
-                    .params("pagesize", 10)
-                    .execute(object : StringCallback(){
-                        override fun onSuccess(response: Response<String>?) {
-                            logI(response?.body() ?: "")
-                        }
-                    })
+            val testObj = Gson().fromJson("{\"name\": \"aaa\", \"age\": 14}", TestObj::class.java)
+            logI(testObj)
         }
+
+    }
+
+    class TestObj{
+        val name: String = ""
+        val age: Int = 0
+        override fun toString(): String {
+            return "TestObj(name='$name', age=$age)"
+        }
+
 
     }
 }
