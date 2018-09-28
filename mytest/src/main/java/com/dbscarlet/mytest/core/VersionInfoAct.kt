@@ -59,6 +59,11 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
                     .build(Path.TEST.WIDGET_TEST)
                     .navigation()
         }
+        btn_tweet_test.setOnClickListener{
+            ARouter.getInstance()
+                    .build(Path.TWEETS.TWEET_TEST)
+                    .navigation()
+        }
         TinkerUtil.tinkerInstallCallback = this
     }
 

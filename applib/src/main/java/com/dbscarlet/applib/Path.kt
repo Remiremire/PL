@@ -18,4 +18,8 @@ object Path {
         const val CURVE_TEST = "$BASE/curveTest"
         const val WIDGET_TEST = "$BASE/widgetTest"
     }
+    object TWEETS {
+        private const val BASE = "/tweets"
+        const val TWEET_TEST = "$BASE/tweetTest"
+    }
 }

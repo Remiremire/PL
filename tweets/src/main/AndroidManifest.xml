@@ -1,2 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.diwinet.xhs.tweets" />
+    package="com.diwinet.xhs.tweets" >
+
+    <application>
+        <activity android:name=".test.TweetTestAct" />
+    </application>
+</manifest>
