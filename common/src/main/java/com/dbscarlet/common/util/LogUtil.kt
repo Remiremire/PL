@@ -83,12 +83,13 @@ object LogUtil {
     private fun getTargetStackTraceElement(): StackTraceElement? {
         var targetStackTrace: StackTraceElement? = null
         val stackTrace = Thread.currentThread().stackTrace
-        var methodLevel = 5
+        var methodLevel = 3
         for (stackTraceElement in stackTrace) {
-            val inLogUtil = stackTraceElement.className == LogUtil::class.java.name
+            val inLogUtil = stackTraceElement.className.contains(LogUtil::class.java.name)
             if (!inLogUtil) {
                 methodLevel--
             }
+            Log.i("stackTrace", stackTraceElement.className)
             if (methodLevel == 0) {
                 targetStackTrace = stackTraceElement
                 break

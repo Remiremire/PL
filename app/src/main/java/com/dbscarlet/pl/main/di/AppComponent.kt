@@ -2,6 +2,7 @@ package com.dbscarlet.pl.main.di
 
 import com.dbscarlet.mytest.TestInjectors
 import com.dbscarlet.pl.main.application.App
+import com.diwinet.xhs.tweets.di.TweetInjectors
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.support.AndroidSupportInjectionModule
@@ -16,7 +17,8 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         AppModule::class,
         AppInjectors::class,
-        TestInjectors::class
+        TestInjectors::class,
+        TweetInjectors::class
 ])
 interface AppComponent {
     fun inject(app: App)
