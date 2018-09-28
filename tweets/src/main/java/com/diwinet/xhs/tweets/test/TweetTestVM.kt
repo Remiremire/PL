@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import com.dbscarlet.common.basic.BaseVM
 import com.dbscarlet.common.dataResource.Resource
 import com.diwinet.xhs.tweets.bean.HomeTimelineTweet
-import com.diwinet.xhs.tweets.reponsitory.TweetsRespository
+import com.diwinet.xhs.tweets.reponsitory.TweetsRepository
 import javax.inject.Inject
 
 /**
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class TweetTestVM
     @Inject
     constructor(
-            private val tweetsRepository: TweetsRespository
+            private val tweetsRepository: TweetsRepository
     ) :BaseVM() {
 
     fun homeTimeline(): LiveData<Resource<HomeTimelineTweet>> {

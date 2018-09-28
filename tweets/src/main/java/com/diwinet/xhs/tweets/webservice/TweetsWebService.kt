@@ -1,7 +1,9 @@
 package com.diwinet.xhs.tweets.webservice
 
 import com.dbscarlet.applib.contact.TwitterUrl
+import com.dbscarlet.common.network.params
 import com.diwinet.xhs.tweets.bean.HomeTimelineTweet
+import com.diwinet.xhs.tweets.bean.TimelineRequest
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.request.base.Request
 import javax.inject.Inject
@@ -13,15 +15,8 @@ import javax.inject.Inject
 class TweetsWebService
     @Inject
     constructor() {
-    fun homeTimeLine(count: Int = 20, since_id: String? = null,
-                     max_id: String? = null, trim_user: Boolean = false,
-                     exclude_replies: Boolean = false, include_entities: Boolean = true): Request<HomeTimelineTweet, *> {
+    fun homeTimeLine(timelineRequest: TimelineRequest): Request<HomeTimelineTweet, *> {
         return OkGo.get<HomeTimelineTweet>(TwitterUrl.HOME_TIMELINE)
-                .params("count", count)
-                .params("since_id", since_id)
-                .params("max_id", max_id)
-                .params("trim_user", trim_user)
-                .params("exclude_replies", exclude_replies)
-                .params("include_entities", include_entities)
+                .params(timelineRequest)
     }
 }
