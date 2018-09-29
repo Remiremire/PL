@@ -3,6 +3,8 @@ package com.dbscarlet.applib.twitterNetwork
 import android.arch.lifecycle.LiveData
 import com.dbscarlet.applib.NetworkError
 import com.dbscarlet.common.dataResource.Resource
+import com.dbscarlet.common.util.gson
+import com.google.gson.reflect.TypeToken
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.lzy.okgo.request.base.Request
@@ -10,12 +12,19 @@ import com.lzy.okgo.request.base.Request
 /**
  * Created by Daibing Wang on 2018/8/17.
  */
-fun <T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
+inline fun <reified T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
     val request: Request<T, *> = this
     val tag = request.tag ?: request.tag(request)
     return object: LiveData<Resource<T>>() {
         override fun onActive() {
             request.execute(object: JsonCallback<T>(){
+                override fun parseJson(jsonStr: String?): T {
+                    if (jsonStr == null) {
+                        throw TwitterApiException(NetworkError.PARSE_ERROR)
+                    }
+                    return gson.fromJson(jsonStr, object : TypeToken<T>(){}.type)
+                }
+
                 override fun onStart(request: Request<T, out Request<Any, Request<*, *>>>?) {
                     super.onStart(request)
                     value = Resource.loading("加载中...")

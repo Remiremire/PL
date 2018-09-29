@@ -16,7 +16,7 @@ class TweetTestVM
             private val tweetsRepository: TweetsRepository
     ) :BaseVM() {
 
-    fun homeTimeline(): LiveData<Resource<HomeTimelineTweet>> {
+    fun homeTimeline(): LiveData<Resource<List<HomeTimelineTweet>>> {
         return tweetsRepository.homeTimeline()
     }
 }

@@ -15,8 +15,8 @@ import javax.inject.Inject
 class TweetsWebService
     @Inject
     constructor() {
-    fun homeTimeLine(timelineRequest: TimelineRequest): Request<HomeTimelineTweet, *> {
-        return OkGo.get<HomeTimelineTweet>(TwitterUrl.HOME_TIMELINE)
+    fun homeTimeLine(timelineRequest: TimelineRequest): Request<List<HomeTimelineTweet>, *> {
+        return OkGo.get<List<HomeTimelineTweet>>(TwitterUrl.HOME_TIMELINE)
                 .params(timelineRequest)
     }
 }

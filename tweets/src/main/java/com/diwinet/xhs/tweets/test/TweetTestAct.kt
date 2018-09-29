@@ -27,8 +27,8 @@ class TweetTestAct: BaseActivity<ActTweetTestBinding>() {
         binding.btnHomeTimeline
                 .setOnClickListener {
                     tweetTestVM.homeTimeline()
-                            .observe(this, object : ResObserver<HomeTimelineTweet>(){
-                                override fun onSuccess(res: Resource<HomeTimelineTweet>, data: HomeTimelineTweet) {
+                            .observe(this, object : ResObserver<List<HomeTimelineTweet>>(){
+                                override fun onSuccess(res: Resource<List<HomeTimelineTweet>>, data: List<HomeTimelineTweet>) {
                                     logI(data)
                                 }
                             })

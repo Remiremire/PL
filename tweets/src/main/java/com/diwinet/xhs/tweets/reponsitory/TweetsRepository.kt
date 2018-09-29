@@ -17,7 +17,7 @@ class TweetsRepository
             private val tweetsWebService: TweetsWebService
     ) {
 
-    fun homeTimeline(): LiveData<Resource<HomeTimelineTweet>> {
+    fun homeTimeline(): LiveData<Resource<List<HomeTimelineTweet>>> {
         return tweetsWebService.homeTimeLine(TimelineRequest())
                 .toJsonLiveData()
     }

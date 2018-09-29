@@ -28,7 +28,7 @@ fun <R, P, T: Request<R, T>> T.params(params: P, isReplace: Boolean = true, conv
 fun <R, T: Request<R, T>> T.params(params: Any, isReplace: Boolean = true) : T {
     return params(params, isReplace) {
         val fieldMap = mutableMapOf<String, String>()
-        params::class.java.declaredFields.forEach {
+        params::class.java.fields.forEach {
             if (it.get(params) != null) {
                 fieldMap[it.name] = it.get(params).toString()
             }
