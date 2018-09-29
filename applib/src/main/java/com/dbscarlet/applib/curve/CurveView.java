@@ -25,7 +25,7 @@ public class CurveView extends View {
     private float defCurvePaddingLR = dip2Px(12);
     private float pointTouchRangePow = dip2Px(20) * dip2Px(20);
     private OnSelectPointListener onSelectPointListener;
-    private RectF curveRectF = new RectF();
+    private RectF mCurveRF = new RectF();
 
     public CurveView(Context context) {
         super(context);
@@ -116,19 +116,19 @@ public class CurveView extends View {
                 float left = getPaddingLeft();
                 float bottom = getHeight() - getPaddingBottom();
                 float right = getWidth() - getPaddingRight();
-                curveRectF.top = top + dip2Px(24);
-                curveRectF.bottom = bottom;
-                curveRectF.left = left + defCurvePaddingLR;
-                curveRectF.right = right - defCurvePaddingLR;
+                mCurveRF.top = top + dip2Px(24);
+                mCurveRF.bottom = bottom;
+                mCurveRF.left = left + defCurvePaddingLR;
+                mCurveRF.right = right - defCurvePaddingLR;
                 float xAxesStep = 0;
                 if (xAxes != null) {
-                    curveRectF.bottom -= xAxes.getHeight();
-                    xAxes.compute(left, right, curveRectF);
+                    mCurveRF.bottom -= xAxes.getHeight();
+                    xAxes.compute(left, right, mCurveRF);
                     xAxesStep = xAxes.getXAexStep();
                 }
                 if (mCurveLines != null) {
                     for (CurveLine cl : mCurveLines) {
-                        cl.compute(curveRectF, mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
+                        cl.compute(mCurveRF, mMinValueLimit, mMaxValueLimit, xAxesStep, LINE_SMOOTHNESS);
                     }
                 }
                 invalidate();
@@ -149,7 +149,7 @@ public class CurveView extends View {
         }
         if (mCurveLines != null && mCurveLines.size() > 0) {
             canvas.save();
-            canvas.clipRect(curveRectF);
+            canvas.clipRect(mCurveRF);
             for (CurveLine cl : mCurveLines) {
                 if (cl.isVisible()) {
                     cl.drawLine(canvas);
