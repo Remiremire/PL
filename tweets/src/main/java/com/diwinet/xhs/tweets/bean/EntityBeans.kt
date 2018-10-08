@@ -4,93 +4,103 @@ package com.diwinet.xhs.tweets.bean
  * Created by Daibing Wang on 2018/9/12.
  */
 
-data class Hashtag(
-    val indices: List<Int>,
-    val text: String
-)
-
-data class Url(
-    val indices: List<Int>,
-    val url: String,
-    val display_url: String,
-    val expanded_url: String,
-    val unwound: Unwound?
-) {
-
-    data class Unwound(
-        val url: String,
-        val status: Int,
-        val title: String,
-        val description: String
-    )
+class Hashtag{
+    lateinit var indices: List<Int>
+    lateinit var text: String
 }
 
-data class UserMention(
-    val name: String,
-    val indices: List<Int>,
-    val screen_name: String,
-    val id_str: String
-)
+class Url{
+    lateinit var indices: List<Int>
+    lateinit var url: String
+    lateinit var display_url: String
+    lateinit var expanded_url: String
+    lateinit var unwound: Unwound
 
-data class Symbol(
-    val indices: List<Int>,
-    val text: String
-)
-
-data class Poll(
-    val options: List<Option>,
-    val end_datetime: String,
-    val duration_minutes: Int
-) {
-
-    data class Option(
-            val position: Int,
-            val text: String
-    )
+    class Unwound {
+        lateinit var url: String
+        var status: Int = 0
+        lateinit var title: String
+        lateinit var description: String
+    }
 }
 
-data class Media(
-    val type: String,
-    val sizes: Sizes,
-    val indices: List<Int>,
-    val url: String,
-    val media_url: String,
-    val display_url: String,
-    val id_str: String,
-    val expanded_url: String,
-    val media_url_https: String,
-    val source_status_id_str: String?
-) {
-
-    data class Sizes(
-            val thumb: Thumb,
-            val large: Large,
-            val medium: Medium,
-            val small: Small
-    )
-
-    data class Large(
-            val h: Int,
-            val resize: String,
-            val w: Int
-    )
-
-    data class Small(
-            val h: Int,
-            val resize: String,
-            val w: Int
-    )
-
-    data class Medium(
-            val h: Int,
-            val resize: String,
-            val w: Int
-    )
-
-    data class Thumb(
-            val h: Int,
-            val resize: String,
-            val w: Int
-    )
+class UserMention{
+    lateinit var name: String
+    lateinit var indices: List<Int>
+    lateinit var screen_name: String
+    lateinit var id_str: String
 }
 
+class Symbol{
+    lateinit var indices: List<Int>
+    lateinit var text: String
+}
+
+class Poll{
+    lateinit var options: List<Option>
+    lateinit var end_datetime: String
+    var duration_minutes: Int = 0
+
+    class Option{
+        var position: Int = 0
+        lateinit var text: String
+    }
+}
+
+class Media {
+    lateinit var type: String
+    lateinit var sizes: Sizes
+    lateinit var indices: List<Int>
+    lateinit var url: String
+    lateinit var media_url: String
+    lateinit var display_url: String
+    lateinit var id_str: String
+    lateinit var expanded_url: String
+    lateinit var media_url_https: String
+    var source_status_id_str: String? = null
+}
+
+class Sizes{
+    lateinit var thumb: SizeInfo
+    lateinit var large: SizeInfo
+    lateinit var medium: SizeInfo
+    lateinit var small: SizeInfo
+
+    class SizeInfo{
+        var w: Int = 0
+        var h: Int = 0
+        lateinit var resize: String
+
+    }
+}
+
+class ExMedia{
+    lateinit var type: String
+    lateinit var sizes: Sizes
+    lateinit var indices: List<Int>
+    lateinit var url: String
+    lateinit var media_url: String
+    lateinit var display_url: String
+    lateinit var id_str: String
+    lateinit var expanded_url: String
+    lateinit var media_url_https: String
+    var source_status_id_str: String? = null
+    var video_info: VideoInfo? = null
+    var additional_media_info: AdditionalMediaInfo? = null
+}
+
+class VideoInfo{
+    lateinit var aspect_ratio: List<Int>
+    var duration_millis: Int = 0
+    lateinit var variants: List<Variant>
+
+    class Variant{
+        lateinit var content_type: String
+        lateinit var url: String
+        var bitrate: Int = 0
+    }
+}
+
+class AdditionalMediaInfo{
+    var monetizable: Boolean = false
+}

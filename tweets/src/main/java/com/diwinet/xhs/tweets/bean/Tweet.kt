@@ -31,16 +31,20 @@ open class Tweet{
     val lang: String? = null
     val matching_rules: List<MatchingRule>? = null
 
-    class Entities() {
-
+    class Entities {
+        val hashtags: List<Hashtag> = mutableListOf()
+        val symbols: List<Symbol> = mutableListOf()
+        val user_mentions: List<UserMention> = mutableListOf()
+        val urls: List<Url> = mutableListOf()
+        val media: List<Media>? = null
     }
 
-    class ExEntities() {
-
+    class ExEntities{
+        lateinit var media: List<ExMedia>
     }
 
-    data class MatchingRule(
-        val tag: String,
-        val id_str: String
-    )
+    class MatchingRule{
+        val tag: String = ""
+        val id_str: String = ""
+    }
 }
