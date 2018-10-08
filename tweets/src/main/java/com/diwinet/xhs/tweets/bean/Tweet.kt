@@ -4,39 +4,39 @@ package com.diwinet.xhs.tweets.bean
  * Created by Daibing Wang on 2018/9/26.
  */
 open class Tweet{
-    val created_at: String = ""
-    val id_str: String = ""
-    val text: String = ""
-    val source: String = ""
-    val truncated: Boolean = false
-    val in_reply_to_status_id_str: String? = null
-    val in_reply_to_user_id_str: String? = null
-    val in_reply_to_screen_name: String? = null
-    val user: User = User()
-    val place: Place? = null
-    val quoted_status_id_str: String? = null
-    val is_quote_status: Boolean? = null
-    val quoted_status: Tweet? = null
-    val retweeted_status: Tweet? = null
-    val quote_count: Int = 0
-    val reply_count: Int = 0
-    val retweet_count: Int = 0
-    val favorite_count: Int = 0
-    val entities: Entities = Entities()
-    val extendedEntities: ExEntities? = ExEntities()
-    val favorited: Boolean? = null
-    val retweeted: Boolean = false
-    val possibly_sensitive: Boolean? = null
-    val filter_level: String? = null
-    val lang: String? = null
-    val matching_rules: List<MatchingRule>? = null
+    lateinit var created_at: String
+    lateinit var id_str: String
+    lateinit var text: String
+    lateinit var source: String
+    var truncated: Boolean = false
+    var in_reply_to_status_id_str: String? = null
+    var in_reply_to_user_id_str: String? = null
+    var in_reply_to_screen_name: String? = null
+    lateinit var user: User
+    var place: Place? = null
+    var quoted_status_id_str: String? = null
+    var is_quote_status: Boolean? = null
+    var quoted_status: Tweet? = null
+    var retweeted_status: Tweet? = null
+    var quote_count: Int = 0
+    var reply_count: Int = 0
+    var retweet_count: Int = 0
+    var favorite_count: Int = 0
+    lateinit var entities: Entities
+    var extendedEntities: ExEntities? = null
+    var favorited: Boolean? = null
+    var retweeted: Boolean = false
+    var possibly_sensitive: Boolean? = null
+    var filter_level: String? = null
+    var lang: String? = null
+    var matching_rules: List<MatchingRule>? = null
 
     class Entities {
-        val hashtags: List<Hashtag> = mutableListOf()
-        val symbols: List<Symbol> = mutableListOf()
-        val user_mentions: List<UserMention> = mutableListOf()
-        val urls: List<Url> = mutableListOf()
-        val media: List<Media>? = null
+        lateinit var hashtags: List<Hashtag>
+        lateinit var symbols: List<Symbol>
+        lateinit var user_mentions: List<UserMention>
+        lateinit var urls: List<Url>
+        var media: List<Media>? = null
     }
 
     class ExEntities{
@@ -44,7 +44,7 @@ open class Tweet{
     }
 
     class MatchingRule{
-        val tag: String = ""
-        val id_str: String = ""
+        lateinit var tag: String
+        lateinit var id_str: String
     }
 }
