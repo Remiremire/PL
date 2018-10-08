@@ -23,7 +23,7 @@ open class Tweet{
     var retweet_count: Int = 0
     var favorite_count: Int = 0
     lateinit var entities: Entities
-    var extendedEntities: ExEntities? = null
+    var extended_entities: ExEntities? = null
     var favorited: Boolean? = null
     var retweeted: Boolean = false
     var possibly_sensitive: Boolean? = null
