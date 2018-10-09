@@ -19,10 +19,11 @@ inline fun <reified T> Request<T, *>.toJsonLiveData(): LiveData<Resource<T>> {
         override fun onActive() {
             request.execute(object: JsonCallback<T>(){
                 override fun parseJson(jsonStr: String?): T {
-                    if (jsonStr == null) {
+                    try {
+                        return gson.fromJson(jsonStr, object : TypeToken<T>(){}.type)
+                    } catch (e: Exception) {
                         throw TwitterApiException(NetworkError.PARSE_ERROR)
                     }
-                    return gson.fromJson(jsonStr, object : TypeToken<T>(){}.type)
                 }
 
                 override fun onStart(request: Request<T, out Request<Any, Request<*, *>>>?) {
