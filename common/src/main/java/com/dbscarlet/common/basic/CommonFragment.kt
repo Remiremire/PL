@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.support.v4.app.Fragment
-import com.dbscarlet.common.permission.PermissionRequest
 import dagger.android.support.AndroidSupportInjection
 
 /**
@@ -30,13 +29,4 @@ abstract class CommonFragment: Fragment() {
 
     }
 
-    /**
-     * 动态权限申请，默认直接调用CommonActivity的实现
-     */
-    open fun requestPermissions(requestCode: Int): PermissionRequest {
-        when(activity) {
-            is CommonActivity-> return (activity as CommonActivity).requestPermissions(requestCode)
-        }
-        throw IllegalStateException("the activity of ${this::class.simpleName} is not extends of CommonActivity, can't use requestPermission")
-    }
 }

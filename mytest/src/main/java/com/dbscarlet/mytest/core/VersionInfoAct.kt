@@ -68,12 +68,12 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
             101->{
                 if (resultCode == Activity.RESULT_OK) {
-                    val patchFile = data.getSerializableExtra("patchFile") as File
+                    val patchFile = data?.getSerializableExtra("patchFile") as File
                     TinkerUtil.installTinkerPatch(this, patchFile.absolutePath)
                 }
             }

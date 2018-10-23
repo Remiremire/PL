@@ -15,6 +15,7 @@ import com.dbscarlet.applib.Path
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.FileUtil
 import com.dbscarlet.mytest.R
+import com.scarlet.lightpermission.LightPermission
 import kotlinx.android.synthetic.main.act_find_patch.*
 import kotlinx.android.synthetic.main.item_find_patch.view.*
 import java.io.File
@@ -43,30 +44,30 @@ class FindPatchAct: CommonActivity() {
             patchFile?.delete()
             updateFileList()
         }
-        requestPermissions(102)
+        LightPermission.request(this)
                 .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .onExplain {
+                .onNeedExplain { activity, permRequest, requestPermission ->
                     Toast.makeText(this, "需要存储权限", Toast.LENGTH_SHORT).show()
-                    it.askPermission()
-                }.onGoAppSetting {
-                    AlertDialog.Builder(this)
-                            .setMessage("需要跳转设置界面申请权限")
-                            .setNegativeButton("取消") { _, _ -> it.cancel() }
-                            .setPositiveButton("确定"){ _, _ -> it.goSetting()}
-                            .show()
-                }.onRefused {
+                    requestPermission.requestPermission()
+                }.onRefused { activity, permRequest, list ->
+                    Toast.makeText(this, "缺少存储权限", Toast.LENGTH_LONG).show()
                     finish()
-                }.execute {
+                }.onDisable { activity, permRequest, setAppPermission ->
+                    AlertDialog.Builder(activity)
+                            .setMessage("需要跳转设置界面申请权限")
+                            .setNegativeButton("取消") { _, _ -> setAppPermission.cancel() }
+                            .setPositiveButton("确定"){ _, _ -> setAppPermission.goSetting()}
+                            .show()
+                }.execute { activity, permRequest ->
                     fileStack.push(FileUtil.getSdRootDir())
                     updateFileList()
                 }
-
         }
 
     private fun updateFileList() {
-        requestPermissions(103)
+        LightPermission.request(this)
                 .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .execute {
+                .execute { activity, permRequest ->
                     fileList.clear()
                     fileList.addAll(fileStack.peek().listFiles())
                     fileList.sortWith(Comparator {
