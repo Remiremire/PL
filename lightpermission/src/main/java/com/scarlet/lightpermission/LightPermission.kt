@@ -67,7 +67,7 @@ object LightPermission {
             strBuilder.append("短信, ")
         }
         if (permissionList.contains(Manifest.permission.RECORD_AUDIO)) {
-            strBuilder.append("录音")
+            strBuilder.append("录音, ")
         }
         if (permissionList.contains(Manifest.permission.READ_PHONE_STATE)
                 || permissionList.contains(Manifest.permission.CALL_PHONE)
