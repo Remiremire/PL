@@ -1,6 +1,7 @@
 package com.dbscarlet.mediademo.di
 
 import com.dbscarlet.mediademo.MediaMainAct
+import com.dbscarlet.mediademo.image.CameraTestAct
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -11,4 +12,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class MediaInjectors{
     @ContributesAndroidInjector
     abstract fun mediaTest(): MediaMainAct
+
+    @ContributesAndroidInjector
+    abstract fun cameraTest(): CameraTestAct
 }

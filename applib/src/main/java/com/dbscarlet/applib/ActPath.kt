@@ -26,5 +26,6 @@ object ActPath {
     object Media {
         private const val BASE = "/media"
         const val MEDIA_MAIN = "$BASE/main"
+        const val CAMERA_TEST = "$BASE/cameraTest"
     }
 }

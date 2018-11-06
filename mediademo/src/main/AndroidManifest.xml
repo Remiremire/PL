@@ -2,6 +2,16 @@
     package="com.dbscarlet.mediademo" >
 
     <application>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.dbscarlet.pl"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/path_provide" />
+        </provider>
         <activity android:name=".MediaMainAct" />
+        <activity android:name=".image.CameraTestAct" />
     </application>
 </manifest>
