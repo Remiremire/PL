@@ -7,7 +7,7 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.ActPath
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.AppInfo
 import com.dbscarlet.common.util.InstallCallback
@@ -21,7 +21,7 @@ import java.io.File
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = Path.TEST.TINKER_TEST)
+@Route(path = ActPath.TEST.TINKER_TEST)
 class VersionInfoAct: CommonActivity(), InstallCallback {
 
     @JvmField
@@ -36,32 +36,37 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         binding.patchInfo = "Patch_$patchCode"
         btn_install_patch.setOnClickListener{
             ARouter.getInstance()
-                    .build(Path.TEST.FIND_PATCH_FILE)
+                    .build(ActPath.TEST.FIND_PATCH_FILE)
                     .navigation(this, 101)
         }
         btn_api_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(Path.TEST.API_TEST)
+                    .build(ActPath.TEST.API_TEST)
                     .navigation(this)
         }
         btn_authentication.setOnClickListener {
             ARouter.getInstance()
-                    .build(Path.TEST.AUTHENTICATION)
+                    .build(ActPath.TEST.AUTHENTICATION)
                     .navigation(this)
         }
         btn_curve_test.setOnClickListener{
             ARouter.getInstance()
-                    .build(Path.TEST.CURVE_TEST)
+                    .build(ActPath.TEST.CURVE_TEST)
                     .navigation(this)
         }
         btn_widget_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(Path.TEST.WIDGET_TEST)
+                    .build(ActPath.TEST.WIDGET_TEST)
+                    .navigation()
+        }
+        btn_behavior_test.setOnClickListener {
+            ARouter.getInstance()
+                    .build(ActPath.TEST.BEHAVIOR_TEST)
                     .navigation()
         }
         btn_tweet_test.setOnClickListener{
             ARouter.getInstance()
-                    .build(Path.TWEETS.TWEET_TEST)
+                    .build(ActPath.TWEETS.TWEET_TEST)
                     .navigation()
         }
         TinkerUtil.tinkerInstallCallback = this

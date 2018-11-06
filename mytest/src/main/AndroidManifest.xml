@@ -7,5 +7,6 @@
         <activity android:name=".core.authentication.AuthenticationAct" />
         <activity android:name=".core.curvetest.CurveTestActivity" />
         <activity android:name=".widget.test.WidgetTestAct" />
+        <activity android:name=".widget.test.behaviorTest.BehaviorTestAct" />
     </application>
 </manifest>

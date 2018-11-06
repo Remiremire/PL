@@ -3,7 +3,7 @@ package com.dbscarlet.applib
 /**
  * Created by Daibing Wang on 2018/6/28.
  */
-object Path {
+object ActPath {
     object APP {
         private const val BASE = "/app"
         const val HOME = "$BASE/home"
@@ -17,6 +17,7 @@ object Path {
         const val AUTHENTICATION = "$BASE/authentication"
         const val CURVE_TEST = "$BASE/curveTest"
         const val WIDGET_TEST = "$BASE/widgetTest"
+        const val BEHAVIOR_TEST = "$BASE/behaviorTest"
     }
     object TWEETS {
         private const val BASE = "/tweets"

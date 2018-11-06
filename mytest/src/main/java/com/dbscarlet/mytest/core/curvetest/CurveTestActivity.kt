@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.applib.curve.*
 import com.dbscarlet.mytest.R
@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Created by Daibing Wang on 2018/8/24.
  */
-@Route(path = Path.TEST.CURVE_TEST)
+@Route(path = ActPath.TEST.CURVE_TEST)
 class CurveTestActivity: BaseActivity<ActCurveTestBinding>() {
     private val updaterList = mutableListOf<PointUpdater>()
     private val updateThread = UpdateThread()

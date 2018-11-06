@@ -14,6 +14,7 @@ abstract class BaseActivity<T: ViewDataBinding>: CommonActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DataBindingUtil.bind<T>(this.window.decorView)
         binding = DataBindingUtil.setContentView(this, getContentLayout())
         initView()
         initData()

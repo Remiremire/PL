@@ -5,7 +5,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
 import com.dbscarlet.common.dataResource.Resource
@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/8/14.
  */
-@Route(path = Path.APP.AUTHORIZE)
+@Route(path = ActPath.APP.AUTHORIZE)
 class AuthorizeAct: BaseActivity<ActAuthorizeBinding>() {
     @Inject
     lateinit var authorizeVM: AuthorizeVM

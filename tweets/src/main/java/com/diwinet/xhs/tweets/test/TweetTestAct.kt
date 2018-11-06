@@ -1,7 +1,7 @@
 package com.diwinet.xhs.tweets.test
 
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
 import com.dbscarlet.common.dataResource.Resource
@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/9/28.
  */
-@Route(path = Path.TWEETS.TWEET_TEST)
+@Route(path = ActPath.TWEETS.TWEET_TEST)
 class TweetTestAct: BaseActivity<ActTweetTestBinding>() {
     @Inject
     lateinit var tweetTestVM: TweetTestVM

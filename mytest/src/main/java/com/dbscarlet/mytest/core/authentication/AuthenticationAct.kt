@@ -7,7 +7,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.dbscarlet.applib.Path
+import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.twitterNetwork.*
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.util.logI
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.act_authentication.*
 /**
  * Created by Daibing Wang on 2018/7/18.
  */
-@Route(path = Path.TEST.AUTHENTICATION)
+@Route(path = ActPath.TEST.AUTHENTICATION)
 class AuthenticationAct: CommonActivity() {
 
     private var token: String? = null
