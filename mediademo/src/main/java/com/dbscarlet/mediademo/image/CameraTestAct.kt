@@ -1,5 +1,6 @@
 package com.dbscarlet.mediademo.image
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -14,6 +15,7 @@ import com.dbscarlet.common.util.logI
 import com.dbscarlet.mediademo.Constant
 import com.dbscarlet.mediademo.R
 import com.dbscarlet.mediademo.databinding.ActCameraTestBinding
+import com.scarlet.lightpermission.LightPermission
 import java.io.File
 import kotlin.math.max
 
@@ -33,16 +35,21 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
 
     override fun initView() {
         binding.ivCameraImg.setOnClickListener {
-            val file = File(imgFilePath)
-            val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                Uri.fromFile(file)
-            } else {
-                FileProvider.getUriForFile(this, application.packageName, file)
-            }
-            startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    .putExtra(MediaStore.EXTRA_OUTPUT, uri)
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
-                    request_img_capture)
+            LightPermission.request(this)
+                    .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .execute { activity, permRequest ->
+                        val file = File(imgFilePath)
+                        val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                            Uri.fromFile(file)
+                        } else {
+                            FileProvider.getUriForFile(this, application.packageName, file)
+                        }
+                        startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                .putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                request_img_capture)
+                    }
         }
     }
 
