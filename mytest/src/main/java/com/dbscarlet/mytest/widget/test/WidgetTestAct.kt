@@ -18,7 +18,7 @@ import com.dbscarlet.mytest.widget.CustomTabLayout
 /**
  * Created by Daibing Wang on 2018/8/27.
  */
-@Route(path = ActPath.TEST.WIDGET_TEST)
+@Route(path = ActPath.Test.WIDGET_TEST)
 class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
     override fun getContentLayout(): Int {
         return R.layout.act_widget_test

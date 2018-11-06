@@ -21,7 +21,7 @@ import java.io.File
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = ActPath.TEST.TINKER_TEST)
+@Route(path = ActPath.Test.TINKER_TEST)
 class VersionInfoAct: CommonActivity(), InstallCallback {
 
     @JvmField
@@ -36,37 +36,37 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
         binding.patchInfo = "Patch_$patchCode"
         btn_install_patch.setOnClickListener{
             ARouter.getInstance()
-                    .build(ActPath.TEST.FIND_PATCH_FILE)
+                    .build(ActPath.Test.FIND_PATCH_FILE)
                     .navigation(this, 101)
         }
         btn_api_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.TEST.API_TEST)
+                    .build(ActPath.Test.API_TEST)
                     .navigation(this)
         }
         btn_authentication.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.TEST.AUTHENTICATION)
+                    .build(ActPath.Test.AUTHENTICATION)
                     .navigation(this)
         }
         btn_curve_test.setOnClickListener{
             ARouter.getInstance()
-                    .build(ActPath.TEST.CURVE_TEST)
+                    .build(ActPath.Test.CURVE_TEST)
                     .navigation(this)
         }
         btn_widget_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.TEST.WIDGET_TEST)
+                    .build(ActPath.Test.WIDGET_TEST)
                     .navigation()
         }
         btn_behavior_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.TEST.BEHAVIOR_TEST)
+                    .build(ActPath.Test.BEHAVIOR_TEST)
                     .navigation()
         }
         btn_tweet_test.setOnClickListener{
             ARouter.getInstance()
-                    .build(ActPath.TWEETS.TWEET_TEST)
+                    .build(ActPath.Tweet.TWEET_TEST)
                     .navigation()
         }
         TinkerUtil.tinkerInstallCallback = this

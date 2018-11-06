@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/8/14.
  */
-@Route(path = ActPath.APP.AUTHORIZE)
+@Route(path = ActPath.App.AUTHORIZE)
 class AuthorizeAct: BaseActivity<ActAuthorizeBinding>() {
     @Inject
     lateinit var authorizeVM: AuthorizeVM

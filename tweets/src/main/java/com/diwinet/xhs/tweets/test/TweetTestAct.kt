@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/9/28.
  */
-@Route(path = ActPath.TWEETS.TWEET_TEST)
+@Route(path = ActPath.Tweet.TWEET_TEST)
 class TweetTestAct: BaseActivity<ActTweetTestBinding>() {
     @Inject
     lateinit var tweetTestVM: TweetTestVM

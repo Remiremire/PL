@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.act_api_test.*
 /**
  * Created by Daibing Wang on 2018/7/10.
  */
-@Route(path = ActPath.TEST.API_TEST)
+@Route(path = ActPath.Test.API_TEST)
 class ApiTestAct: CommonActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

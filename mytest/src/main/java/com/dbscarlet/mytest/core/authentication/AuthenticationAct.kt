@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.act_authentication.*
 /**
  * Created by Daibing Wang on 2018/7/18.
  */
-@Route(path = ActPath.TEST.AUTHENTICATION)
+@Route(path = ActPath.Test.AUTHENTICATION)
 class AuthenticationAct: CommonActivity() {
 
     private var token: String? = null

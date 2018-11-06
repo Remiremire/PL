@@ -24,7 +24,7 @@ import java.util.*
 /**
  * Created by Daibing Wang on 2018/7/3.
  */
-@Route(path = ActPath.TEST.FIND_PATCH_FILE)
+@Route(path = ActPath.Test.FIND_PATCH_FILE)
 class FindPatchAct: CommonActivity() {
     private val fileList: MutableList<File> = mutableListOf()
     private var fileStack: Stack<File> = Stack()

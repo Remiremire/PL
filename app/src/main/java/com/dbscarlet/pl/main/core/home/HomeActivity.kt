@@ -10,7 +10,7 @@ import com.dbscarlet.pl.BuildConfig
 import com.dbscarlet.pl.R
 import kotlinx.android.synthetic.main.activity_home.*
 
-@Route(path = ActPath.APP.HOME)
+@Route(path = ActPath.App.HOME)
 class HomeActivity : CommonActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,13 +18,18 @@ class HomeActivity : CommonActivity() {
         setContentView(R.layout.activity_home)
         tv_tinker_test.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.TEST.TINKER_TEST)
+                    .build(ActPath.Test.TINKER_TEST)
                     .withInt("patchCode", BuildConfig.TINKER_PATCH_VERSION)
                     .navigation(this)
         }
         tv_hello.setOnClickListener {
             ARouter.getInstance()
-                    .build(ActPath.APP.AUTHORIZE)
+                    .build(ActPath.App.AUTHORIZE)
+                    .navigation(this)
+        }
+        tv_media.setOnClickListener {
+            ARouter.getInstance()
+                    .build(ActPath.Media.MEDIA_MAIN)
                     .navigation(this)
         }
     }
