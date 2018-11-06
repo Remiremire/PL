@@ -2,6 +2,7 @@ package com.dbscarlet.mediademo.image
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -11,7 +12,6 @@ import android.support.v4.content.FileProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
-import com.dbscarlet.common.util.logI
 import com.dbscarlet.mediademo.Constant
 import com.dbscarlet.mediademo.R
 import com.dbscarlet.mediademo.databinding.ActCameraTestBinding
@@ -51,6 +51,17 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
                                 request_img_capture)
                     }
         }
+        binding.tvInsertImg.setOnClickListener {
+            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
+            val file = File(imgFilePath)
+            val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                Uri.fromFile(file)
+            } else {
+                FileProvider.getUriForFile(this, application.packageName, file)
+            }
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    .putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -60,9 +71,8 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
                 if (resultCode == Activity.RESULT_OK) {
                     val options = BitmapFactory.Options()
                     options.inJustDecodeBounds = true
-                    logI("file path:$imgFilePath")
-                    val imgInfo = BitmapFactory.decodeFile(imgFilePath, options)
-                    options.inSampleSize = max(imgInfo.width / defWidth, imgInfo.height / defHeight)
+                    BitmapFactory.decodeFile(imgFilePath, options)
+                    options.inSampleSize = max(options.outWidth / defWidth, options.outHeight / defHeight)
                     options.inJustDecodeBounds = false
                     val imgBitmap = BitmapFactory.decodeFile(imgFilePath, options)
                     binding.ivCameraImg.setImageBitmap(imgBitmap)
