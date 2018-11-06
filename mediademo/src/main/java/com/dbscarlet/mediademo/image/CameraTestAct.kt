@@ -38,7 +38,7 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
             LightPermission.request(this)
                     .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .execute { activity, permRequest ->
+                    .execute { _, _ ->
                         val file = File(imgFilePath)
                         val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                             Uri.fromFile(file)
