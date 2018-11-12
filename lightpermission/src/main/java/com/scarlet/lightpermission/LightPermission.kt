@@ -89,6 +89,9 @@ object LightPermission {
                 || permissionList.contains(Manifest.permission.GET_ACCOUNTS)) {
             strBuilder.append("联系人, ")
         }
+        if (permissionList.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)) {
+            strBuilder.append("安装应用, ")
+        }
         return if (strBuilder.length > 0) {
             strBuilder.substring(0, strBuilder.length - 2)
         } else ""
