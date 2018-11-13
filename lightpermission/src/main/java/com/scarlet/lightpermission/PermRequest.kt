@@ -49,7 +49,7 @@ class PermRequest private constructor(val permissions: Array<String>,
         private var onRefused: ((Activity, PermRequest, List<String>) -> Unit)? = null
 
         constructor(fragment: Fragment) {
-            activity = fragment.activity
+            activity = fragment.activity ?: throw IllegalStateException("fragment request permission must attach with activity")
             fragmentManager = fragment.childFragmentManager
         }
 

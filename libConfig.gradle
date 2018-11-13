@@ -1,13 +1,29 @@
 
 project.ext{
-    compile_sdk_version = 26
-    target_sdk_version = 26
+    compile_sdk_version = 27
+    target_sdk_version = 27
     min_sdk_version = 21
 
-    support_v7_version = "26.1.0"
-    dagger2_version = '2.16'
-    rxJava2_version = '2.1.7'
-    rxAndroid_version = '2.0.2'
+    multidex_version = '1.0.3'
+    support_v7_version = "$compile_sdk_version.+"
+    support_v4_version = "$compile_sdk_version.+"
+    support_annotations = "$compile_sdk_version.+"
+    recyclerview_v7_version = "$compile_sdk_version.+"
+    design_version = "$compile_sdk_version.+"
+    cardview_v7_version = "$compile_sdk_version.+"
+
     lifecycle_version = '1.1.1'
-    arouter_compiler_version = '1.1.4'
+
+    dagger2_version = '2.19'
+    rxJava2_version = '2.1.9'
+    rxAndroid_version = '2.0.2'
+    retrofit2_version = '2.4.0'
+    gson_version = '2.8.2'
+    eventbus_version = '3.0.0'
+    arouter_api_version = '1.4.1'
+    arouter_compiler_version = '1.2.2'
+    picasso_version = '2.5.2'
+    glide_version = '3.+'
+    butterknife_version = '8.8.1'
+
 }

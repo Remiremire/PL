@@ -94,7 +94,7 @@ class FindPatchAct: CommonActivity() {
     }
 
     private inner class Adapter: RecyclerView.Adapter<Adapter.Holder>() {
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
             return Holder(layoutInflater.inflate(R.layout.item_find_patch, parent, false))
         }
 
@@ -102,13 +102,13 @@ class FindPatchAct: CommonActivity() {
             return fileList.size
         }
 
-        override fun onBindViewHolder(holder: Holder?, position: Int) {
+        override fun onBindViewHolder(holder: Holder, position: Int) {
             val file = fileList[position]
-            holder?.itemView?.tv_file_name?.text = file.name
-            holder?.itemView?.tv_flag?.text = if (file.isDirectory) ">"
+            holder.itemView?.tv_file_name?.text = file.name
+            holder.itemView?.tv_flag?.text = if (file.isDirectory) ">"
             else if (file.equals(patchFile)) "√"
             else ""
-            holder?.itemView?.setOnClickListener{
+            holder.itemView?.setOnClickListener{
                 if (file.isDirectory) {
                     fileStack.push(file)
                     updateFileList()

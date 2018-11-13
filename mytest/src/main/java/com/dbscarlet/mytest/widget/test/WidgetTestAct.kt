@@ -52,7 +52,7 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
     }
 
     inner class PageAdapter: PagerAdapter() {
-        override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+        override fun isViewFromObject(view: View, `object`: Any): Boolean {
             return view === `object`
         }
 
@@ -60,7 +60,7 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
             return 10
         }
 
-        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val tv = TextView(this@WidgetTestAct)
             tv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT)
@@ -68,12 +68,12 @@ class WidgetTestAct: BaseActivity<ActWidgetTestBinding>() {
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
             tv.text = "content${position + 1}"
             tv.setTextColor(Color.BLACK)
-            container?.addView(tv)
+            container.addView(tv)
             return tv
         }
 
-        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-            container?.removeView(`object` as View)
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            container.removeView(`object` as View)
         }
 
         override fun getPageTitle(position: Int): CharSequence {

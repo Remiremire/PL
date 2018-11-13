@@ -83,20 +83,20 @@ class CurveTestActivity: BaseActivity<ActCurveTestBinding>() {
             return updaterList.size
         }
 
-        override fun onBindViewHolder(holder: Holder?, position: Int) {
+        override fun onBindViewHolder(holder: Holder, position: Int) {
             val line = CurveLine(this@CurveTestActivity, Color.GREEN)
-            holder?.curveView?.setCurveLine(listOf(line))
-            updaterList[position].curveView = holder?.curveView
+            holder.curveView.setCurveLine(listOf(line))
+            updaterList[position].curveView = holder.curveView
             updaterList[position].line = line
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
             val view = layoutInflater.inflate(R.layout.item_curve_test, parent, false)
             return Holder(view)
         }
 
         inner class Holder(itemView: View): RecyclerView.ViewHolder(itemView) {
-            val curveView: CurveView = itemView.findViewById(R.id.curve_view)
+            val curveView = itemView.findViewById(R.id.curve_view) as CurveView
             init {
                 val xAxes = XAxes(this@CurveTestActivity)
                 xAxes.setLabels(listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))

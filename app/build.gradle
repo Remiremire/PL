@@ -44,6 +44,7 @@ repositories {
     mavenCentral()
     maven { url 'https://maven.google.com' }
 }
+
 kapt {
     arguments {
         arg("moduleName", project.getName())
@@ -51,11 +52,20 @@ kapt {
     generateStubs = true
 }
 
+//configurations.all {
+//    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+//        def requested = details.requested
+//        //统一所有support库版本，必须先确认这样不会导致版本冲突
+//        if (requested.group == 'com.android.support') {
+//            if (!requested.name.startsWith("multidex")) {
+//                details.useVersion '25.4.0'
+//            }
+//        }
+//    }
+//}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':applib')
     implementation project(':tweets')
     implementation project(':mytest')

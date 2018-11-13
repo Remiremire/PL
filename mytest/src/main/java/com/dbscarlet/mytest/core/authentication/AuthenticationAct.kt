@@ -81,9 +81,7 @@ class AuthenticationAct: CommonActivity() {
     private fun showWebDialog(html: String) {
         val dialog = Dialog(this)
         val webView = WebView(this)
-        webView.webChromeClient = WebChromeClient()
-        webView.webViewClient  = WebViewClient()
-
+        webView.setWebChromeClient(WebChromeClient())
 
         val settings = webView.settings
         // 此方法需要启用JavaScript
@@ -93,12 +91,12 @@ class AuthenticationAct: CommonActivity() {
         webView.addJavascriptInterface(MyJavaScriptInterface(), "HTMLOUT")
 
         // 必须在loadUrl之前设置WebViewClient
-        webView.webViewClient = object : WebViewClient() {
+        webView.setWebViewClient(object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 // 这里可以过滤一下url
                 webView.loadUrl("javascript:HTMLOUT.processHTML(document.documentElement.outerHTML);")
             }
-        }
+        })
 
         // 开始加载网址
         webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null)
