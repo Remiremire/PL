@@ -26,7 +26,7 @@ android {
 }
 kapt {
     arguments {
-        arg("moduleName", project.getName())
+        arg("AROUTER_MODULE_NAME", project.getName())
     }
     generateStubs = true
 }
