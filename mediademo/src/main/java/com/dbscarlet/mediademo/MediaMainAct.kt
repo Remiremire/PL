@@ -21,5 +21,10 @@ class MediaMainAct: BaseActivity<ActMediaTestBinding>() {
                     .build(ActPath.Media.CAMERA_TEST)
                     .navigation(this)
         }
+        binding.tvCameraSurface.setOnClickListener {
+            ARouter.getInstance()
+                    .build(ActPath.Media.CAMERA_SURFACE)
+                    .navigation(this)
+        }
     }
 }

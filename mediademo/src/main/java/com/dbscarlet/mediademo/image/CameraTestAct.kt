@@ -40,11 +40,7 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                     .execute { _, _ ->
                         val file = File(imgFilePath)
-                        val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                            Uri.fromFile(file)
-                        } else {
-                            FileProvider.getUriForFile(this, application.packageName, file)
-                        }
+                        val uri = createFileUri(file)
                         startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                                 .putExtra(MediaStore.EXTRA_OUTPUT, uri)
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
@@ -54,13 +50,17 @@ class CameraTestAct: BaseActivity<ActCameraTestBinding>() {
         binding.tvInsertImg.setOnClickListener {
             contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
             val file = File(imgFilePath)
-            val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                Uri.fromFile(file)
-            } else {
-                FileProvider.getUriForFile(this, application.packageName, file)
-            }
+            val uri = createFileUri(file)
             Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     .putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        }
+    }
+
+    private fun createFileUri(file: File): Uri {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Uri.fromFile(file)
+        } else {
+            FileProvider.getUriForFile(this, application.packageName, file)
         }
     }
 

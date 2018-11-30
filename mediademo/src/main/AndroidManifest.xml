@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dbscarlet.mediademo" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application>
         <provider
@@ -13,5 +16,7 @@
         </provider>
         <activity android:name=".MediaMainAct" />
         <activity android:name=".image.CameraTestAct" />
+        <activity android:name=".image.CameraSurfaceAct" />
+        <activity android:name=".image.ImageClipAct" />
     </application>
 </manifest>
