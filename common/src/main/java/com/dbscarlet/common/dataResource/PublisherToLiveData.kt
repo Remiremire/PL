@@ -34,7 +34,7 @@ private class PublisherResLiveData<T>(private val mPublisher: Publisher<T>) : Re
         override fun onSubscribe(s: Subscription) {
             if (compareAndSet(null, s)) {
                 postValue(Loading())
-                s.request(java.lang.Long.MAX_VALUE)
+                s.request(Long.MAX_VALUE)
             } else {
                 s.cancel()
             }
