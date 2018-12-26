@@ -8,7 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
-import com.dbscarlet.common.dataResource.Resource
+import com.dbscarlet.common.dataResource.Success
 import com.dbscarlet.common.util.toastShort
 import com.dbscarlet.pl.R
 import com.dbscarlet.pl.databinding.ActAuthorizeBinding
@@ -35,7 +35,7 @@ class AuthorizeAct: BaseActivity<ActAuthorizeBinding>() {
             }
             authorizeVM.login(pinCode)
                     .observe(this, object : ResObserver<Unit>(){
-                        override fun onSuccess(res: Resource<Unit>, data: Unit) {
+                        override fun onSuccess(res: Success<Unit>) {
                             toastShort("登录授权成功")
                         }
                     })
@@ -45,8 +45,8 @@ class AuthorizeAct: BaseActivity<ActAuthorizeBinding>() {
     override fun initData() {
         authorizeVM.getLoginHtml()
                 .observe(this, object : ResObserver<String>(){
-                    override fun onSuccess(res: Resource<String>, data: String) {
-                        showWebDialog(binding.web, data)
+                    override fun onSuccess(res: Success<String>) {
+                        showWebDialog(binding.web, res.data)
                     }
                 })
     }

@@ -10,64 +10,39 @@ object LogUtil {
     var defaultTag = "LogUtil"
     private val LINE = "════════════════════════════════════════════════════════════"
     private val MSG_LENGTH_LIMIT = 3 * 1024
-    private val logI : (String, String) -> Unit = {t, m -> Log.i(t, m)}
-    private val logW : (String, String) -> Unit = {t, m -> Log.w(t, m)}
-    private val logE : (String, String) -> Unit = {t, m -> Log.e(t, m)}
-    private val logD : (String, String) -> Unit = {t, m -> Log.d(t, m)}
-    private val logV : (String, String) -> Unit = {t, m -> Log.v(t, m)}
-    private val logA : (String, String) -> Unit = {t, m -> Log.wtf(t, m)}
-    private val logTrI : (String, String, Throwable) -> Unit = {t, m, tr -> Log.i(t, m, tr)}
-    private val logTrW : (String, String, Throwable) -> Unit = {t, m, tr -> Log.w(t, m, tr)}
-    private val logTrE : (String, String, Throwable) -> Unit = {t, m, tr -> Log.e(t, m, tr)}
-    private val logTrD : (String, String, Throwable) -> Unit = {t, m, tr -> Log.d(t, m, tr)}
-    private val logTrV : (String, String, Throwable) -> Unit = {t, m, tr -> Log.v(t, m, tr)}
-    private val logTrA : (String, String, Throwable) -> Unit = {t, m, tr -> Log.wtf(t, m, tr)}
+    private val logI : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.i(t, m) else Log.i(t, m, tr)}
+    private val logW : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.w(t, m) else Log.w(t, m, tr)}
+    private val logE : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.e(t, m) else Log.e(t, m, tr)}
+    private val logD : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.d(t, m) else Log.d(t, m, tr)}
+    private val logV : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.v(t, m) else Log.v(t, m, tr)}
+    private val logA : (String, String, Throwable?) -> Unit =
+            { t, m, tr -> if (tr == null) Log.wtf(t, m) else Log.wtf(t, m, tr)}
 
     internal fun printLog(tag: String, msg: String, throwable: Throwable?, level: Int) {
         if (!debug) {
             return
         }
-        val printer: (String, String) -> Unit
-        val trPrinter: (String, String, Throwable) -> Unit
-        when (level) {
-            Log.INFO-> {
-                printer = logI
-                trPrinter = logTrI
-            }
-            Log.WARN-> {
-                printer = logW
-                trPrinter = logTrW
-            }
-            Log.ERROR-> {
-                printer = logE
-                trPrinter = logTrE
-            }
-            Log.DEBUG-> {
-                printer = logD
-                trPrinter = logTrD
-            }
-            Log.ASSERT-> {
-                printer = logA
-                trPrinter = logTrA
-            }
-            else -> {
-                printer = logV
-                trPrinter = logTrV
-            }
+        val printer = when (level) {
+            Log.INFO-> logI
+            Log.WARN-> logW
+            Log.ERROR-> logE
+            Log.DEBUG-> logD
+            else -> logV
         }
         val targetStack = targetStackTraceMSg()
         val logStr = "$LINE\n$targetStack$msg"
         var start = 0
         val len = logStr.length
         while (start + MSG_LENGTH_LIMIT < len) {
-            printer.invoke(tag, logStr.substring(start, start + MSG_LENGTH_LIMIT))
+            printer.invoke(tag, logStr.substring(start, start + MSG_LENGTH_LIMIT), null)
             start += MSG_LENGTH_LIMIT
         }
-        if (throwable == null) {
-            printer.invoke(tag, "${logStr.substring(start)}\n$LINE\n")
-        } else {
-            trPrinter.invoke(tag, "${logStr.substring(start)}\n$LINE\n", throwable)
-        }
+        printer.invoke(tag, "${logStr.substring(start)}\n$LINE\n", throwable)
     }
 
 
@@ -113,7 +88,4 @@ fun logD(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = nu
 }
 fun logV(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
     LogUtil.printLog(tag, msg.toString(), throwable, Log.VERBOSE)
-}
-fun logWtf(msg: Any?, tag: String = LogUtil.defaultTag, throwable: Throwable? = null) {
-    LogUtil.printLog(tag, msg.toString(), throwable, Log.ASSERT)
 }

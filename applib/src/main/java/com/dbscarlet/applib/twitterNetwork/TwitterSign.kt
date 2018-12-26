@@ -49,7 +49,7 @@ class TwitterSignInterceptor: Interceptor {
 
         //添加基础参数
         val baseParams = createBaseParams(finalToken)
-        baseParams.forEach{k,v -> paramList.add("$k=$v")}
+        baseParams.forEach {k,v -> paramList.add("$k=$v")}
 
         //参数排序，然后组成一个字符串
         paramList.sort()

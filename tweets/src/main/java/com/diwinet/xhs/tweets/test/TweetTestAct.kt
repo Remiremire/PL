@@ -4,7 +4,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
-import com.dbscarlet.common.dataResource.Resource
 import com.dbscarlet.common.util.logI
 import com.diwinet.xhs.tweets.R
 import com.diwinet.xhs.tweets.bean.HomeTimelineTweet
@@ -28,7 +27,7 @@ class TweetTestAct: BaseActivity<ActTweetTestBinding>() {
                 .setOnClickListener {
                     tweetTestVM.homeTimeline()
                             .observe(this, object : ResObserver<List<HomeTimelineTweet>>(){
-                                override fun onSuccess(res: Resource<List<HomeTimelineTweet>>, data: List<HomeTimelineTweet>) {
+                                override fun onSuccess(data: List<HomeTimelineTweet>) {
                                     logI(data)
                                 }
                             })

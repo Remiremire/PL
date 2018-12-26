@@ -8,21 +8,35 @@ import android.support.annotation.CallSuper
  */
 abstract class ResObserver<T>: Observer<Resource<T>> {
     @CallSuper
-    override fun onChanged(t: Resource<T>?) {
-        when(t?.state) {
-            State.LOADING -> onLoading(t, t.msg, t.progress, t.total)
-            State.SUCCESS -> onSuccess(t, t.data!!)
-            State.FAILED -> onFailed(t, t.code, t.msg, t.cause)
-            State.EXCEPTION -> onException(t, t.code, t.msg, t.cause)
-            else -> Unit
+    override fun onChanged(res: Resource<T>?) {
+        when(res) {
+            is Loading -> onLoading(res)
+            is Success -> onSuccess(res)
+            is Fail -> onFail(res)
+            is Error -> onError(res)
+            is Cancel -> onCancel(res)
+            null -> {  }
         }
     }
 
-    abstract fun onSuccess(res: Resource<T>, data: T)
-
-    open fun onLoading(res: Resource<T>, msg: String?, progress: Double?, total: Double?) {}
-
-    open fun onFailed(res: Resource<T>, code: Int?, msg: String?, cause: Throwable?){}
-
-    open fun onException(res: Resource<T>, code: Int?, msg: String?, cause: Throwable?) {}
+    /**
+     * 加载中
+     */
+    open fun onLoading(res: Loading<T>) {}
+    /**
+     * 数据获取成功
+     */
+    abstract fun onSuccess(res: Success<T>)
+    /**
+     * 数据获取失败(比如用户登录密码错误、请求的数据条码已被删除、用户没有访问权限...)
+     */
+    open fun onFail(res: Fail<T>) {}
+    /**
+     * 数据获取错误(比如网络超时、Json解析错误...)
+     */
+    open fun onError(res: Error<T>) {}
+    /**
+     * 已取消
+     */
+    open fun onCancel(res: Cancel<T>) {}
 }

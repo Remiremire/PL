@@ -1,8 +1,6 @@
 package com.dbscarlet.pl.main.reponsitory
 
 import android.arch.lifecycle.LiveData
-import com.dbscarlet.applib.twitterNetwork.toFormDataLiveData
-import com.dbscarlet.applib.twitterNetwork.toStringLiveData
 import com.dbscarlet.common.dataResource.Resource
 import com.dbscarlet.pl.main.webService.AuthorizeWebService
 import javax.inject.Inject
@@ -17,17 +15,20 @@ class AuthorizeRepository
     ) {
 
     fun requestToken(): LiveData<Resource<Map<String, String>>> {
-        return webService.requestToken()
-                .toFormDataLiveData()
+//        return webService.requestToken()
+//                .toFormDataLiveData()
+        TODO()
     }
 
     fun getLoginHtml(token: String, secret: String): LiveData<Resource<String>> {
-        return webService.authorize(token, secret)
-                .toStringLiveData()
+//        return webService.authorize(token, secret)
+//                .toStringLiveData()
+        TODO()
     }
 
     fun accessToken(pinCode: String, token: String, secret: String): LiveData<Resource<Map<String, String>>> {
-        return webService.accessToken(pinCode, token, secret)
-                .toFormDataLiveData()
+//        return webService.accessToken(pinCode, token, secret)
+//                .toFormDataLiveData()
+        TODO()
     }
 }

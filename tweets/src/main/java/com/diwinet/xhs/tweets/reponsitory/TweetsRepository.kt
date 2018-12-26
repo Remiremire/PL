@@ -1,10 +1,8 @@
 package com.diwinet.xhs.tweets.reponsitory
 
 import android.arch.lifecycle.LiveData
-import com.dbscarlet.applib.twitterNetwork.toJsonLiveData
 import com.dbscarlet.common.dataResource.Resource
 import com.diwinet.xhs.tweets.bean.HomeTimelineTweet
-import com.diwinet.xhs.tweets.bean.TimelineRequest
 import com.diwinet.xhs.tweets.webservice.TweetsWebService
 import javax.inject.Inject
 
@@ -18,7 +16,8 @@ class TweetsRepository
     ) {
 
     fun homeTimeline(): LiveData<Resource<List<HomeTimelineTweet>>> {
-        return tweetsWebService.homeTimeLine(TimelineRequest())
-                .toJsonLiveData()
+//        return tweetsWebService.homeTimeLine(TimelineRequest())
+//                .toJsonLiveData()
+        TODO()
     }
 }
