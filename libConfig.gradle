@@ -5,12 +5,7 @@ project.ext{
     min_sdk_version = 21
 
     multidex_version = '1.0.3'
-    support_v7_version = "$compile_sdk_version.+"
-    support_v4_version = "$compile_sdk_version.+"
-    support_annotations = "$compile_sdk_version.+"
-    recyclerview_v7_version = "$compile_sdk_version.+"
-    design_version = "$compile_sdk_version.+"
-    cardview_v7_version = "$compile_sdk_version.+"
+    support_version = "27.+"
 
     lifecycle_version = '1.1.1'
 

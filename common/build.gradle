@@ -36,14 +36,12 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api "com.android.support:appcompat-v7:$support_v7_version"
-    api "com.android.support:recyclerview-v7:$support_v7_version"
+    api "com.android.support:appcompat-v7:$support_version"
+    api "com.android.support:recyclerview-v7:$support_version"
     implementation "com.android.support:multidex:$multidex_version"
     api "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
     api "io.reactivex.rxjava2:rxjava:$rxJava2_version"
     api "com.google.code.gson:gson:$gson_version"
-    api 'com.lzy.net:okgo:3.0.4'
-    api 'com.lzy.net:okrx2:2.0.2'
     api "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
     api "com.google.dagger:dagger:$dagger2_version"
