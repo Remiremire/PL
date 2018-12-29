@@ -36,9 +36,10 @@ class Success<T>(
 ) : Resource<T>(data)
 
 /**
- * 数据获取失败(比如用户登录密码错误、请求的数据条码已被删除、用户没有访问权限...)
+ * 数据获取失败(比如用户登录时密码错误、请求的数据条码已被删除、用户没有访问权限...)
  */
 class Fail<T>(
+        var state: Int,
         var msg: String,
         var data: T? = null
 ) : Resource<T>(data)
@@ -47,8 +48,8 @@ class Fail<T>(
  * 数据获取错误(比如网络超时、Json解析错误...)
  */
 class Error<T>(
-        var msg: String? = null,
         var cause: Throwable,
+        var msg: String? = null,
         var data: T? = null
 ) : Resource<T>(data)
 

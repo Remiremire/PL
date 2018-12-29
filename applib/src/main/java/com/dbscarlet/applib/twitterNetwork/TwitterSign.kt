@@ -1,7 +1,7 @@
 package com.dbscarlet.applib.twitterNetwork
 
 import android.util.Base64
-import com.lzy.okgo.utils.OkLogger
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request
@@ -22,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec
  */
 
 class TwitterSignInterceptor: Interceptor {
+    private val TAG = TwitterSignInterceptor::class.simpleName
     private val HMAC_SHA1_ALGORITHM = "HmacSHA1"
     private val UTF8 = Charset.forName("UTF-8")
     private val random = Random()
@@ -49,7 +50,7 @@ class TwitterSignInterceptor: Interceptor {
 
         //添加基础参数
         val baseParams = createBaseParams(finalToken)
-        baseParams.forEach {k,v -> paramList.add("$k=$v")}
+        baseParams.forEach {entry -> paramList.add("${entry.key}=${entry.value}")}
 
         //参数排序，然后组成一个字符串
         paramList.sort()
@@ -80,7 +81,7 @@ class TwitterSignInterceptor: Interceptor {
         val builder = StringBuilder("OAuth ")
         val utf8 = "UTF-8"
         baseParams.forEach{
-            k, v -> builder.append("$k=\"${URLEncoder.encode(v, utf8)}\", ")
+            entry-> builder.append("${entry.key}=\"${URLEncoder.encode(entry.value, utf8)}\", ")
         }
         builder.append("oauth_signature=\"${URLEncoder.encode(signature, utf8)}\"")
         return builder.toString()
@@ -150,7 +151,7 @@ class TwitterSignInterceptor: Interceptor {
             val charset = getCharset(body.contentType())
             return buffer.readString(charset)
         } catch (e: Exception) {
-            OkLogger.printStackTrace(e)
+            Log.e(TAG, "getBodyString Error", e)
         }
         return null
     }

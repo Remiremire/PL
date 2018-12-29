@@ -36,6 +36,11 @@ kapt {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':common')
+    api "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
+    api "io.reactivex.rxjava2:rxjava:$rxJava2_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    api "com.google.code.gson:gson:$gson_version"
 
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
     kapt "com.google.dagger:dagger-compiler:$dagger2_version"

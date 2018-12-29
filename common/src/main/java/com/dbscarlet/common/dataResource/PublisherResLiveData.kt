@@ -8,12 +8,8 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * Created by Daibing Wang on 2018/12/6.
  */
- 
-fun <T> Publisher<T>.toResLiveData(): ResLiveData<T> {
-    return PublisherResLiveData(this)
-}
 
-private class PublisherResLiveData<T>(private val mPublisher: Publisher<T>) : ResLiveData<T>() {
+class PublisherResLiveData<T>(private val mPublisher: Publisher<T>) : ResLiveData<T>() {
     private val mSubscriber: AtomicReference<LiveDataSubscriber> = AtomicReference()
 
     override fun onActive() {
@@ -46,7 +42,7 @@ private class PublisherResLiveData<T>(private val mPublisher: Publisher<T>) : Re
 
         override fun onError(ex: Throwable) {
             mSubscriber.compareAndSet(this, null)
-            postValue(Error(cause = ex))
+            postValue(Error(ex))
         }
 
         override fun onComplete() {
