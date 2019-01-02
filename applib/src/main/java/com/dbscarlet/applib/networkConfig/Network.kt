@@ -28,7 +28,7 @@ object Network {
     fun init() {
         val okHttpClient = OkHttpClient.Builder()
                 //打印日志
-                //                .addInterceptor(new LogInterceptor())
+//                .addInterceptor(LogInterceptor())
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
