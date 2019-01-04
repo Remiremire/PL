@@ -10,5 +10,6 @@ object UtilsConfig {
         AppInfo.init(app)
         SpSave.sharePreferences = app.getSharedPreferences(SpSave.SP_NAME, SpSave.MODE)
         LogUtil.debug = AppInfo.DEBUG
+        displayMetrics = app.resources.displayMetrics
     }
 }
