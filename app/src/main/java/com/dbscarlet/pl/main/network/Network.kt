@@ -1,6 +1,7 @@
-package com.dbscarlet.applib.networkConfig
+package com.dbscarlet.pl.main.network
 
 import com.dbscarlet.applib.networkConfig.netConverter.NetConverterFactory
+import com.dbscarlet.applib.twitterNetwork.TwitterSignInterceptor
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -13,30 +14,24 @@ import java.util.concurrent.TimeUnit
 
 object Network {
 
-    lateinit var server: Api
-
     private val TAG = "Network"
 
-    private val BASE_URL = "BaseUrl"
-
-
     fun initNetwork() {
-        val okHttpClient = OkHttpClient.Builder()
+        val twitterClient = OkHttpClient.Builder()
+                .addInterceptor(TwitterSignInterceptor())
                 //打印日志
-//                 .addInterceptor(NetLogInterceptor())
+//                .addInterceptor(NetLogInterceptor())
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build()
 
-        server = Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(BASE_URL)
+        val retrofit = Retrofit.Builder()
+                .client(twitterClient)
+                .baseUrl("NEED BASE URL")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(NetConverterFactory(Gson()))
                 .build()
-                .create(Api::class.java)
 
     }
-
 }

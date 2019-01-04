@@ -29,7 +29,7 @@ class NetLogInterceptor : Interceptor {
                 """
                     request
                         url: ${request.url()}
-                        params: $bodyStr
+                        body: $bodyStr
                         header: ${request.headers()}
                     response
                         body:  ${peekBody.string()}
