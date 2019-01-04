@@ -70,8 +70,10 @@ class NetConverterFactory(private val gson: Gson) : Converter.Factory() {
         return GsonResponseConverter(apiUrlAndMethod, type, gson.getAdapter(TypeToken.get(type)))
     }
 
-    private inner class FormBodyRequestConverter<T: Any>(private val apiUrlAndMethod: String,
-                                                    private val formConverter: FormConverter<T>) : Converter<T, RequestBody> {
+    private inner class FormBodyRequestConverter<T: Any>(
+            private val apiUrlAndMethod: String,
+            private val formConverter: FormConverter<T>
+    ) : Converter<T, RequestBody> {
 
         @Throws(IOException::class)
         override fun convert(value: T?): RequestBody {
@@ -90,8 +92,10 @@ class NetConverterFactory(private val gson: Gson) : Converter.Factory() {
         }
     }
 
-    private inner class MultipartRequestConverter<T: Any>(private val apiUrlAndMethod: String,
-                                                     private val formConverter: FormConverter<T>) : Converter<T, RequestBody> {
+    private inner class MultipartRequestConverter<T: Any>(
+            private val apiUrlAndMethod: String,
+            private val formConverter: FormConverter<T>
+    ) : Converter<T, RequestBody> {
 
         @Throws(IOException::class)
         override fun convert(obj: T?): RequestBody {
@@ -165,7 +169,8 @@ class NetConverterFactory(private val gson: Gson) : Converter.Factory() {
     private open inner class GsonResponseConverter(
             protected val apiUrlAndMethod: String,
             protected val type: Type,
-            protected val adapter: TypeAdapter<out Any>) : Converter<ResponseBody, Any> {
+            protected val adapter: TypeAdapter<out Any>
+    ) : Converter<ResponseBody, Any> {
 
         /**
          * 对请求结果为HttpResult格式的情况作特殊处理
