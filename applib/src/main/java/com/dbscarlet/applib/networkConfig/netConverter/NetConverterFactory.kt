@@ -193,7 +193,7 @@ class NetConverterFactory(private val gson: Gson) : Converter.Factory() {
     private fun getApiUrlAndMethod(retrofit: Retrofit?, methodAnnotations: Array<Annotation>?): String {
         var method = "unknown"
         var url = ""
-        var canfindMethod = true
+        var canFindMethod = true
         if (methodAnnotations != null) {
             findMethod@ for (it in methodAnnotations) {
                 when(it) {
@@ -227,11 +227,11 @@ class NetConverterFactory(private val gson: Gson) : Converter.Factory() {
                     }
                     else -> continue@findMethod
                 }
-                canfindMethod = true
+                canFindMethod = true
                 break@findMethod
             }
         }
-        if (canfindMethod && !url.startsWith("https://") && !url.startsWith("http://")) {
+        if (canFindMethod && !url.startsWith("https://") && !url.startsWith("http://")) {
             url = (retrofit?.baseUrl()?.toString() ?: "NO_BASE_URL/") + url
         }
         return String.format("%s <%s>", url, method)
