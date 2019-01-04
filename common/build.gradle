@@ -37,6 +37,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     api "com.android.support:appcompat-v7:$support_version"
+    api "com.android.support:design:$support_version"
     api "com.android.support:recyclerview-v7:$support_version"
     implementation "com.android.support:multidex:$multidex_version"
     api "android.arch.lifecycle:extensions:$lifecycle_version"

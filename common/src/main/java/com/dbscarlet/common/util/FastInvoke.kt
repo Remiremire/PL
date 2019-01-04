@@ -1,8 +1,10 @@
 package com.dbscarlet.common.util
 
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.support.design.widget.Snackbar
 import android.widget.Toast
 
 /**
@@ -36,4 +38,11 @@ fun toastLong(text: String, context: Context = AppInfo.app) {
     } else {
         runOnUiThread { Toast.makeText(context, text, Toast.LENGTH_LONG).show() }
     }
+}
+
+fun Activity.snackbar(msg: String, bgColor: Int? = null, snackbarSet: (Snackbar.()-> Unit)? = null) {
+    val snackbar = Snackbar.make(window.decorView, msg, 3000)
+    if (bgColor != null) snackbar.view.setBackgroundColor(bgColor)
+    snackbarSet?.invoke(snackbar)
+    snackbar.show()
 }
