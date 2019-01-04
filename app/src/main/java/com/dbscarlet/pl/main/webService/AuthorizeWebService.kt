@@ -6,9 +6,8 @@ import javax.inject.Inject
 /**
  * Created by Daibing Wang on 2018/8/15.
  */
-class AuthorizeWebService
-    @Inject
-    constructor() {
+class AuthorizeWebService @Inject constructor() {
+
     fun requestToken(): ResLiveData<Map<String, String>> {
 //        return OkGo.get<Map<String, String>>(TwitterUrl.REQUEST_TOKEN)
 //                .headers(HEADER_OAUTH_TOKEN, DEF_OAUTH_TOKEN)

@@ -1,5 +1,6 @@
 package com.dbscarlet.pl.main.network
 
+import com.dbscarlet.applib.contact.TwitterUrl
 import com.dbscarlet.applib.networkConfig.netConverter.NetConverterFactory
 import com.dbscarlet.applib.twitterNetwork.TwitterSignInterceptor
 import com.google.gson.Gson
@@ -28,7 +29,7 @@ object Network {
 
         val retrofit = Retrofit.Builder()
                 .client(twitterClient)
-                .baseUrl("NEED BASE URL")
+                .baseUrl(TwitterUrl.HOST)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(NetConverterFactory(Gson()))
                 .build()
