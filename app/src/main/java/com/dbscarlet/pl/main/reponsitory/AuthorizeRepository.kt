@@ -25,12 +25,14 @@ class AuthorizeRepository
     fun getLoginHtml(token: String, secret: String): LiveData<Resource<String>> {
 //        return webService.authorize(token, secret)
 //                .toStringLiveData()
+        twitterService.authorize(token, secret)
         TODO()
     }
 
     fun accessToken(pinCode: String, token: String, secret: String): LiveData<Resource<Map<String, String>>> {
 //        return webService.accessToken(pinCode, token, secret)
 //                .toFormDataLiveData()
+        twitterService.accessToken(token, secret, pinCode)
         TODO()
     }
 }
