@@ -4,11 +4,9 @@ import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN
 import com.dbscarlet.applib.twitterNetwork.DEF_OAUTH_TOKEN_SECRET
 import com.dbscarlet.applib.twitterNetwork.HEADER_OAUTH_SECRET
 import com.dbscarlet.applib.twitterNetwork.HEADER_OAUTH_TOKEN
+import com.diwinet.xhs.tweets.bean.TimelineRequest
 import io.reactivex.Flowable
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * Created by Daibing Wang on 2019/1/4.
@@ -32,5 +30,10 @@ interface TwitterApi {
             @Header(HEADER_OAUTH_TOKEN) token : String,
             @Header(HEADER_OAUTH_SECRET) secret: String,
             @Field("oauth_verifier") pinCode: String
+    ): Flowable<String>
+
+    @POST("1.1/statuses/home_timeline.json")
+    fun homeTimeline(
+            @Body request: TimelineRequest
     ): Flowable<String>
 }
