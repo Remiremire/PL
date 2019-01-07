@@ -3,13 +3,13 @@ package com.dbscarlet.applib.twitterNetwork
 /**
  * Created by Daibing Wang on 2018/8/17.
  */
-val CONSUMER_SECRET = "KoTFoWKEuDALjbxx0qmArc4qdhRATaY2bCuKfQuLqOhnSK6Jqr"
-val CONSUMER_KEY = "PUL25DBIvY54psfJ5Mqhwvwc2"
-val SIGNATURE_METHOD = "HMAC-SHA1"
-val OAUTH_VERSION = "1.0"
+const val CONSUMER_SECRET = "KoTFoWKEuDALjbxx0qmArc4qdhRATaY2bCuKfQuLqOhnSK6Jqr"
+const val CONSUMER_KEY = "PUL25DBIvY54psfJ5Mqhwvwc2"
+const val SIGNATURE_METHOD = "HMAC-SHA1"
+const val OAUTH_VERSION = "1.0"
 
-val DEF_OAUTH_TOKEN = "744155165423509505-SypL6sBZhGM0AZi3v2udHeY4f6Dd95r"
-val DEF_OAUTH_TOKEN_SECRET = "mPDOh1dtvFcmQYLHRqrWKBG53GbcPkwyWZuvN9wCtzEog"
+const val DEF_OAUTH_TOKEN = "744155165423509505-SypL6sBZhGM0AZi3v2udHeY4f6Dd95r"
+const val DEF_OAUTH_TOKEN_SECRET = "mPDOh1dtvFcmQYLHRqrWKBG53GbcPkwyWZuvN9wCtzEog"
 
 var OAUTH_TOKEN: String? = null
     private set
@@ -30,9 +30,9 @@ fun cleanToken() {
  * 如果请求时添加了这个header，将使用这个token
  * 需要和 HEADER_OAUTH_SECRET 一起添加才有效
  */
-val HEADER_OAUTH_TOKEN = "oauth_token"
+const val HEADER_OAUTH_TOKEN = "oauth_token"
 /**
  * 如果请求时添加了这个header，将使用这个token secret
  * 需要和 HEADER_OAUTH_TOKEN 一起添加才有效
  */
-val HEADER_OAUTH_SECRET = "oauth_token_secret"
+const val HEADER_OAUTH_SECRET = "oauth_token_secret"

@@ -2,7 +2,7 @@ package com.dbscarlet.pl.main.reponsitory
 
 import android.arch.lifecycle.LiveData
 import com.dbscarlet.common.dataResource.Resource
-import com.dbscarlet.pl.main.webService.AuthorizeWebService
+import com.dbscarlet.pl.main.webService.TwitterApi
 import javax.inject.Inject
 
 /**
@@ -11,12 +11,14 @@ import javax.inject.Inject
 class AuthorizeRepository
     @Inject
     constructor(
-            private val webService: AuthorizeWebService
+            private val twitterService: TwitterApi
     ) {
 
     fun requestToken(): LiveData<Resource<Map<String, String>>> {
 //        return webService.requestToken()
 //                .toFormDataLiveData()
+        twitterService.requestToken()
+                .subscribe()
         TODO()
     }
 
