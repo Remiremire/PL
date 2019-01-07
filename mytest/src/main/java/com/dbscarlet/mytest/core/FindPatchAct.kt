@@ -13,7 +13,7 @@ import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.common.basic.CommonActivity
-import com.dbscarlet.common.util.FileUtil
+import com.dbscarlet.common.commonUtil.FileUtil
 import com.dbscarlet.mytest.R
 import com.scarlet.lightpermission.LightPermission
 import kotlinx.android.synthetic.main.act_find_patch.*

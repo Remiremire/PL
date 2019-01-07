@@ -1,4 +1,4 @@
-package com.dbscarlet.common.util
+package com.dbscarlet.common.commonUtil
 
 import java.text.SimpleDateFormat
 import java.util.*

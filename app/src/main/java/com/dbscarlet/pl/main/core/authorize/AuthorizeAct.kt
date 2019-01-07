@@ -9,7 +9,7 @@ import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
 import com.dbscarlet.common.dataResource.Success
-import com.dbscarlet.common.util.toastShort
+import com.dbscarlet.common.commonUtil.toastShort
 import com.dbscarlet.pl.R
 import com.dbscarlet.pl.databinding.ActAuthorizeBinding
 import javax.inject.Inject

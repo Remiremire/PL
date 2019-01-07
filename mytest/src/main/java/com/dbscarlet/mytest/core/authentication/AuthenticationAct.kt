@@ -10,7 +10,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.twitterNetwork.*
 import com.dbscarlet.common.basic.CommonActivity
-import com.dbscarlet.common.util.logI
+import com.dbscarlet.common.commonUtil.logI
 import com.dbscarlet.mytest.R
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback

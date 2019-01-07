@@ -5,7 +5,7 @@ import com.dbscarlet.applib.ActPath
 import com.dbscarlet.applib.base.BaseActivity
 import com.dbscarlet.common.dataResource.ResObserver
 import com.dbscarlet.common.dataResource.Success
-import com.dbscarlet.common.util.logI
+import com.dbscarlet.common.commonUtil.logI
 import com.diwinet.xhs.tweets.R
 import com.diwinet.xhs.tweets.bean.HomeTimelineTweet
 import com.diwinet.xhs.tweets.databinding.ActTweetTestBinding

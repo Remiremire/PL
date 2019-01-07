@@ -9,10 +9,10 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dbscarlet.applib.ActPath
 import com.dbscarlet.common.basic.CommonActivity
-import com.dbscarlet.common.util.AppInfo
-import com.dbscarlet.common.util.InstallCallback
-import com.dbscarlet.common.util.InstallResult
-import com.dbscarlet.common.util.TinkerUtil
+import com.dbscarlet.common.commonUtil.AppInfo
+import com.dbscarlet.common.commonUtil.InstallCallback
+import com.dbscarlet.common.commonUtil.InstallResult
+import com.dbscarlet.common.commonUtil.TinkerUtil
 import com.dbscarlet.mytest.R
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*

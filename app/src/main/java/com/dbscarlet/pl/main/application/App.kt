@@ -4,7 +4,7 @@ import android.content.Context
 import com.dbscarlet.applib.contact.SPSaveKey
 import com.dbscarlet.applib.twitterNetwork.setToken
 import com.dbscarlet.common.basic.CommonApp
-import com.dbscarlet.common.util.logI
+import com.dbscarlet.common.commonUtil.logI
 import com.dbscarlet.pl.main.di.AppModule
 import com.dbscarlet.pl.main.di.DaggerAppComponent
 

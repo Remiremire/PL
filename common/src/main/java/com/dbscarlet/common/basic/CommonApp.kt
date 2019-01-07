@@ -8,8 +8,8 @@ import android.content.BroadcastReceiver
 import android.content.ContentProvider
 import android.support.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
-import com.dbscarlet.common.util.UtilsConfig
-import com.dbscarlet.common.util.TinkerUtil
+import com.dbscarlet.common.commonUtil.UtilsConfig
+import com.dbscarlet.common.commonUtil.TinkerUtil
 import dagger.android.*
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
