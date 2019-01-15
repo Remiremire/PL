@@ -72,16 +72,12 @@ public class CustomTabLayout extends HorizontalScrollView {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    mTabContainer.setLayoutParams(new HorizontalScrollView.LayoutParams(
-                            getWidth() - getPaddingLeft() - getPaddingRight(),
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
-            });
+            mTabContainer.setLayoutParams(new HorizontalScrollView.LayoutParams(
+                    getWidth() - getPaddingLeft() - getPaddingRight(),
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         mTabContainer.layoutTabs();
+        requestLayout();
     }
 
     /**
