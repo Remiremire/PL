@@ -8,13 +8,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.dbscarlet.applib.ActPath
-import com.dbscarlet.applib.twitterNetwork.*
 import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.commonUtil.logI
 import com.dbscarlet.mytest.R
-import com.lzy.okgo.OkGo
-import com.lzy.okgo.callback.StringCallback
-import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.act_authentication.*
 
 
@@ -32,49 +28,12 @@ class AuthenticationAct: CommonActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_authentication)
         btn_default_token.setOnClickListener {
-            OkGo.get<String>("https://api.twitter.com/oauth/request_token")
-                    .headers(HEADER_OAUTH_TOKEN, DEF_OAUTH_TOKEN)
-                    .headers(HEADER_OAUTH_SECRET, DEF_OAUTH_TOKEN_SECRET)
-                    .execute(object : StringCallback(){
-                        override fun onSuccess(response: Response<String>?) {
-                            val body = response?.body()
-                            logI("temp token response:\n$body")
-                            if (body != null) {
-                                val results = body.split('&')
-                                val resultMap = mutableMapOf<String, String>()
-                                results.forEach{
-                                    val p = it.split('=')
-                                    if (p.size == 2) {
-                                        resultMap[p[0]] = p[1]
-                                    }
-                                }
-                                if (resultMap["oauth_callback_confirmed"] == "true") {
-                                    token = resultMap["oauth_token"]
-                                    secret = resultMap["oauth_token_secret"]
-                                }
-                            }
-                        }
-
-                        override fun onError(response: Response<String>?) {
-                            super.onError(response)
-                        }
-                    })
 
         }
         btn_ask_user.setOnClickListener {
             if (token.isNullOrEmpty() || secret.isNullOrEmpty()) {
                 return@setOnClickListener
             }
-            OkGo.get<String>("https://api.twitter.com/oauth/authorize")
-                    .headers(HEADER_OAUTH_TOKEN, token)
-                    .headers(HEADER_OAUTH_SECRET, secret)
-                    .params("oauth_token", OAUTH_TOKEN)
-                    .execute(object : StringCallback(){
-                        override fun onSuccess(response: Response<String>) {
-                            val body = response.body()
-                            showWebDialog(body)
-                        }
-                    })
         }
     }
 
