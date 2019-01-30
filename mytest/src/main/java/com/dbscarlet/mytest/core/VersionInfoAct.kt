@@ -12,7 +12,7 @@ import com.dbscarlet.common.basic.CommonActivity
 import com.dbscarlet.common.commonUtil.AppInfo
 import com.dbscarlet.common.commonUtil.InstallCallback
 import com.dbscarlet.common.commonUtil.InstallResult
-import com.dbscarlet.common.commonUtil.TinkerUtil
+import com.dbscarlet.common.commonUtil.TinkerManager
 import com.dbscarlet.mytest.R
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
 import kotlinx.android.synthetic.main.act_version_info.*
@@ -69,7 +69,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
                     .build(ActPath.Tweet.TWEET_TEST)
                     .navigation()
         }
-        TinkerUtil.tinkerInstallCallback = this
+        TinkerManager.tinkerInstallCallback = this
     }
 
 
@@ -79,7 +79,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
             101->{
                 if (resultCode == Activity.RESULT_OK) {
                     val patchFile = data?.getSerializableExtra("patchFile") as File
-                    TinkerUtil.installTinkerPatch(this, patchFile.absolutePath)
+                    TinkerManager.installTinkerPatch(this, patchFile.absolutePath)
                 }
             }
         }
@@ -87,7 +87,7 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
 
     override fun onInstallResult(installResult: InstallResult) {
         if (installResult.isSuccess) {
-            TinkerUtil.showRestartDialog(this)
+            TinkerManager.showRestartDialog(this)
         }
     }
 }

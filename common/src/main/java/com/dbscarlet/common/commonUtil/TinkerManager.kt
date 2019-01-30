@@ -10,16 +10,19 @@ import com.tencent.tinker.lib.service.PatchResult
 import com.tencent.tinker.lib.tinker.TinkerInstaller
 import com.tinkerpatch.sdk.TinkerPatch
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike
+import com.tinkerpatch.sdk.tinker.service.TinkerServerResultService
 
 /**
  * Created by Daibing Wang on 2018/7/2.
  */
-object TinkerUtil {
+object TinkerManager {
     var tinkerInstallCallback: InstallCallback? = null
 
     fun initTinker(app: Application) {
         val applicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike()
-        TinkerPatch.init(applicationLike)
+        val builder = TinkerPatch.Builder(applicationLike)
+        builder.resultServiceClass(TinkerResultService::class.java)
+        TinkerPatch.init(builder.build())
                 .apply {
                     reflectPatchLibrary()
                     setPatchRestartOnSrceenOff(true)
@@ -59,15 +62,20 @@ interface InstallCallback {
     fun onInstallResult(installResult: InstallResult)
 }
 
-class InstallResult internal constructor(private val result: PatchResult) {
-    val isSuccess = result.isSuccess
-    val rawPatchFilePath: String = result.rawPatchFilePath
-    val costTime = result.costTime
-    val e: Throwable? = result.e
-    val patchVersion: String? = result.patchVersion
+class InstallResult internal constructor(private val result: PatchResult?) {
+    val isSuccess = result?.isSuccess ?: false
+    val rawPatchFilePath: String? = result?.rawPatchFilePath
+    val costTime = result?.costTime ?: 0L
+    val e: Throwable? = result?.e
+    val patchVersion: String? = result?.patchVersion
 
     override fun toString(): String {
-        return "InstallResult(result=$result, isSuccess=$isSuccess, rawPatchFilePath='$rawPatchFilePath', costTime=$costTime, e=$e, patchVersion=$patchVersion)"
+        return "InstallResult(result=$result, isSuccess=$isSuccess, " +
+                "rawPatchFilePath='$rawPatchFilePath', costTime=$costTime, " +
+                "e=$e, patchVersion=$patchVersion)"
     }
 
 }
+
+class TinkerResultService: TinkerServerResultService()
+

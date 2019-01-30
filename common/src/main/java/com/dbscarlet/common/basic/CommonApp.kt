@@ -8,8 +8,8 @@ import android.content.BroadcastReceiver
 import android.content.ContentProvider
 import android.support.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
+import com.dbscarlet.common.commonUtil.TinkerManager
 import com.dbscarlet.common.commonUtil.UtilsConfig
-import com.dbscarlet.common.commonUtil.TinkerUtil
 import dagger.android.*
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
@@ -61,7 +61,7 @@ open class CommonApp : Application(), HasActivityInjector, HasFragmentInjector, 
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
-        TinkerUtil.initTinker(this)
+        TinkerManager.initTinker(this)
 //        ARouter.openLog()    // 打印日志
 //        ARouter.openDebug()   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
         ARouter.init(this) // 尽可能早，推荐在Application中初始化

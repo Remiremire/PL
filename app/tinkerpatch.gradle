@@ -5,7 +5,7 @@ apply plugin: 'tinkerpatch-support'
  */
 def isDebug = false
 def bakPath = file("${buildDir}/bakApk/")
-def baseInfo = "app-0.2.0-0704-16-25-33"
+def baseInfo = "app-0.2.1-0130-09-12-47"
 def variantName = isDebug ? "debug" : "release"
 
 
