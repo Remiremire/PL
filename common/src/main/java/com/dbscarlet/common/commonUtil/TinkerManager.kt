@@ -19,8 +19,8 @@ object TinkerManager {
     var tinkerInstallCallback: InstallCallback? = null
 
     fun initTinker(app: Application) {
-        val applicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike()
-        val builder = TinkerPatch.Builder(applicationLike)
+        val appLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike()
+        val builder = TinkerPatch.Builder(appLike)
         builder.resultServiceClass(TinkerResultService::class.java)
         TinkerPatch.init(builder.build())
                 .apply {
@@ -77,5 +77,10 @@ class InstallResult internal constructor(private val result: PatchResult?) {
 
 }
 
+/**
+ * 清单文件配置：
+ * <service android:name="XXX.XXX.TinkerResultService"
+ *      android:permission="android.permission.BIND_JOB_SERVICE"/>
+ */
 class TinkerResultService: TinkerServerResultService()
 
