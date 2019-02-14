@@ -27,10 +27,5 @@ class HomeActivity : CommonActivity() {
                     .build(ActPath.App.AUTHORIZE)
                     .navigation(this)
         }
-        tv_media.setOnClickListener {
-            ARouter.getInstance()
-                    .build(ActPath.Media.MEDIA_MAIN)
-                    .navigation(this)
-        }
     }
 }

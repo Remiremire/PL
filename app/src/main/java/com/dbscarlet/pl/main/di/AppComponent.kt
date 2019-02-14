@@ -1,6 +1,5 @@
 package com.dbscarlet.pl.main.di
 
-import com.dbscarlet.mediademo.di.MediaInjectors
 import com.dbscarlet.mytest.TestInjectors
 import com.dbscarlet.pl.main.application.App
 import com.diwinet.xhs.tweets.di.TweetInjectors
@@ -19,8 +18,7 @@ import javax.inject.Singleton
         AppModule::class,
         AppInjectors::class,
         TestInjectors::class,
-        TweetInjectors::class,
-        MediaInjectors::class
+        TweetInjectors::class
 ])
 interface AppComponent {
     fun inject(app: App)
