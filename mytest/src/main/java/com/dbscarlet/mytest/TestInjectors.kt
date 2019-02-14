@@ -5,7 +5,6 @@ import com.dbscarlet.mytest.core.VersionInfoAct
 import com.dbscarlet.mytest.core.apiTest.ApiTestAct
 import com.dbscarlet.mytest.core.authentication.AuthenticationAct
 import com.dbscarlet.mytest.core.curvetest.CurveTestActivity
-import com.dbscarlet.mytest.widget.test.behaviorTest.BehaviorTestAct
 import com.dbscarlet.mytest.widget.test.WidgetTestAct
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -32,7 +31,4 @@ abstract class TestInjectors {
 
     @ContributesAndroidInjector
     abstract fun widgetTest(): WidgetTestAct
-
-    @ContributesAndroidInjector
-    abstract fun behaviorTest(): BehaviorTestAct
 }

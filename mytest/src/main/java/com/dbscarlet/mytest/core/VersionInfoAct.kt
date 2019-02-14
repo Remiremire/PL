@@ -59,11 +59,6 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
                     .build(ActPath.Test.WIDGET_TEST)
                     .navigation()
         }
-        btn_behavior_test.setOnClickListener {
-            ARouter.getInstance()
-                    .build(ActPath.Test.BEHAVIOR_TEST)
-                    .navigation()
-        }
         btn_tweet_test.setOnClickListener{
             ARouter.getInstance()
                     .build(ActPath.Tweet.TWEET_TEST)

@@ -17,17 +17,9 @@ object ActPath {
         const val AUTHENTICATION = "$BASE/authentication"
         const val CURVE_TEST = "$BASE/curveTest"
         const val WIDGET_TEST = "$BASE/widgetTest"
-        const val BEHAVIOR_TEST = "$BASE/behaviorTest"
     }
     object Tweet {
         private const val BASE = "/tweets"
         const val TWEET_TEST = "$BASE/tweetTest"
-    }
-    object Media {
-        private const val BASE = "/media"
-        const val MEDIA_MAIN = "$BASE/main"
-        const val CAMERA_TEST = "$BASE/cameraTest"
-        const val CAMERA_SURFACE = "$BASE/cameraSurface"
-        const val IMAGE_CLIP = "$BASE/imageClip"
     }
 }
