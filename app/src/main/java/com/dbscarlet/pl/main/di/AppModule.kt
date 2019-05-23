@@ -21,6 +21,10 @@ class AppModule: CommonAppModule<App> {
     @Provides get
 
     constructor(app: App) : super(app) {
+        twitterApi = createTwitterApiServer()
+    }
+
+    private fun createTwitterApiServer(): TwitterApi {
         val httpClient = OkHttpClient.Builder()
                 .writeTimeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .readTimeout(15 * 1000, TimeUnit.MILLISECONDS)
@@ -32,7 +36,6 @@ class AppModule: CommonAppModule<App> {
                 .baseUrl(TwitterUrl.HOST)
                 .client(httpClient)
                 .build()
-        twitterApi = retrofit
-                .create(TwitterApi::class.java)
+        return retrofit.create(TwitterApi::class.java)
     }
 }

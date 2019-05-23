@@ -3,6 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:text="选择补丁文件"
+        android:paddingRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_files"
         android:layout_weight="1"

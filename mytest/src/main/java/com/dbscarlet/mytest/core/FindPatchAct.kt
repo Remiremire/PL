@@ -47,18 +47,19 @@ class FindPatchAct: CommonActivity() {
         LightPermission.request(this)
                 .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .onNeedExplain { activity, permRequest, requestPermission ->
-                    Toast.makeText(this, "需要存储权限", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "需要存储权限", Toast.LENGTH_SHORT).show()
                     requestPermission.requestPermission()
-                }.onRefused { activity, permRequest, list ->
-                    Toast.makeText(this, "缺少存储权限", Toast.LENGTH_LONG).show()
-                    finish()
                 }.onDisable { activity, permRequest, setAppPermission ->
                     AlertDialog.Builder(activity)
                             .setMessage("需要跳转设置界面申请权限")
                             .setNegativeButton("取消") { _, _ -> setAppPermission.cancel() }
                             .setPositiveButton("确定"){ _, _ -> setAppPermission.goSetting()}
                             .show()
+                }.onRefused { activity, permRequest, list ->
+                    Toast.makeText(this, "缺少存储权限", Toast.LENGTH_LONG).show()
+                    finish()
                 }.execute { activity, permRequest ->
+                    Toast.makeText(this, "加载文件列表", Toast.LENGTH_SHORT).show()
                     fileStack.push(FileUtil.getSdRootDir())
                     updateFileList()
                 }
@@ -69,26 +70,21 @@ class FindPatchAct: CommonActivity() {
                 .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .execute { activity, permRequest ->
                     fileList.clear()
-                    fileList.addAll(fileStack.peek().listFiles())
-                    fileList.sortWith(Comparator {
-                        f1, f2 ->
-                        if (f1.isDirectory == f2.isDirectory) {
-                            f1.name.compareTo(f2.name)
-                        } else {
-                            val c1 = if (f1.isDirectory) 1 else 0
-                            val c2 = if (f1.isDirectory) 1 else 0
-                            c1 - c2
+                    if (!fileStack.empty()) {
+                        val files = fileStack.peek().listFiles()
+                        if (files != null && files.isNotEmpty()) {
+                            fileList.addAll(files)
                         }
-                    })
+                    }
                     adapter.notifyDataSetChanged()
                 }
     }
 
     override fun onBackPressed() {
-        fileStack.pop()
-        if (fileStack.empty()) {
+        if (fileStack.size <= 1) {
             super.onBackPressed()
         } else {
+            fileStack.pop()
             updateFileList()
         }
     }

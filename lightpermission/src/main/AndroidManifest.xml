@@ -1,2 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.scarlet.lightpermission" />
+	package="com.scarlet.lightpermission" >
+	<application>
+		<activity android:name=".LightPermissionActivity"
+			android:theme="@style/permAct"/>
+		<!--<activity android:name=".LightPermissionActivity"-->
+			<!--android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
+		<!--<activity android:name=".LightPermissionActivity"-->
+			<!--android:theme="@style/myTransparent"/>-->
+	</application>
+</manifest>

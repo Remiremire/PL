@@ -18,7 +18,9 @@ object LightPermission {
     }
 
     fun request(fragment: Fragment): PermRequest.Builder {
-        return request(PermRequest.Builder(fragment))
+        val activity = fragment.activity
+                ?: throw IllegalStateException("fragment request permission must attach with activity")
+        return request(PermRequest.Builder(activity))
     }
 
     private fun request(builder: PermRequest.Builder): PermRequest.Builder {

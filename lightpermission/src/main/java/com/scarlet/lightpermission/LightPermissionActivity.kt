@@ -6,37 +6,38 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
-import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import java.util.*
 
+
+
+
+
 /**
- * Created by Daibing Wang on 2018/10/17.
+ * Created by Daibing Wang on 2019/5/22.
  */
 private const val PERMISSION_REQUEST_CODE = 853
-
 @TargetApi(Build.VERSION_CODES.M)
-internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPermission {
-    private var requestKey: Long = 0
-    var request: PermRequest? = null
+class LightPermissionActivity: AppCompatActivity(), RequestPermission, SetAppPermission {
+    private val requestKey by lazy { intent.getLongExtra("key", 0L) }
+    private val request by lazy {
+        REQUEST_MAP.remove(requestKey)
+    }
     private var showRationale: BooleanArray? = null
+    private val handler = Handler(Looper.getMainLooper())
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val key = arguments?.getLong("key")
-        if (key == null) {
-            destroy()
-            return
-        }
-        requestKey = key
-        request = REQUEST_MAP[requestKey]
-        if (request == null && savedInstanceState != null) {
-            requestKey = savedInstanceState.getLong("key")
-            request = REQUEST_MAP[requestKey]
-        }
-        val request = request ?: return destroy()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.permAct)
+        super.onCreate(savedInstanceState)
+        startCheckPermission()
+    }
 
+    private fun startCheckPermission() {
+        val request = request ?: return finish()
         if (checkPermissions(request.permissions)) {
             allowed()
         } else {
@@ -50,18 +51,13 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
             }
             this.showRationale = showRationale
             if (needExplain) {
-                runOnUiThread(Runnable {
-                    request.onNeedExplain?.invoke(activity!!, request, this@LightPermissionFragment)
-                })
+                handler.post {
+                    request.onNeedExplain?.invoke(this, request, this)
+                }
             } else {
                 requestPermission()
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putLong("key", requestKey)
     }
 
     override fun requestPermission() {
@@ -74,31 +70,31 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
     }
 
     private fun allowed() {
-        runOnUiThread(Runnable {
-            val request = request ?: return@Runnable destroy()
-            request.onAllowed?.invoke(activity!!, request)
-            destroy()
-        })
+        val request = request ?: return finish()
+        finish()
+        handler.post {
+            request.onAllowed?.invoke(this, request)
+        }
     }
 
     override fun refused() {
-        runOnUiThread(Runnable {
-            val request = request ?: return@Runnable destroy()
+        val request = request ?: return finish()
+        finish()
+        handler.post {
             val refusedPermissions = ArrayList<String>()
             for (p in request.permissions) {
                 if (!checkPermission(p)) {
                     refusedPermissions.add(p)
                 }
             }
-            request.onRefused?.invoke(activity!!, request, refusedPermissions)
-            destroy()
-        })
+            request.onRefused?.invoke(this, request, refusedPermissions)
+        }
     }
 
     override fun goSetting() {
-        val request = request ?: return destroy()
+        val request = request ?: return finish()
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.data = Uri.fromParts("package", activity!!.packageName, null)
+        intent.data = Uri.fromParts("package", packageName, null)
         startActivityForResult(intent, PERMISSION_REQUEST_CODE)
     }
 
@@ -106,18 +102,9 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
         refused()
     }
 
-    private fun destroy() {
-        REQUEST_MAP.remove(requestKey)
-        request = null
-        fragmentManager
-                ?.beginTransaction()
-                ?.remove(this)
-                ?.commit()
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        val request = request ?: return destroy()
+        val request = request ?: return finish()
         if (requestCode != PERMISSION_REQUEST_CODE) {
             return
         }
@@ -140,7 +127,7 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
             }
             if (permDisable && request.onDisable != null) {
                 //权限被禁止时的操作
-                runOnUiThread(Runnable { request.onDisable.invoke(activity!!, request, this@LightPermissionFragment) })
+                handler.post { request.onDisable.invoke(this, request, this) }
             } else {
                 refused()
             }
@@ -149,7 +136,7 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val request = request ?: return destroy()
+        val request = request ?: return finish()
         if (requestCode != PERMISSION_REQUEST_CODE) {
             return
         }
@@ -173,10 +160,6 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
         return true
     }
 
-    private fun checkSelfPermission(permission: String): Int {
-        return activity?.checkSelfPermission(permission) ?: PackageManager.PERMISSION_DENIED
-    }
-
     /**
      * 弹出系统权限请求框时是否需要说明：
      * App第一次请求该权限：false
@@ -191,12 +174,5 @@ internal class LightPermissionFragment : Fragment(), RequestPermission, SetAppPe
             result[i] = !TextUtils.isEmpty(p) && shouldShowRequestPermissionRationale(p)
         }
         return result
-    }
-
-    private fun runOnUiThread(runnable: Runnable?) {
-        val activity = activity
-        if (activity != null && runnable != null) {
-            activity.runOnUiThread(runnable)
-        }
     }
 }

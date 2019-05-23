@@ -1,9 +1,11 @@
 package com.dbscarlet.mytest.core
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -15,6 +17,7 @@ import com.dbscarlet.common.commonUtil.InstallResult
 import com.dbscarlet.common.commonUtil.TinkerManager
 import com.dbscarlet.mytest.R
 import com.dbscarlet.mytest.databinding.ActVersionInfoBinding
+import com.scarlet.lightpermission.LightPermission
 import kotlinx.android.synthetic.main.act_version_info.*
 import java.io.File
 
@@ -64,7 +67,23 @@ class VersionInfoAct: CommonActivity(), InstallCallback {
                     .build(ActPath.Tweet.TWEET_TEST)
                     .navigation()
         }
+        btn_permission_test.setOnClickListener {
+            LightPermission.request(this)
+                    .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA)
+                    .onNeedExplain { activity, permRequest, requestPermission ->
+                        Toast.makeText(this, "需要权限", Toast.LENGTH_SHORT).show()
+                        requestPermission.requestPermission()
+                    }
+                    .onRefused { activity, permRequest, list ->
+                        Toast.makeText(this, "权限已拒绝", Toast.LENGTH_SHORT).show()
+                    }
+                    .execute { activity, permRequest ->
+                        Toast.makeText(this, "权限已授予", Toast.LENGTH_SHORT).show()
+                    }
+        }
         TinkerManager.tinkerInstallCallback = this
+        Toast.makeText(this, "Test Num: 7", Toast.LENGTH_SHORT).show()
     }
 
 

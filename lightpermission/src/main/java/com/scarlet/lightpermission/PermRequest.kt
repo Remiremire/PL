@@ -1,11 +1,8 @@
 package com.scarlet.lightpermission
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
 
 /**
  * Created by Daibing Wang on 2018/8/20.
@@ -22,7 +19,7 @@ class PermRequest private constructor(val permissions: Array<String>,
     /**
      * 发起请求
      */
-    fun execute(activity: Activity, fragmentManager: FragmentManager) {
+    fun execute(activity: Activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                 || permissions.isEmpty()) {
             onAllowed?.invoke(activity, this)
@@ -31,31 +28,19 @@ class PermRequest private constructor(val permissions: Array<String>,
         requestKey++
         val requestKey = requestKey
         REQUEST_MAP[requestKey] = this
-        val fragment = LightPermissionFragment()
-        val args = Bundle()
-        args.putLong("key", requestKey)
-        fragment.arguments = args
-        fragmentManager.beginTransaction()
-                .add(fragment, requestKey.toString())
-                .commit()
+        activity.startActivity(Intent(activity, LightPermissionActivity::class.java)
+                .putExtra("key", requestKey))
     }
 
     class Builder {
         private var activity: Activity
-        private var fragmentManager: FragmentManager
         private var permissions: Array<out String> = arrayOf()
         private var onNeedExplain: ((Activity, PermRequest, RequestPermission) -> Unit)? = null
         private var onDisable: ((Activity, PermRequest, SetAppPermission) -> Unit)? = null
         private var onRefused: ((Activity, PermRequest, List<String>) -> Unit)? = null
 
-        constructor(fragment: Fragment) {
-            activity = fragment.activity ?: throw IllegalStateException("fragment request permission must attach with activity")
-            fragmentManager = fragment.childFragmentManager
-        }
-
-        constructor(activity: FragmentActivity) {
+        constructor(activity: Activity) {
             this.activity = activity
-            fragmentManager = activity.supportFragmentManager
         }
 
         fun permissions(vararg permissions: String): Builder {
@@ -101,7 +86,7 @@ class PermRequest private constructor(val permissions: Array<String>,
                     onDisable,
                     onAllowed,
                     onRefused)
-            permRequest.execute(activity, fragmentManager)
+            permRequest.execute(activity)
         }
     }
 }
