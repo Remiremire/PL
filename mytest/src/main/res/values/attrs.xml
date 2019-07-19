@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ClipLayout">
+        <attr name="clType" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="circle" value="1"/>
+            <enum name="corners" value="2"/>
+        </attr>
+        <attr name="clStrokeColor" format="color"/>
+        <attr name="clStrokeWidth" format="dimension"/>
+        <attr name="clLT" format="dimension"/>
+        <attr name="clRT" format="dimension"/>
+        <attr name="clRB" format="dimension"/>
+        <attr name="clLB" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomDividerView">
+        <attr name="dvdOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="dvdType" format="enum">
+            <enum name="line" value="0"/>
+            <enum name="imaginary" value="1"/>
+            <enum name="dots" value="2"/>
+        </attr>
+        <attr name="dvdCount" format="integer"/>
+        <attr name="dvdInterval" format="dimension"/>
+        <attr name="dvdSize" format="dimension"/>
+        <attr name="dvdInSize" format="dimension"/>
+        <attr name="dvdInInterval" format="dimension"/>
+        <attr name="dvdColor" format="color"/>
+    </declare-styleable>
+</resources>
